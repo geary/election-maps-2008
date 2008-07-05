@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+	<title>Polling Place Search test</title>
+</head>
+<body>
+	<h1>Polling Place Search test</h1>
+	<div>
+		
+		<!-- Begin Polling Place Search widget -->
+		<style type="text/css">
+			.PollingPlaceSearchWrapper { width:300px; margin:0; padding:6px; border:1px solid #AAA; }
+			.PollingPlaceSearchTitle { padding-bottom:4px; }
+			.PollingPlaceSearchInput { width:210px; }
+			.PollingPlaceSearchButton { width:70px; }
+		</style>
+		<div class="PollingPlaceSearchWrapper">
+			<div class="PollingPlaceSearchTitle">
+				Polling Place Search
+			</div>
+			<div class="PollingPlaceSearchForm">
+				<input id="PollingPlaceSearchInput" class="PollingPlaceSearchInput" type="text" onfocus="PollingPlaceSearch.focus()" onblur="PollingPlaceSearch.blur()" />
+				<button type="submit" id="PollingPlaceSearchButton" class="PollingPlaceSearchButton" onclick="return PollingPlaceSearch.submit()"> Search</button>
+			</div>
+		</div>
+		<script type="text/javascript">
+			(function() {
+				var example = '1600 Amphitheatre Parkway, Mountain View, CA';
+				
+				var input = document.getElementById('PollingPlaceSearchInput');
+				var button = document.getElementById('PollingPlaceSearchButton');
+				
+				window.PollingPlaceSearch = {
+					
+					focus: function() {
+						debugger;
+					},
+					
+					blur: function() {
+						debugger;
+					},
+					
+					submit: function() {
+						debugger;
+						return false;
+					}
+					
+				};
+			
+			PollingPlaceSearch.blur();
+		</script>
+		<!-- End Polling Place Search widget -->
+		
+	</div>
+	<div>
+		Content below
+	</div>
+</body>
+</html>
