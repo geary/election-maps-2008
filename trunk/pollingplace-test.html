@@ -44,10 +44,8 @@
 			(function() {
 				//var example = '1600 Amphitheatre Parkway, Mountain View, CA';
 				
-				var spinner = document.getElementById('PollingPlaceSearchSpinner');
-				var label = document.getElementById('PollingPlaceSearchLabel');
-				var input = document.getElementById('PollingPlaceSearchInput');
-				var button = document.getElementById('PollingPlaceSearchButton');
+				function e( id ) { return document.getElementById('PollingPlaceSearch'+id); }
+				var spinner = e('Spinner'), label = e('Label'), input = e('Input'), button = e('Button');
 				
 				window.PollingPlaceSearch = {
 					
