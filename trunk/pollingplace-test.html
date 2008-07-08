@@ -24,7 +24,7 @@
 			<div class="PollingPlaceSearchForm">
 				<div class="PollingPlaceSearchLabelBox">
 					<label id="PollingPlaceSearchLabel" for="PollingPlaceSearchInput" class="PollingPlaceSearchLabel">
-						Example: 1600 Amphitheatre Parkway, Mountain View, CA
+						Example: 1600 Amphitheatre Pkwy, Mountain View, CA
 					</label>
 					<input id="PollingPlaceSearchInput" class="PollingPlaceSearchInput" type="text" onfocus="PollingPlaceSearch.focus()" onblur="PollingPlaceSearch.blur()" />
 				</div>
@@ -45,13 +45,12 @@
 				window.PollingPlaceSearch = {
 					
 					focus: function() {
-						//debugger;
 						label.style.textIndent = '-1000px';
 					},
 					
 					blur: function() {
-						//debugger;
-						label.style.textIndent = '0px';
+						if( input.value === '' )
+							label.style.textIndent = '0px';
 					},
 					
 					submit: function() {
