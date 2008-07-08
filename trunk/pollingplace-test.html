@@ -60,12 +60,21 @@
 					
 					submit: function() {
 						spinner.style.backgroundPosition = '0px 0px';
+						load( 'pollingplace.js' );
 						return false;
 					}
 					
 				};
 				
 				PollingPlaceSearch.blur();
+				
+				function load( url ) {
+					var script = document.createElement( 'script' );
+					script.type = 'text/javascript';
+					script.charset = 'utf-8';
+					script.src = url;
+					document.getElementsByTagName('head')[0].appendChild( script );
+				}
 			})();
 		</script>
 		<!-- End Polling Place Search widget -->
