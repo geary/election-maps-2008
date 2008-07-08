@@ -9,9 +9,12 @@
 		
 		<!-- Begin Polling Place Search widget -->
 		<style type="text/css">
-			.PollingPlaceSearchWrapper { width:300px; margin:0; padding:6px; border:1px solid #AAA; }
+			.PollingPlaceSearchWrapper { font-size:14px; width:580px; margin:0; padding:6px; border:1px solid #AAA; }
 			.PollingPlaceSearchTitle { padding-bottom:4px; }
-			.PollingPlaceSearchInput { width:210px; }
+			.PollingPlaceSearchLabelBox { position:relative; float:left; width: 100%; }
+			.PollingPlaceSearchLabel { position:absolute; left:5px; top:5px; z-index:1; color:#777; cursor: text; }
+			.PollingPlaceSearchInput { width:460px; }
+			.PollingPlaceSearchButtonBox { float:left; }
 			.PollingPlaceSearchButton { width:70px; }
 		</style>
 		<div class="PollingPlaceSearchWrapper">
@@ -19,25 +22,36 @@
 				Polling Place Search
 			</div>
 			<div class="PollingPlaceSearchForm">
-				<input id="PollingPlaceSearchInput" class="PollingPlaceSearchInput" type="text" onfocus="PollingPlaceSearch.focus()" onblur="PollingPlaceSearch.blur()" />
-				<button type="submit" id="PollingPlaceSearchButton" class="PollingPlaceSearchButton" onclick="return PollingPlaceSearch.submit()"> Search</button>
+				<div class="PollingPlaceSearchLabelBox">
+					<label id="PollingPlaceSearchLabel" for="PollingPlaceSearchInput" class="PollingPlaceSearchLabel">
+						Example: 1600 Amphitheatre Parkway, Mountain View, CA
+					</label>
+					<input id="PollingPlaceSearchInput" class="PollingPlaceSearchInput" type="text" onfocus="PollingPlaceSearch.focus()" onblur="PollingPlaceSearch.blur()" />
+				</div>
+				<div class="PollingPlaceSearchButtonBox">
+					<button type="submit" id="PollingPlaceSearchButton" class="PollingPlaceSearchButton" onclick="return PollingPlaceSearch.submit()"> Search</button>
+				</div>
 			</div>
+			<div style="clear:left;">
 		</div>
 		<script type="text/javascript">
 			(function() {
-				var example = '1600 Amphitheatre Parkway, Mountain View, CA';
+				//var example = '1600 Amphitheatre Parkway, Mountain View, CA';
 				
+				var label = document.getElementById('PollingPlaceSearchLabel');
 				var input = document.getElementById('PollingPlaceSearchInput');
 				var button = document.getElementById('PollingPlaceSearchButton');
 				
 				window.PollingPlaceSearch = {
 					
 					focus: function() {
-						debugger;
+						//debugger;
+						label.style.textIndent = '-1000px';
 					},
 					
 					blur: function() {
-						debugger;
+						//debugger;
+						label.style.textIndent = '0px';
 					},
 					
 					submit: function() {
@@ -46,8 +60,9 @@
 					}
 					
 				};
-			
-			PollingPlaceSearch.blur();
+				
+				PollingPlaceSearch.blur();
+			})();
 		</script>
 		<!-- End Polling Place Search widget -->
 		
