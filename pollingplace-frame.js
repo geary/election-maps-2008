@@ -32,6 +32,12 @@ function S() {
 	return Array.prototype.join.call( arguments, '' );
 };
 
+function htmlEscape( str ) {
+	var div = document.createElement( 'div' );
+	div.appendChild( document.createTextNode( str ) );
+	return div.innerHTML;
+}
+
 function spin( yes ) {
 	$('#PollingPlaceSearchSpinner').css({ backgroundPosition: yes ? '0px 0px' : '1000px 0px' });
 }
@@ -42,7 +48,6 @@ var $hider = $('#PollingPlaceSearchFrameHider');
 var $box = $('#PollingPlaceSearchFrameBox');
 
 function geocode( address, callback ) {
-	console.log( encodeURIComponent(address) );
 	var url = S(
 		'http://maps.google.com/maps/geo?output=json&oe=utf-8&q=',
 		encodeURIComponent(address), '&key=', key, '&callback=?'
@@ -54,13 +59,13 @@ function lookup() {
 	$box.empty();
 	
 	geocode( $address.val(), function( geo ) {
-		console.log( geo );
 		var places = geo && geo.Placemark;
 		$box.append(
 			! places || places.length == 0 ? 'No match for that address.' :
 			places.length == 1 ? 'Your full address:' :
 			'Select your address:' );
-		$box.append( formatPlaces(places) ).slideDown( 'slow', function() {
+		$box.append( formatPlaces(places) );
+		$hider.slideDown( 'slow', function() {
 			// HACK
 			setTimeout( function() {
 				var location = {
@@ -95,7 +100,7 @@ function formatPlaces( places ) {
 				'<td>',
 					'<div>',
 						'<label for="', id, '" class="PollingPlaceSearchPlaceAddress">',
-							place.address.replace( /, USA$/, '' ).htmlEscape(),
+							htmlEscape( place.address.replace( /, USA$/, '' ) ),
 						'</label>',
 					'</div>',
 					'<div id="', id, '_Result" style="display:none;">',
@@ -156,7 +161,6 @@ function markPrecinct( location ) {
 	var address = S( location.address, ', ', location.city, ', IA' );
 	var coder = new GClientGeocoder;
 	GAsync( coder, 'getLocations', [ address ], function( geo ) {
-		console.log( geo );
 		var places = geo && geo.Placemark;
 		//$loading.html(
 		//	! places || places.length == 0 ? 'No match for that address.' :
