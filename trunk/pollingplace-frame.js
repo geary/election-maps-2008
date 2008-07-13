@@ -55,43 +55,78 @@ function geocode( address, callback ) {
 	$.getJSON( url, callback );
 }
 
-function lookup() {
+function lookup( address, callback ) {
+	//var url = S(
+	//	'http://somewhere.google.com/?address=',
+	//	encodeURIComponent(address), '&callback=?'
+	//);
+	//$.getJSON( url, callback );
+	
+	// TEMP HACK
+	setTimeout( function() {
+		callback({
+			errorcode: 2,
+			address: ["507 Adair St.,Adair,50002"]
+		});
+	}, 1000 );
+}
+
+function submit() {
 	$box.empty();
 	
 	geocode( $address.val(), function( geo ) {
 		var places = geo && geo.Placemark;
+		var n = places && places.length;
 		$box.append(
-			! places || places.length == 0 ? 'No match for that address.' :
-			places.length == 1 ? 'Your full address:' :
+			! n ? ( spin(false), 'No match for that address.' ) :
+			n == 1 ? 'Your full address:' :
 			'Select your address:' );
 		$box.append( formatPlaces(places) );
 		$hider.slideDown( 'slow', function() {
-			// HACK
-			setTimeout( function() {
-				var location = {
-					precinct: 'Des Moines 24',
-					name: 'Cattell Elementary',
-					address: '3101 E 12th St',
-					city: 'Des Moines'
-				};
-				$('#PollingPlaceSearchPlaceRadio0_Result').html( S(
-					'<div style="border:1px solid rgb(255,153,0); background-color:white; margin:4px; padding:4px;">',
-						formatPrecinct( location ),
-					'</div>'
-				) ).slideDown( 'slow' );
-				//markPrecinct( location );
-			}, 500 );
-			// END HACK
+			if( n == 1 ) {
+				findPrecinct( places[0] );
+			}
+			else if( n ) {
+				$('input:radio',$box).click( function() {
+					spin( true );
+					findPrecinct( places[ this.id.split('-')[1] ] );
+				});
+			}
 		});
 	});
 }
 
-function formatPlaces( places ) {
-	if( ! places ) return 'Check the address and spelling and click Search again.';
+function findPrecinct( place ) {
+	lookup( place.address, function( data ) {
+		if( data.errorcode != 2 ) sorry();
+		else geocode( data.address[0], function( geo ) {
+			var places = geo && geo.Placemark;
+			if( ! places  ||  places.length != 1 ) sorry();
+			else set( formatPrecinct(places[0]) );
+		});
+	});
 	
+	function sorry() {
+		set( 'Sorry, we did not find a polling place for this address' );
+	}
+	
+	function set( html ) {
+		$('#'+place.extra.result).html( html ).slideDown( 'slow', function() {
+			spin( false );
+		});
+	}
+}
+
+function formatPlaces( places ) {
+	if( ! places ) return '<br />Check the address and spelling and click Search again.';
+	
+	var checked = '';
+	if( places.length == 1 ) checked = 'checked="checked" ';
+	else spin( false );
 	var list = places.map( function( place, i ) {
-		var id = 'PollingPlaceSearchPlaceRadio' + i;
-		var checked = ( i == 0 ? 'checked="checked" ' : '' );
+		var id = 'PollingPlaceSearchPlaceRadio-' + i;
+		var result = id + '_Result';
+		place.extra = { index:i, id:id, result:result };
 		return S(
 			'<tr class="PollingPlaceSearchPlace" style="vertical-align:top;">',
 				'<td>',
@@ -103,7 +138,7 @@ function formatPlaces( places ) {
 							htmlEscape( place.address.replace( /, USA$/, '' ) ),
 						'</label>',
 					'</div>',
-					'<div id="', id, '_Result" style="display:none;">',
+					'<div id="', result, '" style="display:none;">',
 					'</div>',
 				'</td>',
 			'</tr>'
@@ -117,99 +152,31 @@ function formatPlaces( places ) {
 	);
 }
 
-function formatPrecinct( location ) {
+function formatPrecinct( place ) {
+	var area = place.AddressDetails.Country.AdministrativeArea;
+	var sub = area.SubAdministrativeArea || area;
+	var locality = sub.Locality;
+	var street = locality.Thoroughfare.ThoroughfareName;
+	var city = locality.LocalityName;
+	var state = area.AdministrativeAreaName;
+	var zip = locality.PostalCode.PostalCodeNumber;
 	return S(
-		'<div style="font-weight:bold;">Caucus Location</div>',
-		'<table>',
-			'<tr>',
-				'<td>',
-					'Precinct:&nbsp;',
-				'</td>',
-				'<td>',
-					location.precinct,
-				'</td>',
-			'</tr>',
-			'<tr>',
-				'<td>',
-					'Location:&nbsp;',
-				'</td>',
-				'<td>',
-					location.name,
-				'</td>',
-			'</tr>',
-			'<tr>',
-				'<td>',
-					'Address:&nbsp;',
-				'</td>',
-				'<td>',
-					location.address,
-				'</td>',
-			'</tr>',
-			'<tr>',
-				'<td>',
-					'City:&nbsp;',
-				'</td>',
-				'<td>',
-					location.city,
-				'</td>',
-			'</tr>',
-		'</table>'
+		'<div style="font-weight:bold;">',
+			'Your Voting Place',
+		'</div>',
+		'<div>',
+			'<div>',
+				street,
+			'</div>',
+			'<div>',
+				city, ', ', state, ' ', zip,
+			'</div>',
+		'</div>'
 	);
 }
 
-function markPrecinct( location ) {
-	var address = S( location.address, ', ', location.city, ', IA' );
-	var coder = new GClientGeocoder;
-	GAsync( coder, 'getLocations', [ address ], function( geo ) {
-		var places = geo && geo.Placemark;
-		//$loading.html(
-		//	! places || places.length == 0 ? 'No match for that address.' :
-		//	places.length == 1 ? 'Full address:' :
-		//	'Select your address:' );
-		var html = S(
-			'<div>',
-				formatPrecinct( location ),
-			'</div>'
-		);
-		var coords = places[0].Point.coordinates;
-		var latlng = new GLatLng( coords[1], coords[0] );
-		
-		var icon = new GIcon;
-		icon.image = 'http://www.google.com/intl/en_us/mapfiles/arrow-white.png';
-		icon.shadow = 'http://www.google.com/intl/en_us/mapfiles/arrowshadow.png';
-		icon.iconSize = new GSize( 23, 34 );
-		icon.shadowSize = new GSize( 39, 34 );
-		icon.iconAnchor = new GPoint( 12, 34 );
-		icon.infoWindowAnchor = new GPoint( 12, 0 );
-		
-		map.clearOverlays();
-		var marker = new GMarker( latlng, icon );
-		map.addOverlay( marker );
-		map.setCenter( latlng, 15 );
-		marker.openInfoWindow( html );
-	});
-}
+submit();
 
-$.opener = function( link, box ) {
-	var $link = $(link), $box = $(box);
-	var moving = false;
-	$link.click( function() {
-		if( ! moving ) {
-			moving = true;
-			var show = $box.is(':hidden');
-			$box.slideToggle( 'slow', function() {
-				if( show ) $box.find('input:first').focus();
-				moving = false;
-				adjustHeight();
-			});
-		}
-		return false;
-	});
-};
-
-setTimeout( function() {
-	spin( false );
-	lookup();
 	//$hider.slideDown( 'slow', function() {
 	//	var width = $box.width(), height = $box.height();
 	//	
@@ -221,7 +188,6 @@ setTimeout( function() {
 	//		src: 'http://gmodules.com/ig/ifr?url=http://primary-maps-2008.googlecode.com/svn/trunk/twitter-gadget.xml&synd=open&w=' + width + '&h=' + height + '&title=Twitter+Election+Map&border=%23ffffff%7C3px%2C1px+solid+%23999999&source=http%3A%2F%2Fgmodules.com%2Fig%2Fcreator%3Fsynd%3Dopen%26url%3Dhttp%3A%2F%2Fprimary-maps-2008.googlecode.com%2Fsvn%2Ftrunk%2Ftwitter-gadget.xml'
 	//	}).appendTo( $box );
 	//});
-}, 1000 );
 
 })();
 
