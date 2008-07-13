@@ -1,6 +1,6 @@
 (function() {
 
-var key = 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRQjDwyFD3YNj60GgWGUlJCU_q5i9hSSSzj0ergKKMY55eRpMa05FE3Wog';
+var key = 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRSuIOvo2pGs7VouOPMgaUBd9TDiaBTE5gjPTrifBPED7VUFoeKD_Ysmkw';
 
 var win$ = window.jQuery_window || window, doc$ = win$.document;
 
@@ -38,6 +38,19 @@ function htmlEscape( str ) {
 	return div.innerHTML;
 }
 
+function url( base, params, delim ) {
+	var a = [];
+	for( var p in params ) {
+		var v = params[p];
+		if( v != null ) a[a.length] = [ p, v ].join('=');
+	}
+	return a.length ? [ base, a.sort().join('&') ].join( delim || '?' ) : base;
+};
+
+function staticmap( params ) {
+	return url( 'http://maps.google.com/staticmap', params );
+}
+
 function spin( yes ) {
 	$('#PollingPlaceSearchSpinner').css({ backgroundPosition: yes ? '0px 0px' : '1000px 0px' });
 }
@@ -68,7 +81,7 @@ function lookup( address, callback ) {
 			errorcode: 2,
 			address: ["507 Adair St.,Adair,50002"]
 		});
-	}, 1000 );
+	}, 250 );
 }
 
 function submit() {
@@ -153,6 +166,7 @@ function formatPlaces( places ) {
 }
 
 function formatPrecinct( place ) {
+	var address = place.address.replace( /, USA$/, '' );
 	var area = place.AddressDetails.Country.AdministrativeArea;
 	var sub = area.SubAdministrativeArea || area;
 	var locality = sub.Locality;
@@ -160,17 +174,31 @@ function formatPrecinct( place ) {
 	var city = locality.LocalityName;
 	var state = area.AdministrativeAreaName;
 	var zip = locality.PostalCode.PostalCodeNumber;
+	var coord = place.Point.coordinates;
+	var latlng = [ coord[1], coord[0] ].join();
+	var width = 450; // $box.width();
+	var height = 300;  // ?
+	var map = staticmap({
+		key: key,
+		center: latlng,
+		zoom: 15,
+		size: [ width, height ].join('x'),
+		markers: [ latlng, 'green' ].join()
+	});
 	return S(
-		'<div style="font-weight:bold;">',
-			'Your Voting Place',
-		'</div>',
 		'<div>',
+			'<div style="font-weight:bold;">',
+				'Your Voting Place',
+			'</div>',
 			'<div>',
 				street,
 			'</div>',
 			'<div>',
 				city, ', ', state, ' ', zip,
 			'</div>',
+		'</div>',
+		'<div>',
+			'<img style="width:', width, 'px; height:', height, 'px;" src="', map, '" alt="', address, '" title="Your voting place: ', address, '" />',
 		'</div>'
 	);
 }
