@@ -124,6 +124,7 @@ function findPrecinct( place ) {
 	}
 	
 	function set( html ) {
+		$('.PollingPlaceSearchPlaceRadioResult',$box).slideUp('slow');
 		$('#'+place.extra.result).html( html ).slideDown( 'slow', function() {
 			spin( false );
 		});
@@ -151,7 +152,7 @@ function formatPlaces( places ) {
 							htmlEscape( place.address.replace( /, USA$/, '' ) ),
 						'</label>',
 					'</div>',
-					'<div id="', result, '" style="display:none;">',
+					'<div id="', result, '" class="PollingPlaceSearchPlaceRadioResult" style="display:none;">',
 					'</div>',
 				'</td>',
 			'</tr>'
