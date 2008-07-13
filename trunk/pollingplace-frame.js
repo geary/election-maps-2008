@@ -97,7 +97,7 @@ function submit() {
 		var n = places && places.length;
 		$box.append(
 			! n ? ( spin(false), 'No match for that address.' ) :
-			n == 1 ? 'Your full address:' :
+			n == 1 ? '' :
 			'Select your address:' );
 		$box.append( formatPlaces(places) );
 		$hider.slideDown( 'slow', function() {
@@ -191,6 +191,13 @@ function formatPrecinct( place ) {
 		size: [ width, height ].join('x'),
 		markers: [ latlng, 'green' ].join()
 	});
+	function link( html ) {
+		return S(
+			'<a target="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=', encodeURIComponent( address.replace( / /g, '+' ) ), '&ie=UTF8&ll=', latlng, '&z=15&iwloc=addr">',
+				html,
+			'</a>'
+		);
+	}
 	return S(
 		'<div>',
 			'<div style="font-weight:bold;">',
@@ -202,9 +209,14 @@ function formatPrecinct( place ) {
 			'<div>',
 				city, ', ', state, ' ', zip,
 			'</div>',
+			'<div>',
+				link( 'Large map and directions' ),
+			'</div>',
 		'</div>',
-		'<div>',
-			'<img style="width:', width, 'px; height:', height, 'px;" src="', map, '" alt="', address, '" title="Your voting place: ', address, '" />',
+		'<div style="margin-top:6px;">',
+			link(S(
+				'<img style="border:0; width:', width, 'px; height:', height, 'px;" src="', map, '" alt="', address, '" title="Your voting place: ', address, '" />'
+			)),
 		'</div>'
 	);
 }
