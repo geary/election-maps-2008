@@ -1,6 +1,7 @@
 setTimeout( function() {
 	
-	var base = 'http://padlet/election-general/', cache = '?' + (+new Date);
+	//var base = 'http://padlet/election-general/', cache = '?' + (+new Date);
+	var base = 'http://s.mg.to/elections/', cache = '?' + (+new Date);
 	
 	var frame = document.createElement( 'iframe' );
 	frame.id = 'PollingPlaceSearchCodeFrame';
