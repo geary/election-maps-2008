@@ -1,4 +1,4 @@
-(function() {
+$(function() {
 
 var key = {
 	'mg.to': 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRQjDwyFD3YNj60GgWGUlJCU_q5i9hSSSzj0ergKKMY55eRpMa05FE3Wog',
@@ -57,12 +57,9 @@ function staticmap( params ) {
 }
 
 function spin( yes ) {
-	$('#PollingPlaceSearchSpinner').css({ backgroundPosition: yes ? '0px 0px' : '1000px 0px' });
+	//$('#PollingPlaceSearchSpinner').css({ backgroundPosition: yes ? '0px 0px' : '1000px 0px' });
 }
 
-var $form = $('#PollingPlaceSearchForm');
-var $address = $('#PollingPlaceSearchInput');
-var $hider = $('#PollingPlaceSearchFrameHider');
 var $box = $('#PollingPlaceSearchFrameBox');
 
 function geocode( address, callback ) {
@@ -90,27 +87,27 @@ function lookup( address, callback ) {
 }
 
 function submit() {
+	var addr = decodeURIComponent( location.hash.slice(1) );
 	$box.empty();
 	
-	geocode( $address.val(), function( geo ) {
+	geocode( addr, function( geo ) {
 		var places = geo && geo.Placemark;
 		var n = places && places.length;
-		$box.append(
-			! n ? ( spin(false), 'No match for that address.' ) :
-			n == 1 ? '' :
-			'Select your address:' );
-		$box.append( formatPlaces(places) );
-		$hider.slideDown( 'slow', function() {
-			if( n == 1 ) {
-				findPrecinct( places[0] );
-			}
-			else if( n ) {
-				$('input:radio',$box).click( function() {
-					spin( true );
-					findPrecinct( places[ this.id.split('-')[1] ] );
-				});
-			}
-		});
+		if( n == 0 ) {
+			spin( false );
+			$box.html( 'No match for that address.' );
+		}
+		else if( n == 1 ) {
+			findPrecinct( places[0] );
+		}
+		else {
+			$box.append( 'Select your address:' );
+			$box.append( formatPlaces(places) );
+			$('input:radio',$box).click( function() {
+				spin( true );
+				findPrecinct( places[ this.id.split('-')[1] ] );
+			});
+		}
 	});
 }
 
@@ -129,10 +126,7 @@ function findPrecinct( place ) {
 	}
 	
 	function set( html ) {
-		$('.PollingPlaceSearchPlaceRadioResult',$box).slideUp('slow');
-		$('#'+place.extra.result).html( html ).slideDown( 'slow', function() {
-			spin( false );
-		});
+		$box.html( html );
 	}
 }
 
@@ -144,8 +138,7 @@ function formatPlaces( places ) {
 	else spin( false );
 	var list = places.map( function( place, i ) {
 		var id = 'PollingPlaceSearchPlaceRadio-' + i;
-		var result = id + '_Result';
-		place.extra = { index:i, id:id, result:result };
+		place.extra = { index:i, id:id };
 		return S(
 			'<tr class="PollingPlaceSearchPlace" style="vertical-align:top;">',
 				'<td>',
@@ -156,8 +149,6 @@ function formatPlaces( places ) {
 						'<label for="', id, '" class="PollingPlaceSearchPlaceAddress">',
 							htmlEscape( place.address.replace( /, USA$/, '' ) ),
 						'</label>',
-					'</div>',
-					'<div id="', result, '" class="PollingPlaceSearchPlaceRadioResult" style="display:none;">',
 					'</div>',
 				'</td>',
 			'</tr>'
@@ -235,6 +226,6 @@ submit();
 	//	}).appendTo( $box );
 	//});
 
-})();
+});
 
 //'http://www.gmodules.com/ig/ifr?url=http://primary-maps-2008.googlecode.com/svn/trunk/twitter-gadget.xml&amp;synd=open&amp;w=' + width + '&amp;h=' + height + '&amp;title=Twitter+Election+Map&amp;border=%23ffffff%7C3px%2C1px+solid+%23999999&amp;output=js';

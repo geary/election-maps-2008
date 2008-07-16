@@ -1,28 +1,25 @@
 setTimeout( function() {
 	
-	//var base = 'http://padlet/election-general/', cache = '?' + (+new Date);
-	var base = 'http://s.mg.to/elections/', cache = '?' + (+new Date);
+	var addr = encodeURIComponent( document.getElementById('PollingPlaceSearchInput').value );
+	console.log( addr );
 	
-	var frame = document.createElement( 'iframe' );
-	frame.id = 'PollingPlaceSearchCodeFrame';
-	frame.style.width = '0px';
-	frame.style.height = '0px';
-	frame.setAttribute( 'frameborder', '0' );
-	document.body.appendChild( frame );
+	if( location.host == 'padlet' ) {
+		var base = 'http://padlet/election-general/', cache = '?' + (+new Date);
+	}
+	else if( location.host == 's.mg.to' ) {
+		var base = 'http://s.mg.to/elections/', cache = '?' + (+new Date);
+	}
+	else {
+		var base = 'http://?/?/', cache = '';
+	}
 	
-	var doc = frame.contentWindow.document;
-	doc.open();
-	doc.write(
-		'<html>',
-			'<head>',
-			'</head>',
-			'<body>',
-				'<script type="text/javascript">jQuery_window = window.parent;<\/script>',
-				'<script type="text/javascript" src="', base, 'jquery-1.2.6-frame.js"><\/script>',
-				'<script type="text/javascript" src="', base, 'pollingplace-frame.js', cache, '"><\/script>',
-			'</body>',
-		'</html>'
-	);
-	doc.close();
+	document.getElementById('PollingPlaceSearchFrameBox').innerHTML = [
+		'<iframe ',
+			'src="', base, 'pollingplace-frame.html', cache, '#', addr, '" ',
+			'id="PollingPlaceSearchResultFrame" ',
+			'style="width:100%; height:100%;" ',
+			'frameborder="0" ',
+		'/>'
+	].join('');
 	
 }, 1 );
