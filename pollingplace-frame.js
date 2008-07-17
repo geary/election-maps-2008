@@ -1,5 +1,3 @@
-$(function() {
-
 var key = {
 	'mg.to': 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRQjDwyFD3YNj60GgWGUlJCU_q5i9hSSSzj0ergKKMY55eRpMa05FE3Wog',
 	's.mg.to': 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRQ9jbX8zKuYy1oz9F5p7GBNeAnoJRS9Itc8RizuhplTF59tia4NLgrdHQ',
@@ -7,7 +5,16 @@ var key = {
 	'': ''
 }[location.host];
 
-var win$ = window.jQuery_window || window, doc$ = win$.document;
+// TEST
+var apimap = location.hash.slice(1,2) == 'a';
+if( apimap )
+	document.write(
+		'<script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=', key, '">',
+		'<\/script>'
+	);
+// END TEST
+
+$(function() {
 
 if( ! Array.prototype.forEach ) {
 	Array.prototype.forEach = function( fun /*, thisp*/ ) {
@@ -56,6 +63,41 @@ function staticmap( params ) {
 	return url( 'http://maps.google.com/staticmap', params );
 }
 
+function jsmap( a, link ) {
+	GBrowserIsCompatible() && setTimeout( function() {
+		var map = new GMap2( $('#Map')[0] );
+		var latlng = new GLatLng( a.lat, a.lng );
+		map.setCenter( latlng, a.zoom );
+		//map.addControl( new GSmallMapControl );
+		//map.addControl( new GMapTypeControl );
+		var icon = new GIcon( G_DEFAULT_ICON );
+		icon.image = 'marker-green.png';
+		var marker = new GMarker( latlng, { icon:icon } );
+		map.addOverlay( marker );
+		marker.openInfoWindowHtml( S(
+			'<div>',
+				'<div style="font-weight:bold;">',
+					'Your Voting Place',
+				'</div>',
+				'<div>',
+					a.street,
+				'</div>',
+				'<div>',
+					a.city, ', ', a.state, ' ', a.zip,
+				'</div>',
+				'<div>',
+					link,
+				'</div>',
+			'</div>'
+		) );
+	}, 1000 );
+	
+	return S(
+		'<div id="Map" style="width:', a.width, 'px; height:', a.height /**/ + 75 /**/, 'px;">',
+		'</div>'
+	);
+}
+
 function spin( yes ) {
 	//$('#PollingPlaceSearchSpinner').css({ backgroundPosition: yes ? '0px 0px' : '1000px 0px' });
 }
@@ -87,7 +129,8 @@ function lookup( address, callback ) {
 }
 
 function submit() {
-	var addr = decodeURIComponent( location.hash.slice(1) );
+	//var addr = decodeURIComponent( location.hash.slice(1) );
+	var addr = decodeURIComponent( location.hash.slice(2) );
 	$box.empty();
 	
 	geocode( addr, function( geo ) {
@@ -167,38 +210,49 @@ function formatPrecinct( place ) {
 	var area = place.AddressDetails.Country.AdministrativeArea;
 	var sub = area.SubAdministrativeArea || area;
 	var locality = sub.Locality;
-	var street = locality.Thoroughfare.ThoroughfareName;
-	var city = locality.LocalityName;
-	var state = area.AdministrativeAreaName;
-	var zip = locality.PostalCode.PostalCodeNumber;
 	var coord = place.Point.coordinates;
-	var latlng = [ coord[1], coord[0] ].join();
-	var width = 450; // $box.width();
-	var height = 300;  // ?
-	var map = staticmap({
-		key: key,
-		center: latlng,
+	var a = {
+		lat: coord[1],
+		lng: coord[0],
+		street: locality.Thoroughfare.ThoroughfareName,
+		city: locality.LocalityName,
+		state: area.AdministrativeAreaName,
+		zip: locality.PostalCode.PostalCodeNumber,
+		width: 450, // $box.width()
+		height: 300,  //
 		zoom: 15,
-		size: [ width, height ].join('x'),
-		markers: [ latlng, 'green' ].join()
-	});
+		_:''
+	}
+	var latlng = [ a.lat, a.lng ].join();
+	var map = apimap ?  jsmap( a, link('Large map and directions') ) : S(
+		staticmap({
+			key: key,
+			center: latlng,
+			zoom: a.zoom,
+			size: [ a.width, a.height ].join('x'),
+			markers: [ latlng, 'green' ].join()
+		})
+	);
 	function link( html ) {
 		return S(
-			'<a target="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=', encodeURIComponent( address.replace( / /g, '+' ) ), '&ie=UTF8&ll=', latlng, '&z=15&iwloc=addr">',
+			'<a target="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=', encodeURIComponent( address.replace( / /g, '+' ) ), '&ie=UTF8&ll=', a.latlng, '&z=15&iwloc=addr">',
 				html,
 			'</a>'
 		);
 	}
+	if( apimap )
+		return map;
+	
 	return S(
 		'<div>',
 			'<div style="font-weight:bold;">',
 				'Your Voting Place',
 			'</div>',
 			'<div>',
-				street,
+				a.street,
 			'</div>',
 			'<div>',
-				city, ', ', state, ' ', zip,
+				a.city, ', ', a.state, ' ', a.zip,
 			'</div>',
 			'<div>',
 				link( 'Large map and directions' ),
@@ -206,7 +260,7 @@ function formatPrecinct( place ) {
 		'</div>',
 		'<div style="margin-top:6px;">',
 			link(S(
-				'<img style="border:0; width:', width, 'px; height:', height, 'px;" src="', map, '" alt="', address, '" title="Your voting place: ', address, '" />'
+				'<img style="border:0; width:', a.width, 'px; height:', a.height, 'px;" src="', map, '" alt="', address, '" title="Your voting place: ', address, '" />'
 			)),
 		'</div>'
 	);
