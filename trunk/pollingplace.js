@@ -1,7 +1,8 @@
 setTimeout( function() {
 	
+	var type = document.getElementById('ApiMap').checked ? 'a' : 's';  // TEMP
+	
 	var addr = encodeURIComponent( document.getElementById('PollingPlaceSearchInput').value );
-	console.log( addr );
 	
 	if( location.host == 'padlet' ) {
 		var base = 'http://padlet/election-general/', cache = '?' + (+new Date);
@@ -15,10 +16,11 @@ setTimeout( function() {
 	
 	document.getElementById('PollingPlaceSearchFrameBox').innerHTML = [
 		'<iframe ',
-			'src="', base, 'pollingplace-frame.html', cache, '#', addr, '" ',
+			'src="', base, 'pollingplace-frame.html', cache, '#', type, addr, '" ',
 			'id="PollingPlaceSearchResultFrame" ',
 			'style="width:100%; height:100%;" ',
 			'frameborder="0" ',
+			'scrolling="no" ',
 		'/>'
 	].join('');
 	
