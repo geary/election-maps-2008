@@ -1,18 +1,16 @@
 setTimeout( function() {
 	
-	var type = document.getElementById('ApiMap').checked ? 'a' : 's';  // TEMP
+	var type = 'a';  // document.getElementById('ApiMap').checked ? 'a' : 's';  // TEMP
 	
 	var addr = encodeURIComponent( document.getElementById('PollingPlaceSearchInput').value );
 	
-	if( location.host == 'padlet' ) {
-		var base = 'http://padlet/election-general/', cache = '?' + (+new Date);
-	}
-	else if( location.host == 's.mg.to' ) {
-		var base = 'http://s.mg.to/elections/', cache = '?' + (+new Date);
-	}
-	else {
+	var host = location.host;
+	if( host in { 'gigapad':1, 'gigapad.local':1, 'padlet':1, 'padlet.local':1 } )
+		var base = 'http://' + host + '/election-general/', cache = '?' + (+new Date);
+	else if( host in { 's.mg.to':1 } )
+		var base = 'http://' + host + '/elections/', cache = '?' + (+new Date);
+	else
 		var base = 'http://?/?/', cache = '';
-	}
 	
 	document.getElementById('PollingPlaceSearchFrameBox').innerHTML = [
 		'<iframe ',
