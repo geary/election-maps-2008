@@ -74,7 +74,7 @@ function jsmap( a, link ) {
 		//map.addControl( new GSmallMapControl );
 		//map.addControl( new GMapTypeControl );
 		var icon = new GIcon( G_DEFAULT_ICON );
-		icon.image = 'marker-green.png';
+		//icon.image = 'marker-green.png';
 		var marker = new GMarker( latlng, { icon:icon } );
 		map.addOverlay( marker );
 		marker.openInfoWindowHtml( S(
