@@ -117,18 +117,12 @@ function geocode( address, callback ) {
 
 function lookup( address, callback ) {
 	//var url = S(
-	//	'http://somewhere.google.com/?address=',
+	//	'http://pollinglocation.apis.google.com/?q=',
 	//	encodeURIComponent(address), '&callback=?'
 	//);
-	//$.getJSON( url, callback );
+	var url = S( 'proxy.php?q=', encodeURIComponent(address) );
 	
-	// TEMP HACK
-	setTimeout( function() {
-		callback({
-			errorcode: 2,
-			address: ["507 Adair St.,Adair,50002"]
-		});
-	}, 250 );
+	$.getJSON( url, callback );
 }
 
 function submit() {
