@@ -110,7 +110,8 @@ function jsmap( a, link ) {
 		);
 		marker.bindInfoWindowHtml( html );
 		marker.openInfoWindowHtml( html );
-	}, 1000 );
+		spin( false );
+	}, 1 );
 	
 	return S(
 		'<div id="jsmap" style="width:', a.width - 6, 'px; height:', a.height, 'px;">',
@@ -119,10 +120,9 @@ function jsmap( a, link ) {
 }
 
 function spin( yes ) {
-	//$('#PollingPlaceSearchSpinner').css({ backgroundPosition: yes ? '0px 0px' : '1000px 0px' });
+	//console.log( 'spin', yes );
+	$('#spinner').css({ visibility: yes ? 'visible' : 'hidden' });
 }
-
-var $title = $('#title'), $map = $('#map');
 
 function geocode( address, callback ) {
 	var url = S(
@@ -185,7 +185,7 @@ function findPrecinct( place ) {
 	}
 	
 	function setMap( place ) {
-		$map.height( $(window).height() - $map.offset().top );
+		$map.height( $window.height() - $map.offset().top );
 		$map.html( formatMap(place) );
 	}
 }
@@ -283,6 +283,13 @@ function formatMap( place ) {
 	);
 }
 
+var $window = $(window), $title = $('#title'), $map = $('#map'), $spinner = $('#spinner');
+$spinner.css({
+	left: ( $window.width() - $spinner.width() ) / 2,
+	top: ( $window.height() - $spinner.height() ) / 2
+});
+spin( true );
+	
 submit();
 
 });
