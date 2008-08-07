@@ -170,7 +170,7 @@ function submit() {
 }
 
 function findPrecinct( place ) {
-	$title.html( '<b>Home:</b> ' + htmlEscape( place.address.replace( /, USA$/, '' ) ) );
+	$title.html( '<strong>Home:</strong> ' + htmlEscape( place.address.replace( /, USA$/, '' ) ) );
 	lookup( place.address, function( data ) {
 		if( data.errorcode != 2 ) sorry();
 		else geocode( data.address[0], function( geo ) {
