@@ -70,8 +70,13 @@ function jsmap( a, link ) {
 	GBrowserIsCompatible() && setTimeout( function() {
 		var $jsmap = $('#jsmap');
 		var map = new GMap2( $jsmap[0] );
+		// Initial position with marker centered
 		var latlng = new GLatLng( a.lat, a.lng );
 		map.setCenter( latlng, a.zoom );
+		// Move map down a bit
+		var point = map.fromLatLngToDivPixel( latlng );
+		point = new GPoint( point.x, point.y - $jsmap.height() * .2 );
+		map.setCenter( map.fromDivPixelToLatLng(point), a.zoom );
 		//map.addControl( new GSmallMapControl );
 		//map.addControl( new GMapTypeControl );
 		var icon = new GIcon( G_DEFAULT_ICON );
