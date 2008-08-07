@@ -75,10 +75,13 @@ function jsmap( a, link ) {
 		map.setCenter( latlng, a.zoom );
 		// Move map down a bit
 		var point = map.fromLatLngToDivPixel( latlng );
-		point = new GPoint( point.x, point.y - $jsmap.height() * .2 );
+		point = new GPoint(
+			point.x /*- $jsmap.width() * .075*/,
+			point.y - $jsmap.height() * .25
+		);
 		map.setCenter( map.fromDivPixelToLatLng(point), a.zoom );
-		//map.addControl( new GSmallMapControl );
-		//map.addControl( new GMapTypeControl );
+		map.addControl( new GSmallMapControl );
+		map.addControl( new GMapTypeControl );
 		var icon = new GIcon( G_DEFAULT_ICON );
 		//icon.image = 'marker-green.png';
 		var marker = new GMarker( latlng, { icon:icon } );
@@ -102,7 +105,7 @@ function jsmap( a, link ) {
 	}, 1000 );
 	
 	return S(
-		'<div id="jsmap" style="width:', a.width, 'px; height:', a.height /**/ + 75 /**/, 'px;">',
+		'<div id="jsmap" style="width:', a.width - 6, 'px; height:', a.height, 'px;">',
 		'</div>'
 	);
 }
@@ -165,7 +168,7 @@ function findPrecinct( place ) {
 		else geocode( data.address[0], function( geo ) {
 			var places = geo && geo.Placemark;
 			if( ! places  ||  places.length != 1 ) sorry();
-			else setMap( formatMap(places[0]) );
+			else setMap( places[0] );
 		});
 	});
 	
@@ -173,8 +176,9 @@ function findPrecinct( place ) {
 		$map.html( 'Sorry, we did not find a polling place for this address' );
 	}
 	
-	function setMap( html ) {
-		$map.html( html );
+	function setMap( place ) {
+		$map.height( $(window).height() - $map.offset().top );
+		$map.html( formatMap(place) );
 	}
 }
 
@@ -223,8 +227,8 @@ function formatMap( place ) {
 		city: locality.LocalityName,
 		state: area.AdministrativeAreaName,
 		zip: locality.PostalCode.PostalCodeNumber,
-		width: 450, // $map.width()
-		height: 300,  //
+		width: $map.width(),
+		height: $map.height(),
 		zoom: 15,
 		_:''
 	}
