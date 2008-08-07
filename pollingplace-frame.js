@@ -69,7 +69,13 @@ function staticmap( params ) {
 function jsmap( a, link ) {
 	GBrowserIsCompatible() && setTimeout( function() {
 		var $jsmap = $('#jsmap');
-		var map = new GMap2( $jsmap[0] );
+		var map = new GMap2( $jsmap[0], {
+			mapTypes: [
+				G_NORMAL_MAP,
+				G_SATELLITE_MAP,
+				G_SATELLITE_3D_MAP
+			]
+		} );
 		// Initial position with marker centered
 		var latlng = new GLatLng( a.lat, a.lng );
 		map.setCenter( latlng, a.zoom );
