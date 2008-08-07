@@ -36,7 +36,7 @@
 				<form id="PollingPlaceSearchForm" class="PollingPlaceSearchForm">
 					<div class="PollingPlaceSearchLabelBox">
 						<label id="PollingPlaceSearchLabel" for="PollingPlaceSearchInput" class="PollingPlaceSearchLabel">
-							Example: 1600 Amphitheatre Pkwy, Mountain View, CA
+							Example: 1600 Pennsylvania Ave, Washington, DC
 						</label>
 						<input id="PollingPlaceSearchInput" class="PollingPlaceSearchInput" type="text" onfocus="PollingPlaceSearch.focus()" onblur="PollingPlaceSearch.blur()" />
 					</div>
@@ -53,8 +53,6 @@
 			</div>
 			<script type="text/javascript">
 				(function() {
-					//var example = '1600 Amphitheatre Parkway, Mountain View, CA';
-					
 					function e( id ) { return document.getElementById('PollingPlaceSearch'+id); }
 					var /*spinner = e('Spinner'),*/ label = e('Label'), input = e('Input'), button = e('Button'), hider = e('FrameHider');
 					button.disabled = false;
@@ -88,7 +86,6 @@
 						/* end cachebuster */
 						var script = document.createElement( 'script' );
 						script.type = 'text/javascript';
-						script.charset = 'utf-8';
 						script.src = url;
 						document.getElementsByTagName('head')[0].appendChild( script );
 					}
