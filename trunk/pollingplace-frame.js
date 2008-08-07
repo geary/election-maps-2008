@@ -68,7 +68,8 @@ function staticmap( params ) {
 
 function jsmap( a, link ) {
 	GBrowserIsCompatible() && setTimeout( function() {
-		var map = new GMap2( $('#Map')[0] );
+		var $jsmap = $('#jsmap');
+		var map = new GMap2( $jsmap[0] );
 		var latlng = new GLatLng( a.lat, a.lng );
 		map.setCenter( latlng, a.zoom );
 		//map.addControl( new GSmallMapControl );
@@ -96,7 +97,7 @@ function jsmap( a, link ) {
 	}, 1000 );
 	
 	return S(
-		'<div id="Map" style="width:', a.width, 'px; height:', a.height /**/ + 75 /**/, 'px;">',
+		'<div id="jsmap" style="width:', a.width, 'px; height:', a.height /**/ + 75 /**/, 'px;">',
 		'</div>'
 	);
 }
@@ -105,7 +106,7 @@ function spin( yes ) {
 	//$('#PollingPlaceSearchSpinner').css({ backgroundPosition: yes ? '0px 0px' : '1000px 0px' });
 }
 
-var $box = $('#PollingPlaceSearchFrameBox');
+var $title = $('#title'), $map = $('#map');
 
 function geocode( address, callback ) {
 	var url = S(
@@ -128,22 +129,23 @@ function lookup( address, callback ) {
 function submit() {
 	//var addr = decodeURIComponent( location.hash.slice(1) );
 	var addr = decodeURIComponent( location.hash.slice(2) );
-	$box.empty();
+	$title.empty();
+	$map.empty();
 	
 	geocode( addr, function( geo ) {
 		var places = geo && geo.Placemark;
 		var n = places && places.length;
 		if( n == 0 ) {
 			spin( false );
-			$box.html( 'No match for that address.' );
+			$title.html( 'No match for that address.' );
 		}
 		else if( n == 1 ) {
 			findPrecinct( places[0] );
 		}
 		else {
-			$box.append( 'Select your address:' );
-			$box.append( formatPlaces(places) );
-			$('input:radio',$box).click( function() {
+			$title.append( 'Select your address:' );
+			$title.append( formatPlaces(places) );
+			$('input:radio',$title).click( function() {
 				spin( true );
 				findPrecinct( places[ this.id.split('-')[1] ] );
 			});
@@ -152,21 +154,22 @@ function submit() {
 }
 
 function findPrecinct( place ) {
+	$title.html( '<b>Home:</b> ' + htmlEscape( place.address.replace( /, USA$/, '' ) ) );
 	lookup( place.address, function( data ) {
 		if( data.errorcode != 2 ) sorry();
 		else geocode( data.address[0], function( geo ) {
 			var places = geo && geo.Placemark;
 			if( ! places  ||  places.length != 1 ) sorry();
-			else set( formatPrecinct(places[0]) );
+			else setMap( formatMap(places[0]) );
 		});
 	});
 	
 	function sorry() {
-		set( 'Sorry, we did not find a polling place for this address' );
+		$map.html( 'Sorry, we did not find a polling place for this address' );
 	}
 	
-	function set( html ) {
-		$box.html( html );
+	function setMap( html ) {
+		$map.html( html );
 	}
 }
 
@@ -202,7 +205,7 @@ function formatPlaces( places ) {
 	);
 }
 
-function formatPrecinct( place ) {
+function formatMap( place ) {
 	var address = place.address.replace( /, USA$/, '' );
 	var area = place.AddressDetails.Country.AdministrativeArea;
 	var sub = area.SubAdministrativeArea || area;
@@ -215,7 +218,7 @@ function formatPrecinct( place ) {
 		city: locality.LocalityName,
 		state: area.AdministrativeAreaName,
 		zip: locality.PostalCode.PostalCodeNumber,
-		width: 450, // $box.width()
+		width: 450, // $map.width()
 		height: 300,  //
 		zoom: 15,
 		_:''
