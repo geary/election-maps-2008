@@ -181,7 +181,7 @@ function findPrecinct( place ) {
 	});
 	
 	function sorry() {
-		$map.html( 'Sorry, we did not find a polling place for this address' );
+		$map.html( '<strong>Sorry, we did not find a polling place for this address.</strong>' );
 		spin( false );
 	}
 	
