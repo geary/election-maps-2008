@@ -284,11 +284,6 @@ function formatMap( place ) {
 }
 
 var $window = $(window), $title = $('#title'), $map = $('#map'), $spinner = $('#spinner');
-$spinner.css({
-	left: ( $window.width() - $spinner.width() ) / 2,
-	top: ( $window.height() - $spinner.height() ) / 2
-});
-spin( true );
 	
 submit();
 
