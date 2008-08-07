@@ -92,7 +92,7 @@ function jsmap( a, link ) {
 		//icon.image = 'marker-green.png';
 		var marker = new GMarker( latlng, { icon:icon } );
 		map.addOverlay( marker );
-		marker.openInfoWindowHtml( S(
+		var html = S(
 			'<div>',
 				'<div style="font-weight:bold;">',
 					'Your Voting Place',
@@ -107,7 +107,9 @@ function jsmap( a, link ) {
 					link,
 				'</div>',
 			'</div>'
-		) );
+		);
+		marker.bindInfoWindowHtml( html );
+		marker.openInfoWindowHtml( html );
 	}, 1000 );
 	
 	return S(
