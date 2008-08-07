@@ -182,6 +182,7 @@ function findPrecinct( place ) {
 	
 	function sorry() {
 		$map.html( 'Sorry, we did not find a polling place for this address' );
+		spin( false );
 	}
 	
 	function setMap( place ) {
