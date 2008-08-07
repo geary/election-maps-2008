@@ -8,14 +8,10 @@ var key = {
 	'': ''
 }[location.host];
 
-// TEST
-var apimap = location.hash.slice(1,2) == 'a';
-if( apimap )
-	document.write(
-		'<script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=', key, '">',
-		'<\/script>'
-	);
-// END TEST
+document.write(
+	'<script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=', key, '">',
+	'<\/script>'
+);
 
 $(function() {
 
@@ -61,10 +57,6 @@ function url( base, params, delim ) {
 	}
 	return a.length ? [ base, a.sort().join('&') ].join( delim || '?' ) : base;
 };
-
-function staticmap( params ) {
-	return url( 'http://maps.google.com/staticmap', params );
-}
 
 function jsmap( a, link ) {
 	GBrowserIsCompatible() && setTimeout( function() {
@@ -143,8 +135,7 @@ function lookup( address, callback ) {
 }
 
 function submit() {
-	//var addr = decodeURIComponent( location.hash.slice(1) );
-	var addr = decodeURIComponent( location.hash.slice(2) );
+	var addr = decodeURIComponent( location.hash.slice(1) );
 	$title.empty();
 	$map.empty();
 	
@@ -242,15 +233,8 @@ function formatMap( place ) {
 		_:''
 	}
 	var latlng = [ a.lat, a.lng ].join();
-	var map = apimap ?  jsmap( a, link('Large map and directions') ) : S(
-		staticmap({
-			key: key,
-			center: latlng,
-			zoom: a.zoom,
-			size: [ a.width, a.height ].join('x'),
-			markers: [ latlng, 'green' ].join()
-		})
-	);
+	return jsmap( a, link('Large map and directions') );
+
 	function link( html ) {
 		return S(
 			'<a target="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=', encodeURIComponent( address.replace( / /g, '+' ) ), '&ie=UTF8&ll=', a.latlng, '&z=15&iwloc=addr">',
@@ -258,30 +242,6 @@ function formatMap( place ) {
 			'</a>'
 		);
 	}
-	if( apimap )
-		return map;
-	
-	return S(
-		'<div>',
-			'<div style="font-weight:bold;">',
-				'Your Voting Place',
-			'</div>',
-			'<div>',
-				a.street,
-			'</div>',
-			'<div>',
-				a.city, ', ', a.state, ' ', a.zip,
-			'</div>',
-			'<div>',
-				link( 'Large map and directions' ),
-			'</div>',
-		'</div>',
-		'<div style="margin-top:6px;">',
-			link(S(
-				'<img style="border:0; width:', a.width, 'px; height:', a.height, 'px;" src="', map, '" alt="', address, '" title="Your voting place: ', address, '" />'
-			)),
-		'</div>'
-	);
 }
 
 var $window = $(window), $title = $('#title'), $map = $('#map'), $spinner = $('#spinner');
