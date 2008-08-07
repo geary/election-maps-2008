@@ -3,7 +3,9 @@
 <head>
 	<title></title>
 	<style type="text/css">
+		body { margin:0; padding:0; }
 		body { font-family:Arial,sans-serif; font-size:10pt; }
+		#title { margin-bottom:4px; }
 		#title, #map { overflow: auto; }
 	</style>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js">
@@ -17,10 +19,12 @@
 		);
 	</script>
 </head>
-<body>
-	<div id="title">
-	</div>
-	<div id="map">
+<body scroll="no">
+	<div id="wrapper">
+		<div id="title">
+		</div>
+		<div id="map">
+		</div>
 	</div>
 </body>
 </html>
