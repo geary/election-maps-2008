@@ -1,7 +1,5 @@
 setTimeout( function() {
 	
-	var type = 'a';  // document.getElementById('ApiMap').checked ? 'a' : 's';  // TEMP
-	
 	var addr = encodeURIComponent( document.getElementById('PollingPlaceSearchInput').value );
 	
 	var host = location.host;
@@ -14,7 +12,7 @@ setTimeout( function() {
 	
 	document.getElementById('PollingPlaceSearchFrameBox').innerHTML = [
 		'<iframe ',
-			'src="', base, 'pollingplace-frame.html', cache, '#', type, addr, '" ',
+			'src="', base, 'pollingplace-frame.html', cache, '#', addr, '" ',
 			'id="PollingPlaceSearchResultFrame" ',
 			'style="width:100%; height:100%;" ',
 			'frameborder="0" ',
