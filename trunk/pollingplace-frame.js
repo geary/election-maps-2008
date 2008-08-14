@@ -207,7 +207,7 @@ function lookup( address, callback ) {
 	//	'http://pollinglocation.apis.google.com/?q=',
 	//	encodeURIComponent(address), '&callback=?'
 	//);
-	var url = S( 'http://mg.to/elections/proxy.php?callback=?&q=', encodeURIComponent(address) );
+	var url = S( 'http://s.mg.to/elections/proxy.php?callback=?&q=', encodeURIComponent(address) );
 	
 	$.getJSON( url, callback );
 }
