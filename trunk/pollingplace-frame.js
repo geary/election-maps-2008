@@ -14,7 +14,7 @@ var key = {
 document.write(
 	'<style type="text/css">',
 		'body.gadget { margin:0; padding:0; }',
-		'body { font-family:Arial,sans-serif; font-size:10pt; }',
+		'#wrapper { font-family:Arial,sans-serif; font-size:10pt; }',
 		'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(spinner.gif); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30; }',
 		'#spinner { filter:alpha(opacity=30); }',
 		'#title { margin-bottom:4px; }',
@@ -58,10 +58,6 @@ if( mapplet ) {
 			'</form>',
 			'<div style="clear:left;">',
 			'</div>',
-			'<div id="PollingPlaceSearchFrameHider" class="PollingPlaceSearchFrameHider">',
-				'<div id="PollingPlaceSearchFrameBox" class="PollingPlaceSearchFrameBox">',
-				'</div>',
-			'</div>',
 		'</div>'
 	);
 }
@@ -79,6 +75,17 @@ else {
 	   '</style>'
 	);
 }
+
+document.write(
+	'<div id="spinner">',
+	'</div>',
+	'<div id="wrapper">',
+		'<div id="title">',
+		'</div>',
+		'<div id="map">',
+		'</div>',
+	'</div>'
+);
 
 $(function() {
 
@@ -171,7 +178,7 @@ function initMap( a, map ) {
 		'</div>'
 	);
 	var html = S(
-		'<div>',
+		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
 			'<div style="font-weight:bold;">',
 				'Your Voting Place',
 			'</div>',
@@ -238,7 +245,7 @@ function submit( addr ) {
 }
 
 function findPrecinct( place ) {
-	$title.html( '<strong>Home:</strong> ' + htmlEscape( place.address.replace( /, USA$/, '' ) ) );
+	$title.html( '<strong>Your home:</strong> ' + htmlEscape( place.address.replace( /, USA$/, '' ) ) );
 	lookup( place.address, function( data ) {
 		if( data.errorcode != 2 ) sorry();
 		else geocode( data.address[0], function( geo ) {
@@ -329,7 +336,7 @@ var $window = $(window), $title = $('#title'), $map = $('#map'), $spinner = $('#
 if( mapplet ) {
 	(function() {
 		function e( id ) { return document.getElementById('PollingPlaceSearch'+id); }
-		var /*spinner = e('Spinner'),*/ label = e('Label'), input = e('Input'), button = e('Button'), hider = e('FrameHider');
+		var /*spinner = e('Spinner'),*/ label = e('Label'), input = e('Input'), button = e('Button');
 		button.disabled = false;
 		
 		window.PollingPlaceSearch = {
@@ -345,7 +352,6 @@ if( mapplet ) {
 			
 			submit: function() {
 				//spinner.style.backgroundPosition = '0px 0px';
-				hider.style.display = 'block';
 				submit( input.value );
 				return false;
 			}
