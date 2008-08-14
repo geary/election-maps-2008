@@ -68,7 +68,15 @@ if( mapplet ) {
 else {
 	document.write(
 		'<script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=', key, '">',
-		'<\/script>'
+		'<\/script>',
+		'<script type="text/javascript" src="http://www.google.com/uds/api?file=uds.js&v=1.0&key=', key, '">',
+		'<\/script>',
+		'<script type="text/javascript" src="http://www.google.com/uds/solutions/localsearch/gmlocalsearch.js">',
+		'<\/script>',
+	    '<style type="text/css">',
+			'@import url("http://www.google.com/uds/css/gsearch.css");',
+			'@import url("http://www.google.com/uds/solutions/localsearch/gmlocalsearch.css");',
+	   '</style>'
 	);
 }
 
@@ -145,6 +153,11 @@ function initMap( a, map ) {
 		map.setCenter( map.fromDivPixelToLatLng(point), a.zoom );
 		map.addControl( new GSmallMapControl );
 		map.addControl( new GMapTypeControl );
+		
+		map.addControl(
+			new google.maps.LocalSearch(),
+			new GControlPosition( G_ANCHOR_BOTTOM_RIGHT, new GSize(10,20) )
+		);
 	}
 	var icon = new GIcon( G_DEFAULT_ICON );
 	//icon.image = 'marker-green.png';
