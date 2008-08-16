@@ -34,8 +34,6 @@ if( mapplet ) {
 			'.PollingPlaceSearchInput { width:18.5em; }',
 			'.PollingPlaceSearchButtonBox { float:left; }',
 			'.PollingPlaceSearchButton { width:4em; }',
-			'.PollingPlaceSearchFrameHider { width:100%; height:400px; padding:4px; display:none; }',
-			'.PollingPlaceSearchFrameBox { width:100%; height:100%; }',
 		'</style>',
 		'<div id="PollingPlaceSearch">',
 			'<div class="PollingPlaceSearchTitle">',
@@ -155,7 +153,7 @@ function initMap( a, map ) {
 		var point = map.fromLatLngToDivPixel( latlng );
 		point = new GPoint(
 			point.x /*- a.$jsmap.width() * .075*/,
-			point.y - a.$jsmap.height() * .25
+			point.y - a.$jsmap.height() * .275
 		);
 		map.setCenter( map.fromDivPixelToLatLng(point), a.zoom );
 		map.addControl( new GSmallMapControl );
@@ -171,23 +169,35 @@ function initMap( a, map ) {
 	var marker = new GMarker( latlng, { icon:icon } );
 	map.addOverlay( marker );
 	var largeMapLink = mapplet ? '' : S(
-		'<div>',
+		'<div style="padding-top:0.5em;">',
 			'<a target="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=', encodeURIComponent( a.address.replace( / /g, '+' ) ), '&ie=UTF8&ll=', latlng, '&z=15&iwloc=addr">',
-				'Large map and directions',
+				'Large map and directions &#187;',
 			'</a>',
 		'</div>'
 	);
-	var html = S(
-		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
-			'<div style="font-weight:bold;">',
+	var location = S(
+		'<div>',
+			'<div style="font-weight:bold; font-size:110%;">',
 				'Your Voting Place',
 			'</div>',
-			'<div>',
-				a.street,
+			'<div style="padding-top:0.5em;">',
+				'<div>',
+					a.street,
+				'</div>',
+				'<div>',
+					a.city, ', ', a.state, ' ', a.zip,
+				'</div>',
 			'</div>',
-			'<div>',
-				a.city, ', ', a.state, ' ', a.zip,
-			'</div>',
+		'</div>'
+	);
+	if( mapplet ) $title.append( S(
+		'<div style="padding-top:0.5em;">',
+			location,
+		'</div>'
+	));
+	var html = S(
+		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
+			location,
 			largeMapLink,
 		'</div>'
 	);
@@ -245,7 +255,15 @@ function submit( addr ) {
 }
 
 function findPrecinct( place ) {
-	$title.html( '<strong>Your home:</strong> ' + htmlEscape( place.address.replace( /, USA$/, '' ) ) );
+	var style = mapplet ? ' style="padding-top:0.5em;"' : '';
+	$title.html( S(
+		'<div', style, '>',
+			'<strong style="font-size:110%;">Your Home</strong>',
+			'<div', style, '>',
+				htmlEscape( place.address.replace( /, USA$/, '' ) ),
+			'</div>',
+		'</div>'
+	));
 	lookup( place.address, function( data ) {
 		if( data.errorcode != 2 ) sorry();
 		else geocode( data.address[0], function( geo ) {
@@ -326,7 +344,7 @@ function mapInfo( place ) {
 
 function formatMap( a ) {
 	return S(
-		'<div id="jsmap" style="width:', a.width - 6, 'px; height:', a.height, 'px;">',
+		'<div id="jsmap" style="width:', a.width, 'px; height:', a.height, 'px;">',
 		'</div>'
 	);
 }
