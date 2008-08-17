@@ -1,4 +1,5 @@
 mapplet = window.mapplet;
+var currentAddress;
 
 var key = {
 	'gigapad': 'ABQIAAAAgNQJhbWKFHRJJiHCXotPZxTCDaeoAnk9GZSdGi854AcXbJXoXRS9QqxqDWHL54Twi5thIIANaCUAeA',
@@ -14,7 +15,7 @@ var key = {
 document.write(
 	'<style type="text/css">',
 		'body.gadget { margin:0; padding:0; }',
-		'#wrapper { font-family:Arial,sans-serif; font-size:10pt; }',
+		'#wrapper, #wrapper td { font-family:Arial,sans-serif; font-size:10pt; }',
 		'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(spinner.gif); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30; }',
 		'#spinner { filter:alpha(opacity=30); }',
 		'#title { margin-bottom:4px; }',
@@ -230,6 +231,7 @@ function lookup( address, callback ) {
 }
 
 function submit( addr ) {
+	currentAddress = addr;
 	$title.empty();
 	$map.empty();
 	
@@ -244,27 +246,37 @@ function submit( addr ) {
 			findPrecinct( places[0] );
 		}
 		else {
-			$title.append( 'Select your address:' );
-			$title.append( formatPlaces(places) );
-			$('input:radio',$title).click( function() {
-				spin( true );
-				findPrecinct( places[ this.id.split('-')[1] ] );
-			});
+			if( places ) {
+				$title.append( S(
+					'<div style="padding-top:0.5em;">',
+						'<strong>Select your address:</strong>',
+					'</div>'
+				));
+				$title.append( formatPlaces(places) );
+				$('input:radio',$title).click( function() {
+					spin( true );
+					findPrecinct( places[ this.id.split('-')[1] ] );
+				});
+			}
+			else {
+				$title.append( sorryHtml() );
+			}
 		}
 	});
 }
 
 function findPrecinct( place ) {
+	var address = currentAddress = place.address;
 	var style = mapplet ? ' style="padding-top:0.5em;"' : '';
 	$title.html( S(
 		'<div', style, '>',
 			'<strong style="font-size:110%;">Your Home</strong>',
 			'<div', style, '>',
-				htmlEscape( place.address.replace( /, USA$/, '' ) ),
+				htmlEscape( address.replace( /, USA$/, '' ) ),
 			'</div>',
 		'</div>'
 	));
-	lookup( place.address, function( data ) {
+	lookup( address, function( data ) {
 		if( data.errorcode != 2 ) sorry();
 		else geocode( data.address[0], function( geo ) {
 			var places = geo && geo.Placemark;
@@ -275,8 +287,26 @@ function findPrecinct( place ) {
 }
 
 function sorry() {
-	$map.html( '<strong>Sorry, we did not find a polling place for this address.</strong>' );
+	$map.html( sorryHtml() );
 	spin( false );
+}
+
+function sorryHtml() {
+	return S(
+		'<div>',
+			'<div style="padding-top:0.5em;">',
+				'<strong>', window.currentAddress || '', '</strong> does not appear to be a home address.',
+			'</div>',
+			'<div style="padding-top:0.5em;">',
+				'Suggestions:',
+			'</div>',
+			'<ul>',
+				'<li>Make sure all street and city names are spelled correctly.</li>',
+				'<li>Make sure your address includes a street and number.</li>',
+				'<li>Make sure your address includes a city and state, or a zip code.</li>',
+			'</ul>',
+		'</div>'
+	);
 }
 
 function setMap( place ) {
@@ -293,7 +323,7 @@ function setMap( place ) {
 }
 
 function formatPlaces( places ) {
-	if( ! places ) return '<br />Check the address and spelling and click Search again.';
+	if( ! places ) return sorryHtml();
 	
 	var checked = '';
 	if( places.length == 1 ) checked = 'checked="checked" ';
