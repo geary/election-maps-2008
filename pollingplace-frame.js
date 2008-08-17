@@ -28,7 +28,7 @@ if( mapplet ) {
 		'<style type="text/css">',
 			'#PollingPlaceSearch { font-size:14px; width:100%; margin:0; padding:0; }',
 			'.PollingPlaceSearchForm { margin:0; padding:0; }',
-			'.PollingPlaceSearchTitle { float:left; /*font-weight:bold;*/ font-size:120%; padding-bottom:4px; }',
+			'.PollingPlaceSearchTitle { float:left; /*font-weight:bold;*/ font-size:110%; padding-bottom:4px; }',
 			'/*.PollingPlaceSearchSpinner { float:right; margin-right:4px; width:16px; height:16px; background-image:url(spinner16.gif); background-position:1000px 0px; background-repeat:no-repeat; }*/',
 			'.PollingPlaceSearchLabelBox { position:relative; float:left; margin-right:6px; }',
 			'.PollingPlaceSearchLabel { position:absolute; left:5px; top:5px; z-index:1; color:#777; cursor: text; }',
