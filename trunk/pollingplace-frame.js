@@ -206,7 +206,7 @@ function initMap( a, map ) {
 	function ready() {
 		setTimeout( function() {
 			var options = {
-				maxWidth: Math.min( width - 125, 375 )
+				maxWidth: mapplet ? 375 : Math.min( a.$jsmap.width() - 125, 375 )
 				/*, disableGoogleLinks:true*/
 			};
 			marker.bindInfoWindowHtml( html, options );
@@ -219,7 +219,7 @@ function initMap( a, map ) {
 	
 	// Initial position with marker centered
 	var latlng = new GLatLng( a.lat, a.lng ), center = latlng;
-	var width = a.$jsmap.width(), height = a.$jsmap.height();
+	//var width = a.$jsmap.width(), height = a.$jsmap.height();
 	map.setCenter( latlng, a.zoom );
 	if( ! mapplet ) {
 		// Move map down a bit
