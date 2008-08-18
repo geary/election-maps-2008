@@ -151,17 +151,84 @@ function loadMap( a ) {
 }
 
 function initMap( a, map ) {
+	//var largeMapLink = mapplet ? '' : S(
+	//	'<div style="padding-top:0.5em;">',
+	//		'<a target="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=', encodeURIComponent( a.address.replace( / /g, '+' ) ), '&ie=UTF8&ll=', latlng, '&z=15&iwloc=addr">',
+	//			'Large map and directions &#187;',
+	//		'</a>',
+	//	'</div>'
+	//);
+	var location = S(
+		'<div style="font-weight:bold; font-size:110%;">',
+			'Your Voting Location',
+		'</div>',
+		'<div style="padding-top:0.5em;">',
+			'<div>',
+				a.street,
+			'</div>',
+			'<div>',
+				a.city, ', ', a.state, ' ', a.zip,
+			'</div>',
+		'</div>'
+	);
+	var extra = S(
+		'<div style="padding-top:0.5em;">',
+			'<a target="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=', encodeURIComponent( a.address.replace( / /g, '+' ) ), '&ie=UTF8&ll=', latlng, '&z=15&iwloc=addr">',
+				'Get directions',
+			'</a>',
+			' - ',
+			'<a target="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=', encodeURIComponent( a.address.replace( / /g, '+' ) ), '&ie=UTF8&ll=', latlng, '&z=15&iwloc=addr">',
+				'Send',
+			'</a>',
+		'</div>',
+		'<div style="padding-top:0.5em; line-height:1.2em;">',
+			'This is a voting location for the US election on November 8, 2008. ',
+			'Please check with your state or local election officials to verify your voting location.',
+		'</div>',
+		'<div style="padding-top:0.5em;">',
+			'<a target="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=', encodeURIComponent( a.address.replace( / /g, '+' ) ), '&ie=UTF8&ll=', latlng, '&z=15&iwloc=addr">',
+				'Registration details, election officials, and more',
+			'</a>',
+		'</div>'
+	);
+	if( mapplet ) $title.append( S(
+		'<div style="padding-top:0.5em;">',
+			location,
+		'</div>'
+	));
+	var html = S(
+		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
+			location,
+			extra,
+		'</div>'
+	);
+	
+	function ready() {
+		setTimeout( function() {
+			var options = {
+				maxWidth: Math.min( width - 125, 375 )
+				/*, disableGoogleLinks:true*/
+			};
+			marker.bindInfoWindowHtml( html, options );
+			marker.openInfoWindowHtml( html, options );
+		}, 500 );
+	}
+	
+	if( ! mapplet )
+		GEvent.addListener( map, 'load', ready );
+	
 	// Initial position with marker centered
 	var latlng = new GLatLng( a.lat, a.lng ), center = latlng;
+	var width = a.$jsmap.width(), height = a.$jsmap.height();
 	map.setCenter( latlng, a.zoom );
 	if( ! mapplet ) {
 		// Move map down a bit
-		var point = map.fromLatLngToDivPixel( latlng );
-		point = new GPoint(
-			point.x /*- a.$jsmap.width() * .075*/,
-			point.y - a.$jsmap.height() * .275
-		);
-		map.setCenter( map.fromDivPixelToLatLng(point), a.zoom );
+		//var point = map.fromLatLngToDivPixel( latlng );
+		//point = new GPoint(
+		//	point.x /*- width * .075*/,
+		//	point.y - height * .275
+		//);
+		//map.setCenter( map.fromDivPixelToLatLng(point), a.zoom );
 		map.addControl( new GSmallMapControl );
 		map.addControl( new GMapTypeControl );
 		
@@ -174,41 +241,8 @@ function initMap( a, map ) {
 	//icon.image = 'marker-green.png';
 	var marker = new GMarker( latlng, { icon:icon } );
 	map.addOverlay( marker );
-	var largeMapLink = mapplet ? '' : S(
-		'<div style="padding-top:0.5em;">',
-			'<a target="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=', encodeURIComponent( a.address.replace( / /g, '+' ) ), '&ie=UTF8&ll=', latlng, '&z=15&iwloc=addr">',
-				'Large map and directions &#187;',
-			'</a>',
-		'</div>'
-	);
-	var location = S(
-		'<div>',
-			'<div style="font-weight:bold; font-size:110%;">',
-				'Your Voting Place',
-			'</div>',
-			'<div style="padding-top:0.5em;">',
-				'<div>',
-					a.street,
-				'</div>',
-				'<div>',
-					a.city, ', ', a.state, ' ', a.zip,
-				'</div>',
-			'</div>',
-		'</div>'
-	);
-	if( mapplet ) $title.append( S(
-		'<div style="padding-top:0.5em;">',
-			location,
-		'</div>'
-	));
-	var html = S(
-		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
-			location,
-			largeMapLink,
-		'</div>'
-	);
-	marker.bindInfoWindowHtml( html );
-	marker.openInfoWindowHtml( html );
+	if( mapplet )
+		ready();
 	spin( false );
 }
 
