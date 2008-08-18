@@ -1,3 +1,8 @@
+var userAgent = navigator.userAgent.toLowerCase(),
+	msie = /msie/.test( userAgent ) && !/opera/.test( userAgent );
+
+var localsearch = ! msie;
+
 mapplet = window.mapplet;
 var currentAddress;
 
@@ -68,28 +73,36 @@ if( mapplet ) {
 else {
 	document.write(
 		'<script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=', key, '">',
-		'<\/script>',
-		'<script type="text/javascript" src="http://www.google.com/uds/api?file=uds.js&v=1.0&key=', key, '">',
-		'<\/script>',
-		'<script type="text/javascript" src="http://www.google.com/uds/solutions/localsearch/gmlocalsearch.js">',
-		'<\/script>',
-	    '<style type="text/css">',
-			'@import url("http://www.google.com/uds/css/gsearch.css");',
-			'@import url("http://www.google.com/uds/solutions/localsearch/gmlocalsearch.css");',
-	   '</style>'
+		'<\/script>'
 	);
+	if( localsearch )
+		document.write(
+			'<script type="text/javascript" src="http://www.google.com/uds/api?file=uds.js&v=1.0&key=', key, '">',
+			'<\/script>',
+			'<script type="text/javascript" src="http://www.google.com/uds/solutions/localsearch/gmlocalsearch.js">',
+			'<\/script>',
+			'<style type="text/css">',
+				'@import url("http://www.google.com/uds/css/gsearch.css");',
+				'@import url("http://www.google.com/uds/solutions/localsearch/gmlocalsearch.css");',
+		   '</style>'
+		);
 }
 
-document.write(
-	'<div id="spinner">',
-	'</div>',
-	'<div id="wrapper">',
-		'<div id="title">',
+writeBody = function() {
+	document.write(
+		'<div id="spinner">',
 		'</div>',
-		'<div id="map">',
-		'</div>',
-	'</div>'
-);
+		'<div id="wrapper">',
+			'<div id="title">',
+			'</div>',
+			'<div id="map">',
+			'</div>',
+		'</div>'
+	);
+};
+
+if( mapplet )
+	writeBody();
 
 $(function() {
 
@@ -145,7 +158,7 @@ function loadMap( a ) {
 				G_SATELLITE_MAP,
 				G_SATELLITE_3D_MAP
 			]
-		} );
+		});
 		initMap( a, map );
 	}, 1 );
 }
@@ -231,11 +244,18 @@ function initMap( a, map ) {
 		//map.setCenter( map.fromDivPixelToLatLng(point), a.zoom );
 		map.addControl( new GSmallMapControl );
 		map.addControl( new GMapTypeControl );
-		
-		map.addControl(
-			new google.maps.LocalSearch(),
-			new GControlPosition( G_ANCHOR_BOTTOM_RIGHT, new GSize(10,20) )
-		);
+		if( localsearch ) {
+			//alert( window.GControl );
+			//debugger;
+			//map.addControl(
+			//	new google.maps.LocalSearch(),
+			//	new GControlPosition( G_ANCHOR_BOTTOM_RIGHT, new GSize(10,20) )
+			//);
+			var gls = new google.maps.LocalSearch();
+			var gs = new GSize(10,20);
+			var gcp = new GControlPosition( G_ANCHOR_BOTTOM_RIGHT, gs )
+			map.addControl( gls, gcp );
+		}
 	}
 	var icon = new GIcon( G_DEFAULT_ICON );
 	//icon.image = 'marker-green.png';
