@@ -8,7 +8,7 @@ setTimeout( function() {
 	else if( host in { 's.mg.to':1 } )
 		var base = 'http://' + host + '/elections/', cache = '?' + (+new Date);
 	else
-		var base = 'http://?/?/', cache = '';
+		var base = 'http://s.mg.to/elections/pollingplace.js', cache = '';
 	
 	document.getElementById('PollingPlaceSearchFrameBox').innerHTML = [
 		'<iframe ',
