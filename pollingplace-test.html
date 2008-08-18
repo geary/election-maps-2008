@@ -33,7 +33,7 @@
 				<!--</div>-->
 				<div style="clear:both;">
 				</div>
-				<form id="PollingPlaceSearchForm" class="PollingPlaceSearchForm">
+				<form id="PollingPlaceSearchForm" class="PollingPlaceSearchForm" onsubmit="return PollingPlaceSearch.submit()">
 					<div class="PollingPlaceSearchLabelBox">
 						<label id="PollingPlaceSearchLabel" for="PollingPlaceSearchInput" class="PollingPlaceSearchLabel">
 							Example: 1600 Pennsylvania Ave, Washington, DC
@@ -41,7 +41,7 @@
 						<input id="PollingPlaceSearchInput" class="PollingPlaceSearchInput" type="text" onfocus="PollingPlaceSearch.focus()" onblur="PollingPlaceSearch.blur()" />
 					</div>
 					<div class="PollingPlaceSearchButtonBox">
-						<button type="submit" id="PollingPlaceSearchButton" class="PollingPlaceSearchButton" onclick="return PollingPlaceSearch.submit()"> Search</button>
+						<button type="submit" id="PollingPlaceSearchButton" class="PollingPlaceSearchButton"> Search</button>
 					</div>
 				</form>
 				<div style="clear:left;">
