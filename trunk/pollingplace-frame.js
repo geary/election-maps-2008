@@ -1,3 +1,29 @@
+function parseQuery( query ) {
+	var params = {};
+	if( query ) {
+		var array = query.split( '&' );
+		for( var i = 0, n = array.length;  i < n;  ++i ) {
+			var p = array[i].split( '=' ),
+				k = decodeURIComponent(p[0]),
+				v = decodeURIComponent(p[1]);
+			if( k ) params[k] = v;
+		}
+	}
+	return params;
+}
+
+var params = parseQuery( unescape(location.search).replace( /^\?[^?]*\?/, '' ) );
+
+function S() {
+	return Array.prototype.join.call( arguments, '' );
+};
+
+function htmlEscape( str ) {
+	var div = document.createElement( 'div' );
+	div.appendChild( document.createTextNode( str ) );
+	return div.innerHTML;
+}
+
 var userAgent = navigator.userAgent.toLowerCase(),
 	msie = /msie/.test( userAgent ) && !/opera/.test( userAgent );
 
@@ -51,7 +77,9 @@ if( mapplet ) {
 					'<tr>',
 						'<td style="width:99%;">',
 							'<div>',
-								'<input id="PollingPlaceSearchInput" class="PollingPlaceSearchInput" type="text" />',
+								'<input id="PollingPlaceSearchInput" class="PollingPlaceSearchInput" type="text" value="',
+									htmlEscape( ( params.home || '' ).replace( /!/g, ' ' ) ),
+								'" />',
 							'</div>',
 						'</td>',
 						'<td style="width:1%;">',
@@ -128,16 +156,6 @@ if( ! Array.prototype.map ) {
 		
 		return res;
 	};
-}
-
-function S() {
-	return Array.prototype.join.call( arguments, '' );
-};
-
-function htmlEscape( str ) {
-	var div = document.createElement( 'div' );
-	div.appendChild( document.createTextNode( str ) );
-	return div.innerHTML;
 }
 
 function url( base, params, delim ) {
@@ -467,6 +485,7 @@ if( mapplet ) {
 		
 		PollingPlaceSearch.focus();
 		PollingPlaceSearch.blur();
+		if( params.home ) PollingPlaceSearch.submit();
 	})();
 }
 else {
