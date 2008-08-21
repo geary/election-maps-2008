@@ -1,3 +1,7 @@
+var base = {
+	image: 'http://s.mg.to/elections/'
+}
+
 function parseQuery( query ) {
 	var params = {};
 	if( query ) {
@@ -47,7 +51,7 @@ var key = {
 document.write(
 	'<style type="text/css">',
 		'body.gadget { margin:0; padding:0; }',
-		'#wrapper, #wrapper td { font-family:Arial,sans-serif; font-size:10pt; }',
+		'#wrapper, #wrapper * { font-family:Arial,sans-serif; font-size:10pt; }',
 		'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(spinner.gif); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30; }',
 		'#spinner { filter:alpha(opacity=30); }',
 		'#title { margin-bottom:4px; }',
@@ -195,12 +199,21 @@ function initMap( a, map ) {
 			'Your Voting Location',
 		'</div>',
 		'<div style="padding-top:0.5em;">',
-			'<div>',
-				a.street,
-			'</div>',
-			'<div>',
-				a.city, ', ', a.state, ' ', a.zip,
-			'</div>',
+			'<table cellpadding="0" cellspacing="0">',
+				'<tr valign="middle">',
+					'<td style="width:50px; padding-right:.75em;">',
+						'<img src="', base.image, 'vote-icon-50.png" style="width:50px; height:50px;" />',
+					'</td>',
+					'<td>',
+						'<div>',
+							a.street,
+						'</div>',
+						'<div>',
+							a.city, ', ', a.state, ' ', a.zip,
+						'</div>',
+					'</td>',
+				'</tr>',
+			'</table>',
 		'</div>'
 	);
 	var extra = S(
@@ -213,14 +226,14 @@ function initMap( a, map ) {
 				'Send',
 			'</a>',
 		'</div>',
-		'<div style="padding-top:0.5em; line-height:1.2em;">',
-			'This is a voting location for the US election on November 4, 2008. ',
-			'Please check with your state or local election officials to verify your voting location.',
-		'</div>',
 		'<div style="padding-top:0.5em;">',
 			'<a target="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=', encodeURIComponent( a.address.replace( / /g, '+' ) ), '&ie=UTF8&ll=', latlng, '&z=15&iwloc=addr">',
 				'Registration details, election officials, and more',
 			'</a>',
+		'</div>',
+		'<div style="padding-top:0.5em; line-height:1.2em; color:gray; font-size:80%;">',
+			'This is a voting location for the US election on November 4, 2008. ',
+			'Please check with your state or local election officials to verify your voting location.',
 		'</div>'
 	);
 	if( mapplet ) $title.append( S(
@@ -237,7 +250,7 @@ function initMap( a, map ) {
 	
 	function ready() {
 		setTimeout( function() {
-			setMarker({ place:home, image:'http://s.mg.to/elections/marker-green.png' });
+			setMarker({ place:home, image:base.image+'marker-green.png' });
 			setMarker({ place:vote, open:true });
 		}, 500 );
 	}
