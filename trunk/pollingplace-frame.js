@@ -194,28 +194,7 @@ function initMap( a, map ) {
 	//		'</a>',
 	//	'</div>'
 	//);
-	var location = S(
-		'<div style="font-weight:bold; font-size:110%;">',
-			'Your Voting Location',
-		'</div>',
-		'<div style="padding-top:0.5em;">',
-			'<table cellpadding="0" cellspacing="0">',
-				'<tr valign="middle">',
-					'<td style="width:50px; padding-right:.75em;">',
-						'<img src="', base.image, 'vote-icon-50.png" style="width:50px; height:50px;" />',
-					'</td>',
-					'<td>',
-						'<div>',
-							a.street,
-						'</div>',
-						'<div>',
-							a.city, ', ', a.state, ' ', a.zip,
-						'</div>',
-					'</td>',
-				'</tr>',
-			'</table>',
-		'</div>'
-	);
+	var location = formatLocation( a, 'vote-icon-50.png', 'Your Voting Location' );
 	var extra = S(
 		'<div style="padding-top:0.5em;">',
 			'<a target="_blank" href="http://maps.google.com/maps?f=d&saddr=', encodeURIComponent(home.info.address), '&daddr=', encodeURIComponent(vote.info.address), '&hl=en&mra=ls&ie=UTF8&iwloc=A&iwstate1=dir">',
@@ -306,6 +285,31 @@ function initMap( a, map ) {
 	spin( false );
 }
 
+function formatLocation( a, icon, title ) {
+	return S(
+		'<div style="font-weight:bold; font-size:110%;">',
+			title,
+		'</div>',
+		'<div style="padding-top:0.5em;">',
+			'<table cellpadding="0" cellspacing="0">',
+				'<tr valign="middle">',
+					'<td style="width:50px; padding-right:.75em;">',
+						'<img src="', base.image, icon, '" style="width:50px; height:50px;" />',
+					'</td>',
+					'<td>',
+						'<div>',
+							a.street,
+						'</div>',
+						'<div>',
+							a.city, ', ', a.state, ' ', a.zip,
+						'</div>',
+					'</td>',
+				'</tr>',
+			'</table>',
+		'</div>'
+	);
+}
+
 function spin( yes ) {
 	//console.log( 'spin', yes );
 	$('#spinner').css({ visibility: yes ? 'visible' : 'hidden' });
@@ -368,20 +372,7 @@ function findPrecinct( place ) {
 	home.info = mapInfo( place );
 	var address = currentAddress = place.address;
 	var style = mapplet ? ' style="padding-top:0.5em;"' : '';
-	var location = S(
-		'<div', style, '>',
-			'<strong style="font-size:110%;">Your Home</strong>',
-			'<div', style, '>',
-				//htmlEscape( address.replace( /, USA$/, '' ) ),
-				'<div>',
-					home.info.street,
-				'</div>',
-				'<div>',
-					home.info.city, ', ', home.info.state, ' ', home.info.zip,
-				'</div>',
-			'</div>',
-		'</div>'
-	);
+	var location = formatLocation( home.info, 'home-icon-50.png', 'Your Home' );
 	home.html = S(
 		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
 			location,
