@@ -30,7 +30,8 @@ var userAgent = navigator.userAgent.toLowerCase(),
 var localsearch = ! msie;
 
 mapplet = window.mapplet;
-var currentAddress;
+var $jsmap, currentAddress;
+var home = {}, vote = {};
 
 var key = {
 	'gigapad': 'ABQIAAAAgNQJhbWKFHRJJiHCXotPZxTCDaeoAnk9GZSdGi854AcXbJXoXRS9QqxqDWHL54Twi5thIIANaCUAeA',
@@ -169,8 +170,8 @@ function url( base, params, delim ) {
 
 function loadMap( a ) {
 	GBrowserIsCompatible() && setTimeout( function() {
-		a.$jsmap = $('#jsmap');
-		var map = new GMap2( a.$jsmap[0], {
+		$jsmap = $('#jsmap');
+		var map = new GMap2( $jsmap[0], {
 			mapTypes: [
 				G_NORMAL_MAP,
 				G_SATELLITE_MAP,
@@ -227,7 +228,7 @@ function initMap( a, map ) {
 			location,
 		'</div>'
 	));
-	var html = S(
+	vote.html = S(
 		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
 			location,
 			extra,
@@ -236,21 +237,33 @@ function initMap( a, map ) {
 	
 	function ready() {
 		setTimeout( function() {
-			var options = {
-				maxWidth: mapplet ? 375 : Math.min( a.$jsmap.width() - 125, 375 )
-				/*, disableGoogleLinks:true*/
-			};
-			marker.bindInfoWindowHtml( html, options );
-			marker.openInfoWindowHtml( html, options );
+			setMarker({ place:home, image:'http://s.mg.to/elections/marker-green.png' });
+			setMarker({ place:vote, open:true });
 		}, 500 );
+	}
+	
+	function setMarker( a ) {
+		var icon = new GIcon( G_DEFAULT_ICON );
+		if( a.image ) icon.image = a.image;  // TODO!
+		var marker = a.place.marker = new GMarker(
+			new GLatLng( a.place.info.lat, a.place.info.lng ),
+			{ icon:icon }
+		);
+		map.addOverlay( marker );
+		var options = {
+			maxWidth: mapplet ? 375 : Math.min( $jsmap.width() - 125, 375 )
+			/*, disableGoogleLinks:true*/
+		};
+		marker.bindInfoWindow( $(a.place.html)[0], options );
+		if( a.open ) marker.openInfoWindowHtml( a.place.html, options );
 	}
 	
 	if( ! mapplet )
 		GEvent.addListener( map, 'load', ready );
 	
 	// Initial position with marker centered
-	var latlng = new GLatLng( a.lat, a.lng ), center = latlng;
-	//var width = a.$jsmap.width(), height = a.$jsmap.height();
+	var latlng = vote.latlng = new GLatLng( a.lat, a.lng ), center = latlng;
+	//var width = $jsmap.width(), height = $jsmap.height();
 	map.setCenter( latlng, a.zoom );
 	if( ! mapplet ) {
 		// Move map down a bit
@@ -275,10 +288,6 @@ function initMap( a, map ) {
 			map.addControl( gls, gcp );
 		}
 	}
-	var icon = new GIcon( G_DEFAULT_ICON );
-	//icon.image = 'marker-green.png';
-	var marker = new GMarker( latlng, { icon:icon } );
-	map.addOverlay( marker );
 	if( mapplet )
 		ready();
 	spin( false );
@@ -343,16 +352,29 @@ function submit( addr ) {
 }
 
 function findPrecinct( place ) {
+	home.info = mapInfo( place );
 	var address = currentAddress = place.address;
 	var style = mapplet ? ' style="padding-top:0.5em;"' : '';
-	$title.html( S(
+	var location = S(
 		'<div', style, '>',
 			'<strong style="font-size:110%;">Your Home</strong>',
 			'<div', style, '>',
-				htmlEscape( address.replace( /, USA$/, '' ) ),
+				//htmlEscape( address.replace( /, USA$/, '' ) ),
+				'<div>',
+					home.info.street,
+				'</div>',
+				'<div>',
+					home.info.city, ', ', home.info.state, ' ', home.info.zip,
+				'</div>',
 			'</div>',
 		'</div>'
-	));
+	);
+	home.html = S(
+		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
+			location,
+		'</div>'
+	);
+	$title.html( location );
 	lookup( address, function( data ) {
 		if( data.errorcode != 2 ) sorry();
 		else geocode( data.address[0], function( geo ) {
@@ -387,7 +409,7 @@ function sorryHtml() {
 }
 
 function setMap( place ) {
-	var a = mapInfo( place );
+	var a = vote.info = mapInfo( place );
 	if( mapplet ) {
 		initMap( a, new GMap2 );
 	}
