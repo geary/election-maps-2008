@@ -69,6 +69,7 @@ if( mapplet ) {
 			//'.PollingPlaceSearchLabelBox { position:relative; float:left; margin-right:6px; }',
 			'.PollingPlaceSearchLabel { color:#777; cursor: text; }',
 			'.PollingPlaceSearchInput { width:100%; }',
+			'#title { margin-top:12px; }',
 		'</style>',
 		'<div id="PollingPlaceSearch">',
 			'<div class="PollingPlaceSearchTitle">',
