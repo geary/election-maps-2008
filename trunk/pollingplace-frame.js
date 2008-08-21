@@ -34,7 +34,7 @@ var userAgent = navigator.userAgent.toLowerCase(),
 var localsearch = ! msie;
 
 mapplet = window.mapplet;
-var $jsmap, currentAddress;
+var map, $jsmap, currentAddress;
 var home = {}, vote = {};
 
 var key = {
@@ -55,7 +55,7 @@ document.write(
 		'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(spinner.gif); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30; }',
 		'#spinner { filter:alpha(opacity=30); }',
 		'#title { margin-bottom:4px; }',
-		'#title, #map { overflow: auto; }',
+		'#title, #mapbox { overflow: auto; }',
 	'</style>'
 );
 
@@ -129,7 +129,7 @@ writeBody = function() {
 		'<div id="wrapper">',
 			'<div id="title">',
 			'</div>',
-			'<div id="map">',
+			'<div id="mapbox">',
 			'</div>',
 		'</div>'
 	);
@@ -187,7 +187,8 @@ function loadMap( a ) {
 	}, 1 );
 }
 
-function initMap( a, map ) {
+function initMap( a, m ) {
+	map = m;
 	//var largeMapLink = mapplet ? '' : S(
 	//	'<div style="padding-top:0.5em;">',
 	//		'<a target="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=', encodeURIComponent( a.address.replace( / /g, '+' ) ), '&ie=UTF8&ll=', latlng, '&z=15&iwloc=addr">',
@@ -335,6 +336,7 @@ function lookup( address, callback ) {
 }
 
 function submit( addr ) {
+	map && map.clearOverlays();
 	currentAddress = addr;
 	$title.empty();
 	$map.empty();
@@ -483,7 +485,7 @@ function formatMap( a ) {
 	);
 }
 
-var $window = $(window), $title = $('#title'), $map = $('#map'), $spinner = $('#spinner');
+var $window = $(window), $title = $('#title'), $map = $('#mapbox'), $spinner = $('#spinner');
 
 if( mapplet ) {
 	(function() {
