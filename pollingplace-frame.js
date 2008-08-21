@@ -401,14 +401,15 @@ function sorryHtml() {
 	return S(
 		'<div>',
 			'<div style="padding-top:0.5em;">',
-				'<strong>', window.currentAddress || '', '</strong> does not appear to be a home address.',
+				'Sorry, we did not find a voting place for:<br />',
+				'<strong>', formatAddress(window.currentAddress), '</strong>.',
 			'</div>',
 			'<div style="padding-top:0.5em;">',
 				'Suggestions:',
 			'</div>',
 			'<ul>',
-				'<li>Make sure all street and city names are spelled correctly.</li>',
 				'<li>Make sure your address includes a street and number.</li>',
+				'<li>Make sure all street and city names are spelled correctly.</li>',
 				'<li>Make sure your address includes a city and state, or a zip code.</li>',
 			'</ul>',
 		'</div>'
@@ -428,6 +429,10 @@ function setMap( place ) {
 	}
 }
 
+function formatAddress( address ) {
+	return htmlEscape( ( address || '' ).replace( /, USA$/, '' ) );
+}
+
 function formatPlaces( places ) {
 	if( ! places ) return sorryHtml();
 	
@@ -445,7 +450,7 @@ function formatPlaces( places ) {
 				'<td style="width:99%; padding:5px 0 2px 2px;">',
 					'<div>',
 						'<label for="', id, '" class="PollingPlaceSearchPlaceAddress">',
-							htmlEscape( place.address.replace( /, USA$/, '' ) ),
+							formatAddress(place.address),
 						'</label>',
 					'</div>',
 				'</td>',
@@ -466,7 +471,7 @@ function mapInfo( place ) {
 	var locality = sub.Locality;
 	var coord = place.Point.coordinates;
 	return {
-		address: place.address.replace( /, USA$/, '' ),
+		address: formatAddress(place.address),
 		lat: coord[1],
 		lng: coord[0],
 		street: locality.Thoroughfare.ThoroughfareName,
