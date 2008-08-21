@@ -4,7 +4,7 @@ home-icon-50.png:
 
 	Copyright 2008 Everaldo.com
 	http://www.everaldo.com/crystal/
-	GPL License
+	LGPL License
 	http://www.everaldo.com/crystal/?action=license
 	
 All other files:
