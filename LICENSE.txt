@@ -1,0 +1,15 @@
+LICENSE INFORMATION
+
+home-icon-50.png:
+
+	Copyright 2008 Everaldo.com
+	http://www.everaldo.com/crystal/
+	GPL License
+	http://www.everaldo.com/crystal/?action=license
+	
+All other files:
+
+	Copyright 2008 Michael Geary
+	http://mg.to/
+	Free Beer and Free Speech License (MIT+GPL)
+	http://freebeerfreespeech.org/
