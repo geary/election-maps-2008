@@ -843,7 +843,7 @@ function initMap( a, m ) {
 		);
 		map.addOverlay( marker );
 		var options = {
-			maxWidth: mapplet ? 375 : Math.min( $jsmap.width() - 125, 375 )
+			maxWidth: mapplet ? 325 : Math.min( $jsmap.width() - 150, 325 )
 			/*, disableGoogleLinks:true*/
 		};
 		marker.bindInfoWindow( $(a.place.html)[0], options );
