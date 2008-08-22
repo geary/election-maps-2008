@@ -26,7 +26,7 @@
 
 	var mapplet = {
 		moduleId: __MODULE_ID__,
-		baseUrl: 'http://vote2008.s3.amazonaws.com/'
+		baseUrl: 'http://election-maps-2008.googlecode.com/svn/trunk/'
 	};
 	
 	function script( url, seconds ) {
