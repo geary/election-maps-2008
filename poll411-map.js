@@ -1,6 +1,4 @@
-var base = {
-	image: 'http://s.mg.to/elections/'
-}
+var baseUrl = mapplet && mapplet.baseUrl || 'http://poll411.s3.amazonaws.com/';
 
 function parseQuery( query ) {
 	var params = {};
@@ -231,7 +229,7 @@ function initMap( a, m ) {
 	
 	function ready() {
 		setTimeout( function() {
-			setMarker({ place:home, image:base.image+'marker-green.png' });
+			setMarker({ place:home, image:baseUrl+'marker-green.png' });
 			setMarker({ place:vote, open:true });
 		}, 500 );
 	}
@@ -296,7 +294,7 @@ function formatLocation( a, icon, title ) {
 			'<table cellpadding="0" cellspacing="0">',
 				'<tr valign="middle">',
 					'<td style="width:50px; padding-right:.75em;">',
-						'<img src="', base.image, icon, '" style="width:50px; height:50px;" />',
+						'<img src="', baseUrl, icon, '" style="width:50px; height:50px;" />',
 					'</td>',
 					'<td>',
 						'<div>',
@@ -320,19 +318,33 @@ function spin( yes ) {
 function geocode( address, callback ) {
 	var url = S(
 		'http://maps.google.com/maps/geo?output=json&oe=utf-8&q=',
-		encodeURIComponent(address), '&key=', key, '&callback=?'
+		encodeURIComponent(address), '&key=', key
 	);
-	$.getJSON( url, callback );
+	getJSON( url, callback );
 }
 
 function lookup( address, callback ) {
-	//var url = S(
-	//	'http://pollinglocation.apis.google.com/?q=',
-	//	encodeURIComponent(address), '&callback=?'
-	//);
-	var url = S( 'http://s.mg.to/elections/proxy.php?callback=?&q=', encodeURIComponent(address) );
+	if( mapplet )
+		var url = S(
+			'http://pollinglocation.apis.google.com/?q=',
+			encodeURIComponent(address)
+		);
+	else
+		var url = S( 'http://s.mg.to/elections/proxy.php?q=', encodeURIComponent(address) );
 	
-	$.getJSON( url, callback );
+	getJSON( url, callback );
+}
+
+function getJSON( url, callback ) {
+	if( mapplet ) {
+		_IG_FetchContent( url, function( text ) {
+			var json = eval( '(' + text + ')' );
+			callback( json );
+		});
+	}
+	else {
+		$.getJSON( url + '&callback=?', callback );
+	}
 }
 
 function submit( addr ) {
