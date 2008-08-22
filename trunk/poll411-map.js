@@ -769,7 +769,7 @@ function loadMap( a ) {
 function electionInfo() {
 	return S(
 		'<div style="padding-top:0.5em;">',
-			election( 'status', 'Check your voter registration!' ),
+			election( 'status', 'Are you registered to vote?' ),
 			election( 'info', '% voter registration info' ),
 			election( 'absentee', 'Absentee voter info' ),
 			election( 'elections', '% election website' ),
