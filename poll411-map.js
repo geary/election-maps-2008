@@ -61,7 +61,7 @@ if( mapplet ) {
 	document.write(
 		'<style type="text/css">',
 			'#PollingPlaceSearch, #PollingPlaceSearch td { font-size:10pt; margin:0; padding:0; }',
-			'#PollingPlaceSearch { background-color:#EEE; border:1px solid #AAA; margin:0; padding:6px; }',
+			'#PollingPlaceSearch { background-color:#EEE; border:1px solid #AAA; margin:0; padding:6px; width:96%; }',
 			'.PollingPlaceSearchForm { margin:0; padding:0; }',
 			'.PollingPlaceSearchTitle { /*font-weight:bold;*/ /*font-size:110%;*/ padding-bottom:4px; }',
 			//'/*.PollingPlaceSearchSpinner { float:right; margin-right:4px; width:16px; height:16px; background-image:url(spinner16.gif); background-position:1000px 0px; background-repeat:no-repeat; }*/',
@@ -122,7 +122,7 @@ else {
 }
 
 var available = S(
-	'<div style="padding:6px; background-color:#FFEAC0; border:1px solid #FFBA90">',
+	'<div style="padding:6px; width:96%; background-color:#FFEAC0; border:1px solid #FFBA90;">',
 		'<div>',
 			'Voting locations are currently only available for DC, DE, NH, NM, SC, and VT. ',
 		'</div>',
@@ -430,13 +430,16 @@ function sorryHtml() {
 				'<strong>', formatAddress(window.currentAddress), '</strong>.',
 			'</div>',
 			'<div style="padding-top:0.5em;">',
-				'Suggestions:',
+				'We are working to provide this data soon. Until then, please check with your state or local election officials to verify your voting location.',
 			'</div>',
-			'<ul>',
-				'<li>Make sure your address includes a street and number.</li>',
-				'<li>Make sure all street and city names are spelled correctly.</li>',
-				'<li>Make sure your address includes a city and state, or a zip code.</li>',
-			'</ul>',
+			//'<div style="padding-top:0.5em;">',
+			//	'Suggestions:',
+			//'</div>',
+			//'<ul>',
+			//	'<li>Make sure your address includes a street and number.</li>',
+			//	'<li>Make sure all street and city names are spelled correctly.</li>',
+			//	'<li>Make sure your address includes a city and state, or a zip code.</li>',
+			//'</ul>',
 		'</div>'
 	);
 }
