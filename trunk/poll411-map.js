@@ -637,7 +637,18 @@ if( mapplet ) {
 			'.PollingPlaceSearchLabel { color:#777; cursor: text; }',
 			'.PollingPlaceSearchInput { width:100%; }',
 			'#title { margin-top:12px; }',
-		'</style>',
+		'</style>'
+	);
+}
+
+if( mapplet ) {
+	document.write(
+		'<div id="outerlimits" style="margin-right:8px;">'
+	);
+}
+
+if( mapplet ) {
+	document.write(
 		'<div id="PollingPlaceSearch">',
 			'<div class="PollingPlaceSearchTitle">',
 				'Find your voting location, registration information and more. ',
@@ -716,6 +727,12 @@ writeBody = function() {
 
 if( mapplet )
 	writeBody();
+
+if( mapplet ) {
+	document.write(
+		'</div>'
+	);
+}
 
 $(function() {
 
