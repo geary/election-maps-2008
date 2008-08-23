@@ -641,7 +641,7 @@ if( mapplet ) {
 		'<div id="PollingPlaceSearch">',
 			'<div class="PollingPlaceSearchTitle">',
 				'Find your voting location, registration information and more. ',
-				'To get started, enter&nbsp;your&nbsp;<strong>home</strong>&nbsp;address:',
+				'Enter your <strong>home</strong>&nbsp;address:',
 			'</div>',
 			'<!--<div id="PollingPlaceSearchSpinner" class="PollingPlaceSearchSpinner">-->',
 			'<!--</div>-->',
