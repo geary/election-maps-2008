@@ -618,7 +618,7 @@ document.write(
 	'<style type="text/css">',
 		'body.gadget { margin:0; padding:0; }',
 		'#wrapper, #wrapper * { font-family:Arial,sans-serif; font-size:10pt; }',
-		'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(', baseUrl, 'spinner.gif); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30; }',
+		//'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(', baseUrl, 'spinner.gif); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30; }',
 		'#spinner { filter:alpha(opacity=30); }',
 		'#title { margin-bottom:4px; }',
 		'#title, #mapbox { overflow: auto; }',
