@@ -714,7 +714,7 @@ else {
 var available = S(
 	'<div style="padding:6px; width:95%; background-color:#FFEAC0; border:1px solid #FFBA90;">',
 		'<div>',
-			'Voting locations are currently only available for DC, DE, NH, NM, SC, and VT. ',
+			'Voting locations are currently only available for DC, DE, NH, NM, OH, SC, and VT. ',
 		'</div>',
 		'<div style="margin-top:0.5em;">',
 			'Registration information is available for all states.',
