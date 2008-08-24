@@ -612,7 +612,7 @@ var localsearch = ! msie;
 
 mapplet = window.mapplet;
 var map, $jsmap, currentAddress;
-var home = {}, vote = {};
+var home, vote;
 
 var key = {
 	'gigapad': 'ABQIAAAAgNQJhbWKFHRJJiHCXotPZxTCDaeoAnk9GZSdGi854AcXbJXoXRS9QqxqDWHL54Twi5thIIANaCUAeA',
@@ -817,8 +817,8 @@ function electionInfo() {
 	}
 }
 
-function initMap( a, m ) {
-	map = m;
+function setVoteHtml() {
+	if( ! vote.info ) return;
 	//var largeMapLink = mapplet ? '' : S(
 	//	'<div style="padding-top:0.5em;">',
 	//		'<a target="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=', encodeURIComponent( a.address.replace( / /g, '+' ) ), '&ie=UTF8&ll=', latlng, '&z=15&iwloc=addr">',
@@ -826,7 +826,7 @@ function initMap( a, m ) {
 	//		'</a>',
 	//	'</div>'
 	//);
-	var location = formatLocation( a, 'vote-icon-50.png', 'Your Voting Location' );
+	var location = formatLocation( vote.info, 'vote-icon-50.png', 'Your Voting Location' );
 	var extra = S(
 		'<div style="padding-top:0.5em;">',
 			'<a xtarget="_blank" href="http://maps.google.com/maps?f=d&saddr=', encodeURIComponent(home.info.address), '&daddr=', encodeURIComponent(vote.info.address), '&hl=en&mra=ls&ie=UTF8&iwloc=A&iwstate1=dir">',
@@ -854,35 +854,49 @@ function initMap( a, m ) {
 			extra,
 		'</div>'
 	);
+}
+
+function initMap( a, m ) {
+	map = m;
+	setVoteHtml();
 	
 	function ready() {
 		setTimeout( function() {
-			setMarker({ place:home, image:baseUrl+'marker-green.png' });
-			setMarker({ place:vote, open:true });
+			var only = ! vote.info;
+			setMarker({
+				place: home,
+				image: baseUrl + 'marker-green.png',
+				open: only,
+				html: formatHome( true/*only*/ )
+			});
+			if( vote.info )
+				setMarker({
+					place: vote,
+					html: vote.html,
+					open: true
+				});
 		}, 500 );
 	}
 	
 	function setMarker( a ) {
 		var icon = new GIcon( G_DEFAULT_ICON );
 		if( a.image ) icon.image = cacheUrl( a.image );
-		var marker = a.place.marker = new GMarker(
-			new GLatLng( a.place.info.lat, a.place.info.lng ),
-			{ icon:icon }
-		);
+		var marker = a.place.marker =
+			new GMarker( a.place.info.latlng, { icon:icon });
 		map.addOverlay( marker );
 		var options = {
 			maxWidth: mapplet ? 325 : Math.min( $jsmap.width() - 150, 325 )
 			/*, disableGoogleLinks:true*/
 		};
-		marker.bindInfoWindow( $(a.place.html)[0], options );
-		if( a.open ) marker.openInfoWindowHtml( a.place.html, options );
+		marker.bindInfoWindow( $(a.html)[0], options );
+		if( a.open ) marker.openInfoWindowHtml( a.html, options );
 	}
 	
 	if( ! mapplet )
 		GEvent.addListener( map, 'load', ready );
 	
 	// Initial position with marker centered
-	var latlng = vote.latlng = new GLatLng( a.lat, a.lng ), center = latlng;
+	var latlng = vote.info ? vote.info.latlng : home.info.latlng, center = latlng;
 	//var width = $jsmap.width(), height = $jsmap.height();
 	map.setCenter( latlng, a.zoom );
 	if( ! mapplet ) {
@@ -976,6 +990,8 @@ function getJSON( url, callback ) {
 }
 
 function submit( addr ) {
+	home = {};
+	vote = {};
 	map && map.clearOverlays();
 	currentAddress = addr;
 	$title.empty();
@@ -1011,29 +1027,32 @@ function submit( addr ) {
 	});
 }
 
+function formatHome( extra ) {
+	return S(
+		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
+			formatLocation( home.info, 'home-icon-50.png', 'Your Home' ),
+			extra ? electionInfo() : '',
+		'</div>'
+	);
+}
+
 function findPrecinct( place ) {
 	home.info = mapInfo( place );
 	var address = currentAddress = place.address;
-	var style = mapplet ? ' style="padding-top:0.5em;"' : '';
-	var location = formatLocation( home.info, 'home-icon-50.png', 'Your Home' );
-	home.html = S(
-		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
-			location,
-		'</div>'
-	);
-	$title.html( location );
+	$title.html( formatHome() );
 	lookup( address, function( data ) {
 		if( data.errorcode != 0 ) sorry();
 		else geocode( data.address[0], function( geo ) {
 			var places = geo && geo.Placemark;
 			if( ! places  ||  places.length != 1 ) sorry();
-			else setMap( places[0] );
+			else setMap( vote.info = mapInfo(places[0]) );
 		});
 	});
 }
 
 function sorry() {
 	$map.html( sorryHtml() );
+	if( mapplet ) setMap( home.info );
 	spin( false );
 }
 
@@ -1047,7 +1066,7 @@ function sorryHtml() {
 			'<div style="padding-top:0.5em;">',
 				'We are working to provide this data soon. Until then, please check with your state or local election officials to verify your voting location.',
 			'</div>',
-			electionInfo(),
+			//electionInfo(),
 			//'<div style="padding-top:0.5em;">',
 			//	'Suggestions:',
 			//'</div>',
@@ -1060,8 +1079,7 @@ function sorryHtml() {
 	);
 }
 
-function setMap( place ) {
-	var a = vote.info = mapInfo( place );
+function setMap( a ) {
 	if( mapplet ) {
 		initMap( a, new GMap2 );
 	}
@@ -1118,10 +1136,12 @@ function mapInfo( place ) {
 	var street = locality.Thoroughfare;
 	var zip = locality.PostalCode;
 	var coord = place.Point.coordinates;
+	var lat = coord[1], lng = coord[0];
 	return {
 		address: formatAddress(place.address),
-		lat: coord[1],
-		lng: coord[0],
+		lat: lat,
+		lng: lng,
+		latlng: new GLatLng( lat, lng ),
 		street: street && street.ThoroughfareName || '',
 		city: locality.LocalityName,
 		countyName: countyName,
