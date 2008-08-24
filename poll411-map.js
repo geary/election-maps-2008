@@ -1012,7 +1012,7 @@ function findPrecinct( place ) {
 	);
 	$title.html( location );
 	lookup( address, function( data ) {
-		if( data.errorcode != 2 ) sorry();
+		if( data.errorcode != 0 ) sorry();
 		else geocode( data.address[0], function( geo ) {
 			var places = geo && geo.Placemark;
 			if( ! places  ||  places.length != 1 ) sorry();
