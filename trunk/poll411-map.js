@@ -629,7 +629,7 @@ if( mapplet ) {
 	document.write(
 		'<style type="text/css">',
 			'#PollingPlaceSearch, #PollingPlaceSearch td { font-size:10pt; margin:0; padding:0; }',
-			'#PollingPlaceSearch { background-color:#EEE; border:1px solid #AAA; margin:0; padding:6px; width:96%; }',
+			'#PollingPlaceSearch { background-color:#EEE; border:1px solid #AAA; margin:0; padding:6px; width:95%; }',
 			'.PollingPlaceSearchForm { margin:0; padding:0; }',
 			'.PollingPlaceSearchTitle { /*font-weight:bold;*/ /*font-size:110%;*/ padding-bottom:4px; }',
 			//'/*.PollingPlaceSearchSpinner { float:right; margin-right:4px; width:16px; height:16px; background-image:url(spinner16.gif); background-position:1000px 0px; background-repeat:no-repeat; }*/',
@@ -701,7 +701,7 @@ else {
 }
 
 var available = S(
-	'<div style="padding:6px; width:96%; background-color:#FFEAC0; border:1px solid #FFBA90;">',
+	'<div style="padding:6px; width:95%; background-color:#FFEAC0; border:1px solid #FFBA90;">',
 		'<div>',
 			'Voting locations are currently only available for DC, DE, NH, NM, SC, and VT. ',
 		'</div>',
