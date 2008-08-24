@@ -922,7 +922,7 @@ function formatLocation( info, icon, title ) {
 			'<table cellpadding="0" cellspacing="0">',
 				'<tr valign="middle">',
 					'<td style="width:50px; padding-right:.75em;">',
-						'<img src="', cacheUrl( baseUrl + icon ), '" style="width:50px; height:50px;" />',
+						'<img src="', cacheUrl( baseUrl + icon, 300 ), '" style="width:50px; height:50px;" />',
 					'</td>',
 					'<td>',
 						'<div>',
