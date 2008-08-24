@@ -65,7 +65,7 @@ function htmlEscape( str ) {
 function cacheUrl( url, cache, always ) {
 	if( opt.nocache  &&  ! always ) return url + '?q=' + new Date().getTime();
 	if( opt.nocache ) cache = 0;
-	if( typeof cache != 'number' ) cache = 120;
+	if( typeof cache != 'number' ) cache = 300;
 	url = _IG_GetCachedUrl( url, { refreshInterval:cache } );
 	if( ! url.match(/^http:/) ) url = 'http://' + location.host + url;
 	return url;
@@ -864,7 +864,7 @@ function initMap( a, m ) {
 	
 	function setMarker( a ) {
 		var icon = new GIcon( G_DEFAULT_ICON );
-		if( a.image ) icon.image = a.image;  // TODO!
+		if( a.image ) icon.image = cacheUrl( a.image );
 		var marker = a.place.marker = new GMarker(
 			new GLatLng( a.place.info.lat, a.place.info.lng ),
 			{ icon:icon }
@@ -922,7 +922,7 @@ function formatLocation( info, icon, title ) {
 			'<table cellpadding="0" cellspacing="0">',
 				'<tr valign="middle">',
 					'<td style="width:50px; padding-right:.75em;">',
-						'<img src="', cacheUrl( baseUrl + icon, 300 ), '" style="width:50px; height:50px;" />',
+						'<img src="', cacheUrl( baseUrl + icon ), '" style="width:50px; height:50px;" />',
 					'</td>',
 					'<td>',
 						'<div>',
