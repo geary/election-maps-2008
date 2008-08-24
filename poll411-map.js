@@ -1,4 +1,6 @@
-var baseUrl = mapplet && mapplet.baseUrl || 'http://poll411.s3.amazonaws.com/';
+var opt = window.mapplet ? mapplet : {};
+
+var baseUrl = opt.baseUrl || 'http://poll411.s3.amazonaws.com/';
 
 function parseQuery( query ) {
 	var params = {};
@@ -58,6 +60,15 @@ function htmlEscape( str ) {
 	var div = document.createElement( 'div' );
 	div.appendChild( document.createTextNode( str ) );
 	return div.innerHTML;
+}
+
+function cacheUrl( url, cache, always ) {
+	if( opt.nocache  &&  ! always ) return url + '?q=' + new Date().getTime();
+	if( opt.nocache ) cache = 0;
+	if( typeof cache != 'number' ) cache = 120;
+	url = _IG_GetCachedUrl( url, { refreshInterval:cache } );
+	if( ! url.match(/^http:/) ) url = 'http://' + location.host + url;
+	return url;
 }
 
 var states = [
@@ -911,7 +922,7 @@ function formatLocation( info, icon, title ) {
 			'<table cellpadding="0" cellspacing="0">',
 				'<tr valign="middle">',
 					'<td style="width:50px; padding-right:.75em;">',
-						'<img src="', baseUrl, icon, '" style="width:50px; height:50px;" />',
+						'<img src="', cacheUrl( baseUrl + icon ), '" style="width:50px; height:50px;" />',
 					'</td>',
 					'<td>',
 						'<div>',
