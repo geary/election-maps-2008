@@ -146,6 +146,7 @@ var states = [
 	{
 		'abbr': 'DC',
 		'name': 'District of Columbia',
+		'prefix': 'the',
 		'parties': {
 			'dem': { 'date': '02-12' },
 			'gop': { 'date': '02-12' }
@@ -540,6 +541,8 @@ function stateByAbbr( abbr ) {
 	return statesByAbbr[abbr.toUpperCase()] || stateUS;
 }
 
+// This awkward tab-delimited data is a quick and dirty spreadsheet import.
+// State AreYouRegistered RegistrationInfo AbsenteeInfo WhereToVote ElectionWebsite
 var stateUrlTabbed = [
 	'Alabama		http://www.sos.state.al.us/Elections/VoterRegistrationInfo.aspx	http://www.sos.state.al.us/Elections/AbsenteeVotingInfo.aspx		http://www.sos.state.al.us/Elections/Default.aspx														',
 	'Alaska		http://ltgov.state.ak.us/elections/regapp.php	http://www.elections.alaska.gov/abinfo.php		http://www.elections.alaska.gov/														',
@@ -549,7 +552,7 @@ var stateUrlTabbed = [
 	'Colorado	http://www.sos.state.co.us/Voter/voterHome.do;jsessionid=0000QlBp7qrdd1E9ysKzDFyDdlc:121vl9gps	http://www.elections.colorado.gov/WWW/default/Clerks%20Corner/SOS%20Approved%20Forms/2008_forms/approved_registration_form_37_combo_VR_application_english_color_06.26.08.pdf	http://www.elections.colorado.gov/WWW/default/Clerks%20Corner/SOS%20Approved%20Forms/2008_forms/approved_mail-in_ballot_form_17_mail-in_ballot_application_english_color_06.17.08.pdf		http://www.elections.colorado.gov														',
 	'Connecticut		http://www.ct.gov/sots/LIB/sots/ElectionServices/ElectForms/electforms/ed671.pdf	http://www.ct.gov/sots/LIB/sots/ElectionServices/ElectForms/electforms/aabeng.pdf		http://www.ct.gov/sots/cwp/view.asp?a=3179&q=392220&SOTSNav_GID=1846														',
 	'Delaware	http://pollingplace.delaware.gov/	https://registertovote.elections.delaware.gov/VoterRegistration/TermsAgreement	http://electionsncc.delaware.gov/absentee_de/index.shtml	http://pollingplace.delaware.gov/	http://elections.delaware.gov/														',
-	'District of Columbia	http://www.dcboee.org/voterreg/vic_step1.asp	http://www.dcboee.org/serv/download_index.shtm	http://www.dcboee.org/serv/download_index.shtm	http://www.dcboee.org/voterreg/ppl_step1.asp	http://www.dcboee.org/														',
+	'District of Columbia	http://www.dcboee.org/voter_info/reg_status/	http://www.dcboee.org/voter_info/register_to_vote/ovr_step1.asp	http://www.dcboee.org/voter_info/absentee_ballot/ab_step1.asp	http://www.dcboee.org/voter_info/find_pollingplace/	http://www.dcboee.org/														',
 	'Florida		http://election.dos.state.fl.us/regtovote/regform.shtml	http://election.dos.state.fl.us/absenteevoting.shtml		http://election.dos.state.fl.us/														',
 	'Georgia	http://sos.georgia.gov/cgi-bin/llocator3a.asp?	http://www.sos.georgia.gov/elections/Voting_information.htm#Registering%20to%20Vote	http://www.sos.georgia.gov/elections/Voting_information.htm#Absentee_Voting	http://sos.georgia.gov/elections/polllocator/	http://sos.georgia.gov/Elections/														',
 	'Hawaii		http://hawaii.gov/elections/voters/registration.htm	http://hawaii.gov/elections/voters/voteabsentee.htm		http://hawaii.gov/elections/														',
@@ -812,7 +815,7 @@ function electionInfo() {
 	return S(
 		'<div style="padding-top:0.5em;">',
 			election( 'status', 'Are you registered to vote?' ),
-			election( 'info', '% voter registration info' ),
+			election( 'info', 'How to register in %' ),
 			election( 'absentee', 'Absentee voter info' ),
 			election( 'elections', '% election website' ),
 		'</div>',
@@ -825,7 +828,10 @@ function electionInfo() {
 		return ! url ? '' : S(
 			'<div>',
 				'<a target="_blank" href="', url, '">',
-					text.replace( '%', state.name ),
+					text.replace( '%', S(
+						state.prefix ? state.prefix  + ' ' : '',
+						state.name
+					) ),
 				'</a>',
 			'</div>'
 		);
