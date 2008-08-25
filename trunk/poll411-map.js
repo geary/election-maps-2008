@@ -1100,14 +1100,20 @@ function submit( addr ) {
 			else {
 				if( places ) {
 					$title.append( S(
-						'<div style="padding-top:0.5em;">',
+						'<div id="radios" style="padding-top:0.5em;">',
 							'<strong>Select your address:</strong>',
 						'</div>'
 					));
-					$title.append( formatPlaces(places) );
+					var $radios = $('#radios');
+					$radios.append( formatPlaces(places) );
 					$('input:radio',$title).click( function() {
+						var radio = this;
 						spin( true );
-						findPrecinct( places[ this.id.split('-')[1] ] );
+						setTimeout( function() {
+							$('#radios').slideUp( 350, function() {
+								findPrecinct( places[ radio.id.split('-')[1] ] );
+							});
+						}, 250 );
 					});
 				}
 				else {
