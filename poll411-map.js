@@ -1,6 +1,7 @@
 var opt = window.mapplet ? mapplet : {};
 
 var baseUrl = opt.baseUrl || 'http://poll411.s3.amazonaws.com/';
+var dataUrl = opt.dataUrl || baseUrl;
 
 function parseQuery( query ) {
 	var params = {};
@@ -794,6 +795,15 @@ function loadMap( a ) {
 	}, 1 );
 }
 
+function linkto( addr ) {
+	var a = htmlEscape( addr ), u = a;
+	if( addr.match(/@/) )
+		u = 'mailto:' + u;
+	else if( ! addr.match(/^http:\/\//) )
+		u = a = 'http://' + a;
+	return S( '<a target="_blank" href="', u, '">', a, '</a>' );
+}
+
 function electionInfo() {
 	return S(
 		'<div style="padding-top:0.5em;">',
@@ -801,7 +811,8 @@ function electionInfo() {
 			election( 'info', '% voter registration info' ),
 			election( 'absentee', 'Absentee voter info' ),
 			election( 'elections', '% election website' ),
-		'</div>'
+		'</div>',
+		local()
 	);
 	
 	function election( key, text ) {
@@ -812,6 +823,29 @@ function electionInfo() {
 				'<a target="_blank" href="', url, '">',
 					text.replace( '%', state.name ),
 				'</a>',
+			'</div>'
+		);
+	}
+	
+	function local() {
+		var leo = home.leo;
+		if( !( leo.title || leo.phone || leo.email  ) ) return '';
+		function remove( what ) {
+			if( title.indexOf(what) == 0 )
+				title = title.slice( what.length + 1 );
+		}
+		var county = home.info.countyName;
+		var title = leo.title;
+		remove( county );
+		remove( 'County' );
+		return S(
+			'<div style="padding-top:0.5em;">',
+				'<div>',
+					county, ' County ',
+					title || ' Election Information',
+				'</div>',
+				leo.phone ? S( '<div>', 'Phone: ', leo.phone, '</div>' ) : '',
+				leo.email ? S( '<div>', 'Email: ', linkto(leo.email), '</div>' ) : '',
 			'</div>'
 		);
 	}
@@ -965,6 +999,34 @@ function geocode( address, callback ) {
 	getJSON( url, callback );
 }
 
+function getleo( info, callback ) {
+	var url = S( dataUrl, 'leo/', info.state.abbr, '.xml' );
+	if( mapplet ) {
+		_IG_FetchXmlContent( url, function( xml ) {
+			if( ! xml.getElementsByTagName ) {
+				callback({});
+				return;
+			}
+			function add( key ) { leo[key] = $.trim( $leo.find(key).text() ); }
+			var name = info.countyName.toUpperCase();
+			var counties = xml.getElementsByTagName( 'county_name' );
+			for( var i = 0, county;  county = counties[i++]; ) {
+				if( county.firstChild.nodeValue == name ) {
+					var $leo = $(county.parentNode);
+					var leo = {};
+					add('name'), add('title'), add('phone'), add('fax'), add('email');
+					callback( leo );
+					return;
+				}
+			}
+			callback({});
+		});
+	}
+	else {
+		callback({});
+	}
+}
+
 function lookup( address, callback ) {
 	if( mapplet )
 		var url = S(
@@ -1040,12 +1102,16 @@ function findPrecinct( place ) {
 	home.info = mapInfo( place );
 	var address = currentAddress = place.address;
 	$title.html( formatHome() );
-	lookup( address, function( data ) {
-		if( data.errorcode != 0 ) sorry();
-		else geocode( data.address[0], function( geo ) {
-			var places = geo && geo.Placemark;
-			if( ! places  ||  places.length != 1 ) sorry();
-			else setMap( vote.info = mapInfo(places[0]) );
+	
+	getleo( home.info, function( leo ) {
+		home.leo = leo;
+		lookup( address, function( poll ) {
+			if( poll.errorcode != 0 ) sorry();
+			else geocode( poll.address[0], function( geo ) {
+				var places = geo && geo.Placemark;
+				if( ! places  ||  places.length != 1 ) sorry();
+				else setMap( vote.info = mapInfo(places[0]) );
+			});
 		});
 	});
 }
@@ -1131,8 +1197,8 @@ function mapInfo( place ) {
 	var area = place.AddressDetails.Country.AdministrativeArea;
 	var state = stateByAbbr( area.AdministrativeAreaName );
 	var sub = area.SubAdministrativeArea || area;
-	var countyName = sub.SubAdministrativeAreaName;
 	var locality = sub.Locality;
+	var countyName = sub.SubAdministrativeAreaName || locality.LocalityName;
 	var street = locality.Thoroughfare;
 	var zip = locality.PostalCode;
 	var coord = place.Point.coordinates;
