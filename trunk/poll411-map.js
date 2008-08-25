@@ -1110,9 +1110,11 @@ function submit( addr ) {
 						var radio = this;
 						spin( true );
 						setTimeout( function() {
-							$('#radios').slideUp( 350, function() {
+							function ready() {
 								findPrecinct( places[ radio.id.split('-')[1] ] );
-							});
+							}
+							if( $.browser.msie ) ready();
+							else $('#radios').slideUp( 350, ready );
 						}, 250 );
 					});
 				}
