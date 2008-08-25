@@ -1012,7 +1012,7 @@ function getleo( info, callback ) {
 	var url = S( dataUrl, 'leo/', info.state.abbr, '.xml' );
 	if( mapplet ) {
 		_IG_FetchXmlContent( url, function( xml ) {
-			if( !( 'getElementsByTagName' in xml ) ) {
+			if( typeof xml == 'string' ) {
 				callback({});
 				return;
 			}
