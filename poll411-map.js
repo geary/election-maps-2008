@@ -1123,7 +1123,7 @@ function formatHome( extra ) {
 
 function findPrecinct( place ) {
 	home.info = mapInfo( place );
-	if( ! home.info ) { sorry(); return; }
+	if( ! home.info ) { $title.empty(); sorry(); return; }
 	var address = currentAddress = place.address;
 	$title.html( formatHome() );
 	
@@ -1220,8 +1220,10 @@ function mapInfo( place ) {
 	var area = place.AddressDetails.Country.AdministrativeArea;
 	if( ! area ) return null;
 	var state = stateByAbbr( area.AdministrativeAreaName );
+	if( ! state ) return null;
 	var sub = area.SubAdministrativeArea || area;
 	var locality = sub.Locality;
+	if( ! locality ) return null;
 	var countyName = sub.SubAdministrativeAreaName || locality.LocalityName;
 	var street = locality.Thoroughfare;
 	var zip = locality.PostalCode;
