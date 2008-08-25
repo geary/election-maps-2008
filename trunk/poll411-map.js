@@ -816,7 +816,7 @@ function electionInfo() {
 		'<div style="padding-top:0.5em;">',
 			election( 'status', 'Are you registered to vote?' ),
 			election( 'info', 'How to register in %' ),
-			election( 'absentee', 'Absentee voter info' ),
+			election( 'absentee', 'Get an absentee ballot' ),
 			election( 'elections', '% election website' ),
 		'</div>',
 		local()
