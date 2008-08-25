@@ -3,6 +3,8 @@ var opt = window.mapplet ? mapplet : {};
 var baseUrl = opt.baseUrl || 'http://poll411.s3.amazonaws.com/';
 var dataUrl = opt.dataUrl || baseUrl;
 
+var sampleAddr = '1600 Pennsylvania Ave 20006';
+
 function parseQuery( query ) {
 	var params = {};
 	if( query ) {
@@ -650,7 +652,6 @@ if( mapplet ) {
 			'.PollingPlaceSearchTitle { /*font-weight:bold;*/ /*font-size:110%;*/ /*padding-bottom:4px;*/ }',
 			//'/*.PollingPlaceSearchSpinner { float:right; margin-right:4px; width:16px; height:16px; background-image:url(spinner16.gif); background-position:1000px 0px; background-repeat:no-repeat; }*/',
 			//'.PollingPlaceSearchLabelBox { position:relative; float:left; margin-right:6px; }',
-			'.PollingPlaceSearchLabel { color:#777; cursor: text; }',
 			'.PollingPlaceSearchInput { width:100%; }',
 			'#title { margin-top:12px; }',
 		'</style>'
@@ -694,11 +695,12 @@ if( mapplet ) {
 					'</table>',
 				'</form>',
 			'</div>',
-			//'<div class="removehelp">',
-			//	'<label id="PollingPlaceSearchLabel" for="PollingPlaceSearchInput" class="PollingPlaceSearchLabel">',
-			//		'Example: 1600 Pennsylvania Ave 20006',
-			//	'</label>',
-			//'</div>',
+			'<div class="removehelp">',
+				'Example: ',
+				'<a href="#" onclick="return PollingPlaceSearch.sample();">',
+					sampleAddr,
+				'</a>',
+			'</div>',
 		'</div>'
 	);
 }
@@ -1289,12 +1291,16 @@ if( mapplet ) {
 				//	label.style.textIndent = '0px';
 			},
 			
+			sample: function() {
+				input.value = sampleAddr;
+				this.submit();
+			},
+			
 			submit: function() {
 				//spinner.style.backgroundPosition = '0px 0px';
 				submit( input.value );
 				return false;
 			}
-			
 		};
 		
 		PollingPlaceSearch.focus();
