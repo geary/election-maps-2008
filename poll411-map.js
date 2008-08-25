@@ -838,6 +838,7 @@ function electionInfo() {
 	
 	function election( key, text, prefix ) {
 		var state = home.info.state;
+		if( ! state  ||  ! state.election ) return '';
 		var url = state.election[key];
 		return ! url ? '' : S(
 			'<div>',
