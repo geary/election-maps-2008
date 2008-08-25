@@ -670,29 +670,31 @@ if( mapplet ) {
 			'</div>',
 			'<!--<div id="PollingPlaceSearchSpinner" class="PollingPlaceSearchSpinner">-->',
 			'<!--</div>-->',
-			'<form id="PollingPlaceSearchForm" class="PollingPlaceSearchForm" onsubmit="return PollingPlaceSearch.submit()">',
-				'<table style="width:100%;">',
-					'<tr>',
-						'<td style="width:99%;">',
-							'<div>',
-								'<input id="PollingPlaceSearchInput" class="PollingPlaceSearchInput" type="text" value="',
-									htmlEscape( ( params.home || '' ).replace( /!/g, ' ' ) ),
-								'" />',
-							'</div>',
-						'</td>',
-						'<td style="width:1%;">',
-							'<div>',
-								'<button type="submit" id="PollingPlaceSearchButton" class="PollingPlaceSearchButton"> Search</button>',
-							'</div>',
-						'</td>',
-					'</tr>',
-				'</table>',
-				'<div>',
-					'<label id="PollingPlaceSearchLabel" for="PollingPlaceSearchInput" class="PollingPlaceSearchLabel removehelp">',
-						'Example: 1600 Pennsylvania Ave 20006',
-					'</label>',
-				'</div>',
-			'</form>',
+			'<div>',
+				'<form id="PollingPlaceSearchForm" class="PollingPlaceSearchForm" onsubmit="return PollingPlaceSearch.submit()">',
+					'<table style="width:100%;">',
+						'<tr>',
+							'<td style="width:99%;">',
+								'<div>',
+									'<input id="PollingPlaceSearchInput" class="PollingPlaceSearchInput" type="text" value="',
+										htmlEscape( ( params.home || '' ).replace( /!/g, ' ' ) ),
+									'" />',
+								'</div>',
+							'</td>',
+							'<td style="width:1%;">',
+								'<div>',
+									'<button type="submit" id="PollingPlaceSearchButton" class="PollingPlaceSearchButton"> Search</button>',
+								'</div>',
+							'</td>',
+						'</tr>',
+					'</table>',
+				'</form>',
+			'</div>',
+			'<div class="removehelp">',
+				'<label id="PollingPlaceSearchLabel" for="PollingPlaceSearchInput" class="PollingPlaceSearchLabel">',
+					'Example: 1600 Pennsylvania Ave 20006',
+				'</label>',
+			'</div>',
 		'</div>'
 	);
 }
@@ -1060,7 +1062,7 @@ function getJSON( url, callback ) {
 
 function closehelp( callback ) {
 	var $remove = $('.removehelp');
-	if( $remove.css('display') == 'none' ) {
+	if( $.browser.msie  ||  $remove.css('display') == 'none' ) {
 		callback();
 	}
 	else {
