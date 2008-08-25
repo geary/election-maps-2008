@@ -1294,6 +1294,7 @@ if( mapplet ) {
 			sample: function() {
 				input.value = sampleAddr;
 				this.submit();
+				return false;
 			},
 			
 			submit: function() {
