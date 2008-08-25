@@ -862,9 +862,8 @@ function setVoteHtml() {
 	//		'</a>',
 	//	'</div>'
 	//);
-	var location = formatLocation( vote.info, 'vote-icon-50.png', 'Your Voting Location' );
 	var extra = S(
-		'<div style="padding-top:0.5em;">',
+		'<div>',
 			'<a xtarget="_blank" href="http://maps.google.com/maps?f=d&saddr=', encodeURIComponent(home.info.address), '&daddr=', encodeURIComponent(vote.info.address), '&hl=en&mra=ls&ie=UTF8&iwloc=A&iwstate1=dir">',
 				'Get directions',
 			'</a>',
@@ -872,22 +871,25 @@ function setVoteHtml() {
 			//'<a xtarget="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=polling+places+loc+', encodeURIComponent( a.address.replace( / /g, '+' ) ), '&ie=UTF8&z=15&iwloc=A&iwstate1=stp">',
 			//	'Send',
 			//'</a>',
-		'</div>',
-		electionInfo(),
+		'</div>'
+	);
+	var footer = S(
 		'<div style="padding-top:0.5em; line-height:1.2em; color:gray; font-size:80%;">',
 			'This is a voting location for the US election on November 4, 2008. ',
 			'Please check with your state or local election officials to verify your voting location.',
 		'</div>'
 	);
+	var location = formatLocation( vote.info, 'vote-icon-50.png', 'Your Voting Location', extra );
 	if( mapplet ) $title.append( S(
 		'<div style="padding-top:0.5em;">',
 			location,
+			electionInfo(),
 		'</div>'
 	));
 	vote.html = S(
 		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
 			location,
-			extra,
+			footer,
 		'</div>'
 	);
 }
@@ -963,7 +965,7 @@ function initMap( a, m ) {
 	spin( false );
 }
 
-function formatLocation( info, icon, title ) {
+function formatLocation( info, icon, title, extra ) {
 	return S(
 		'<div style="font-weight:bold; font-size:110%;">',
 			title,
@@ -981,6 +983,7 @@ function formatLocation( info, icon, title ) {
 						'<div>',
 							info.city, ', ', info.state.abbr, ' ', info.zip,
 						'</div>',
+						extra,
 					'</td>',
 				'</tr>',
 			'</table>',
@@ -1109,7 +1112,7 @@ function formatHome( extra ) {
 	return S(
 		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
 			formatLocation( home.info, 'home-icon-50.png', 'Your Home' ),
-			extra ? electionInfo() : '',
+			//extra ? electionInfo() : '',
 		'</div>'
 	);
 }
@@ -1142,13 +1145,12 @@ function sorryHtml() {
 	return S(
 		'<div>',
 			'<div style="padding-top:0.5em;">',
-				'Sorry, we did not find a voting place for:<br />',
-				'<strong>', formatAddress(window.currentAddress), '</strong>.',
+				'Sorry, we did not find your voting place.',
 			'</div>',
 			'<div style="padding-top:0.5em;">',
 				'We are working to provide this data soon. Until then, please check with your state or local election officials to verify your voting location.',
 			'</div>',
-			//electionInfo(),
+			electionInfo(),
 			//'<div style="padding-top:0.5em;">',
 			//	'Suggestions:',
 			//'</div>',
