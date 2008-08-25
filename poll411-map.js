@@ -643,7 +643,7 @@ if( mapplet ) {
 			'#PollingPlaceSearch, #PollingPlaceSearch td { font-size:10pt; margin:0; padding:0; }',
 			'#PollingPlaceSearch { background-color:#EEE; border:1px solid #AAA; margin:0; padding:6px; width:95%; }',
 			'.PollingPlaceSearchForm { margin:0; padding:0; }',
-			'.PollingPlaceSearchTitle { /*font-weight:bold;*/ /*font-size:110%;*/ padding-bottom:4px; }',
+			'.PollingPlaceSearchTitle { /*font-weight:bold;*/ /*font-size:110%;*/ /*padding-bottom:4px;*/ }',
 			//'/*.PollingPlaceSearchSpinner { float:right; margin-right:4px; width:16px; height:16px; background-image:url(spinner16.gif); background-position:1000px 0px; background-repeat:no-repeat; }*/',
 			//'.PollingPlaceSearchLabelBox { position:relative; float:left; margin-right:6px; }',
 			'.PollingPlaceSearchLabel { color:#777; cursor: text; }',
@@ -662,9 +662,11 @@ if( mapplet ) {
 if( mapplet ) {
 	document.write(
 		'<div id="PollingPlaceSearch">',
-			'<div class="PollingPlaceSearchTitle">',
-				'Find your voting location, registration information and more. ',
-				'Enter your <strong>home</strong>&nbsp;address:',
+			'<div class="PollingPlaceSearchTitle removehelp">',
+				'<div style="margin-bottom:4px;">',
+					'Find your voting location, registration information and more. ',
+					'Enter your <strong>home</strong>&nbsp;address:',
+				'</div>',
 			'</div>',
 			'<!--<div id="PollingPlaceSearchSpinner" class="PollingPlaceSearchSpinner">-->',
 			'<!--</div>-->',
@@ -686,7 +688,7 @@ if( mapplet ) {
 					'</tr>',
 				'</table>',
 				'<div>',
-					'<label id="PollingPlaceSearchLabel" for="PollingPlaceSearchInput" class="PollingPlaceSearchLabel">',
+					'<label id="PollingPlaceSearchLabel" for="PollingPlaceSearchInput" class="PollingPlaceSearchLabel removehelp">',
 						'Example: 1600 Pennsylvania Ave 20006',
 					'</label>',
 				'</div>',
@@ -1051,6 +1053,19 @@ function getJSON( url, callback ) {
 	}
 }
 
+function closehelp( callback ) {
+	var $remove = $('.removehelp');
+	if( $remove.css('display') == 'none' ) {
+		callback();
+	}
+	else {
+		var count = $remove.length;
+		$remove.slideUp( 350, function() {
+			if( --count == 0 ) callback();
+		});
+	}
+}
+
 function submit( addr ) {
 	home = {};
 	vote = {};
@@ -1058,34 +1073,35 @@ function submit( addr ) {
 	currentAddress = addr;
 	$title.empty();
 	$map.empty();
-	
-	geocode( addr, function( geo ) {
-		var places = geo && geo.Placemark;
-		var n = places && places.length;
-		if( n == 0 ) {
-			spin( false );
-			$title.html( 'No match for that address.' );
-		}
-		else if( n == 1 ) {
-			findPrecinct( places[0] );
-		}
-		else {
-			if( places ) {
-				$title.append( S(
-					'<div style="padding-top:0.5em;">',
-						'<strong>Select your address:</strong>',
-					'</div>'
-				));
-				$title.append( formatPlaces(places) );
-				$('input:radio',$title).click( function() {
-					spin( true );
-					findPrecinct( places[ this.id.split('-')[1] ] );
-				});
+	closehelp( function() {
+		geocode( addr, function( geo ) {
+			var places = geo && geo.Placemark;
+			var n = places && places.length;
+			if( n == 0 ) {
+				spin( false );
+				$title.html( 'No match for that address.' );
+			}
+			else if( n == 1 ) {
+				findPrecinct( places[0] );
 			}
 			else {
-				$title.append( sorryHtml() );
+				if( places ) {
+					$title.append( S(
+						'<div style="padding-top:0.5em;">',
+							'<strong>Select your address:</strong>',
+						'</div>'
+					));
+					$title.append( formatPlaces(places) );
+					$('input:radio',$title).click( function() {
+						spin( true );
+						findPrecinct( places[ this.id.split('-')[1] ] );
+					});
+				}
+				else {
+					$title.append( sorryHtml() );
+				}
 			}
-		}
+		});
 	});
 }
 
