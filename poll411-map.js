@@ -934,7 +934,9 @@ function initMap( a, m ) {
 		GEvent.addListener( map, 'load', ready );
 	
 	// Initial position with marker centered
-	var latlng = vote.info ? vote.info.latlng : home.info.latlng, center = latlng;
+	var latlng = vote.info ? vote.info.latlng : home.info ? home.info.latlng : null;
+	if( ! latlng ) return;
+	var center = latlng;
 	//var width = $jsmap.width(), height = $jsmap.height();
 	map.setCenter( latlng, a.zoom );
 	if( ! mapplet ) {
@@ -1119,6 +1121,7 @@ function formatHome( extra ) {
 
 function findPrecinct( place ) {
 	home.info = mapInfo( place );
+	if( ! home.info ) { sorry(); return; }
 	var address = currentAddress = place.address;
 	$title.html( formatHome() );
 	
@@ -1150,7 +1153,7 @@ function sorryHtml() {
 			'<div style="padding-top:0.5em;">',
 				'We are working to provide this data soon. Until then, please check with your state or local election officials to verify your voting location.',
 			'</div>',
-			electionInfo(),
+			home.info ? electionInfo() : '',
 			//'<div style="padding-top:0.5em;">',
 			//	'Suggestions:',
 			//'</div>',
@@ -1213,6 +1216,7 @@ function formatPlaces( places ) {
 
 function mapInfo( place ) {
 	var area = place.AddressDetails.Country.AdministrativeArea;
+	if( ! area ) return null;
 	var state = stateByAbbr( area.AdministrativeAreaName );
 	var sub = area.SubAdministrativeArea || area;
 	var locality = sub.Locality;
