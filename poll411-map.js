@@ -722,7 +722,7 @@ var available = S(
 			'Voting locations are currently only available for DC, DE, NH, NM, OH, SC, and VT. ',
 		'</div>',
 		'<div style="margin-top:0.5em;">',
-			'Registration information is available for all states.',
+			'Voter registration information is available for all states.',
 		'</div>',
 	'</div>'
 );
