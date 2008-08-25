@@ -827,21 +827,21 @@ function electionInfo() {
 	return S(
 		'<div style="padding-top:1em;">',
 			election( 'status', 'Are you registered to vote?' ),
-			election( 'info', 'How to register in %' ),
+			election( 'info', 'How to register in %', true ),
 			election( 'absentee', 'Get an absentee ballot' ),
 			election( 'elections', '% election website' ),
 		'</div>',
 		local()
 	);
 	
-	function election( key, text ) {
+	function election( key, text, prefix ) {
 		var state = home.info.state;
 		var url = state.election[key];
 		return ! url ? '' : S(
 			'<div>',
 				'<a target="_blank" href="', url, '">',
 					text.replace( '%', S(
-						state.prefix ? state.prefix  + ' ' : '',
+						prefix && state.prefix ? state.prefix  + ' ' : '',
 						state.name
 					) ),
 				'</a>',
