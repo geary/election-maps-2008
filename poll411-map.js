@@ -693,11 +693,11 @@ if( mapplet ) {
 					'</table>',
 				'</form>',
 			'</div>',
-			'<div class="removehelp">',
-				'<label id="PollingPlaceSearchLabel" for="PollingPlaceSearchInput" class="PollingPlaceSearchLabel">',
-					'Example: 1600 Pennsylvania Ave 20006',
-				'</label>',
-			'</div>',
+			//'<div class="removehelp">',
+			//	'<label id="PollingPlaceSearchLabel" for="PollingPlaceSearchInput" class="PollingPlaceSearchLabel">',
+			//		'Example: 1600 Pennsylvania Ave 20006',
+			//	'</label>',
+			//'</div>',
 		'</div>'
 	);
 }
