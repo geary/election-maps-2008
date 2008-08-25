@@ -637,6 +637,7 @@ document.write(
 		'#spinner { filter:alpha(opacity=30); }',
 		'#title { margin-bottom:4px; }',
 		'#title, #mapbox { overflow: auto; }',
+		'.orange { padding:6px; width:95%; background-color:#FFEAC0; border:1px solid #FFBA90; }',
 	'</style>'
 );
 
@@ -719,14 +720,23 @@ else {
 		);
 }
 
+var helpUsAdd = S(
+	'<div style="margin-top:0.5em;">',
+		'<a target="_blank" href="https://spreadsheets.google.com/viewform?key=pjlpIDhF6TGdUGD-5lOSJCQ">',
+			'Help us add your voting location',
+		'</a>',
+	'</div>'
+);
+
 var available = S(
-	'<div style="padding:6px; width:95%; background-color:#FFEAC0; border:1px solid #FFBA90;">',
+	'<div class="orange">',
 		'<div>',
 			'Voting locations are currently available for DC, DE, NH, NM, OH, SC, and VT. ',
 		'</div>',
 		'<div style="margin-top:0.5em;">',
-			'Voter registration information is available for all states.',
+			'Voter registration information is available for all states. ',
 		'</div>',
+		helpUsAdd,
 	'</div>'
 );
 
@@ -813,7 +823,7 @@ function linkto( addr ) {
 
 function electionInfo() {
 	return S(
-		'<div style="padding-top:0.5em;">',
+		'<div style="padding-top:1em;">',
 			election( 'status', 'Are you registered to vote?' ),
 			election( 'info', 'How to register in %' ),
 			election( 'absentee', 'Get an absentee ballot' ),
@@ -1163,21 +1173,16 @@ function sorry() {
 function sorryHtml() {
 	return S(
 		'<div>',
-			'<div style="padding-top:0.5em;">',
-				'Sorry, we did not find your voting place.',
-			'</div>',
-			'<div style="padding-top:0.5em;">',
-				'We are working to provide this data soon. Until then, please check with your state or local election officials to verify your voting location.',
+			'<div class="orange">',
+				'<div>',
+					'Sorry, we did not find your voting place.',
+				'</div>',
+				'<div style="padding-top:0.5em;">',
+					'We are working to provide this data soon. Please check with your state or local election officials to verify your voting location.',
+				'</div>',
+				helpUsAdd,
 			'</div>',
 			home.info ? electionInfo() : '',
-			//'<div style="padding-top:0.5em;">',
-			//	'Suggestions:',
-			//'</div>',
-			//'<ul>',
-			//	'<li>Make sure your address includes a street and number.</li>',
-			//	'<li>Make sure all street and city names are spelled correctly.</li>',
-			//	'<li>Make sure your address includes a city and state, or a zip code.</li>',
-			//'</ul>',
 		'</div>'
 	);
 }
