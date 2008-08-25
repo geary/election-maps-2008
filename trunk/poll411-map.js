@@ -1262,18 +1262,18 @@ var $window = $(window), $title = $('#title'), $map = $('#mapbox'), $spinner = $
 if( mapplet ) {
 	(function() {
 		function e( id ) { return document.getElementById('PollingPlaceSearch'+id); }
-		var /*spinner = e('Spinner'),*/ label = e('Label'), input = e('Input'), button = e('Button');
+		var /*spinner = e('Spinner'),*/ /*label = e('Label'),*/ input = e('Input'), button = e('Button');
 		button.disabled = false;
 		
 		window.PollingPlaceSearch = {
 			
 			focus: function() {
-				label.style.textIndent = '-1000px';
+				//label.style.textIndent = '-1000px';
 			},
 			
 			blur: function() {
-				if( input.value === '' )
-					label.style.textIndent = '0px';
+				//if( input.value === '' )
+				//	label.style.textIndent = '0px';
 			},
 			
 			submit: function() {
