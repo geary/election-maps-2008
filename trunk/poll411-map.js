@@ -956,10 +956,17 @@ function initMap( a, m ) {
 	if( ! mapplet )
 		GEvent.addListener( map, 'load', ready );
 	
-	// Initial position with marker centered
-	var latlng = vote.info ? vote.info.latlng : home.info ? home.info.latlng : null;
-	if( ! latlng ) return;
-	var center = latlng;
+	// Initial position with marker centered on home, or halfway between home and voting place
+	var hi = home.info, vi = vote.info;
+	if( ! hi ) return;
+	var latlng = hi.latlng;
+	if( vi ) {
+		latlng = new GLatLng(
+			( hi.lat + vi.lat ) / 2,
+			( hi.lng + vi.lng ) / 2
+		);
+	}
+	//var center = latlng;
 	//var width = $jsmap.width(), height = $jsmap.height();
 	map.setCenter( latlng, a.zoom );
 	if( ! mapplet ) {
