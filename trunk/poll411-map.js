@@ -696,10 +696,12 @@ if( mapplet ) {
 				'</form>',
 			'</div>',
 			'<div class="removehelp">',
-				'Example: ',
-				'<a href="#" onclick="return PollingPlaceSearch.sample();">',
-					sampleAddr,
-				'</a>',
+				'<div style="margin-top:0.25em;">',
+					'Example: ',
+					'<a href="#" onclick="return PollingPlaceSearch.sample();">',
+						sampleAddr,
+					'</a>',
+				'</div>',
 			'</div>',
 		'</div>'
 	);
