@@ -894,7 +894,7 @@ function setVoteHtml() {
 		'</div>'
 	);
 	var footer = S(
-		'<div style="padding-top:0.5em; line-height:1.2em; color:gray; font-size:80%;">',
+		'<div style="padding-top:1em; line-height:1.2em; color:gray; font-size:80%;">',
 			'This is a voting location for the US election on November 4, 2008. ',
 			'Please check with your state or local election officials to verify your voting location.',
 		'</div>'
