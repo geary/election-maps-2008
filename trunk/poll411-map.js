@@ -1,3 +1,8 @@
+// Copyright 2008 Michael Geary
+// http://mg.to/
+// Free Beer and Free Speech License (MIT+GPL)
+// http://freebeerfreespeech.org/
+
 var opt = window.mapplet ? mapplet : {};
 
 var baseUrl = opt.baseUrl || 'http://poll411.s3.amazonaws.com/';
