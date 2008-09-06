@@ -1247,7 +1247,7 @@ function findPrecinct( place ) {
 		home.leo = leo;
 		lookup( address, function( poll ) {
 			if( poll.errorcode != 0 ) sorry();
-			else geocode( poll.address[0], function( geo ) {
+			else geocode( poll.address[0] || poll.locations[0].address, function( geo ) {  // TEMP FORMAT CHANGE
 				var places = geo && geo.Placemark;
 				if( ! places  ||  places.length != 1 ) sorry();
 				else setMap( vote.info = mapInfo(places[0]) );
