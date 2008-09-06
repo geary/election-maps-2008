@@ -62,7 +62,7 @@ Array.prototype.mapjoin = function( fun, delim ) {
 
 function S() {
 	return Array.prototype.join.call( arguments, '' );
-};
+}
 
 function htmlEscape( str ) {
 	var div = document.createElement( 'div' );
@@ -637,6 +637,11 @@ var key = {
 }[location.host];
 
 document.write(
+	'<script type="text/javascript" src="http://www.google.com/jsapi">',
+	'</script>'
+);
+
+document.write(
 	'<style type="text/css">',
 		'body.gadget { margin:0; padding:0; }',
 		'#wrapper, #wrapper * { font-family:Arial,sans-serif; font-size:10pt; }',
@@ -644,7 +649,9 @@ document.write(
 		'#spinner { filter:alpha(opacity=30); }',
 		'#title { margin-bottom:4px; }',
 		'#title, #mapbox { overflow: auto; }',
+		'.heading { font-weight:bold; font-size:110%; }',
 		'.orange { padding:6px; width:95%; background-color:#FFEAC0; border:1px solid #FFBA90; }',
+		'.pink { padding:6px; width:95%; background-color:#FFD0D0; border:1px solid #FF9090; }',
 	'</style>'
 );
 
@@ -830,28 +837,86 @@ function linkto( addr ) {
 	return S( '<a target="_blank" href="', u, '">', a, '</a>' );
 }
 
-function electionInfo() {
+function expander( link, body ) {
 	return S(
-		'<div style="padding-top:1em;">',
+		'<div>',
+			'<div>',
+				'<a href="#" onclick="return expandit(this);">',
+					link,
+				'</a>',
+			'</div>',
+			'<div style="display:none; margin:8px;">',
+				body,
+			'</div>',
+		'</div>'
+	);
+}
+
+expandit = function( node ) {
+	 $(node).parent().next().slideDown('slow');
+	 return false;
+}
+
+function electionInfo( a ) {
+	a = a || {};
+	var state = home.info.state;
+	if( ! state  ||  ! state.election ) return '';
+	
+	var estimate = a.estimate ? expander(
+		S(
+			'<div style="margin-top:0.5em; font-size:90%;">',
+				'Not your home state?',
+			'</div>'
+		),
+		S(
+			'<div class="pink">',
+				'<div>',
+					'Sorry we got your location wrong!',
+				'</div>',
+				'<div style="margin-top:0.5em;">',
+					'It was our best guess based on your computer\'s ',
+					'<a target="_blank" href="http://www.google.com/search?q=ip+address">',
+						'IP address',
+					'</a>',
+				'</div>',
+				'<div style="margin-top:0.5em;">',
+					'Enter your home address in the box above and click Search for more accurate information.',
+				'</div>',
+			'</div>'
+		)
+	) : '';
+	return S(
+		'<div>',
+			'<div class="heading" style="margin-bottom:4px;">',
+				fix('%S Voter Info'),
+			'</div>',
 			election( 'status', 'Are you registered to vote?' ),
-			election( 'info', 'How to register in %', true ),
+			election( 'info', 'How to register in %S', true ),
 			election( 'absentee', 'Get an absentee ballot' ),
-			election( 'elections', '% election website' ),
-		'</div>',
-		local()
+			election( 'elections', '%S election website' ),
+			estimate,
+			local(),
+		'</div>'
 	);
 	
+	function fix( text, prefix ) {
+		return( text
+			.replace( '%S', S(
+				prefix && state.prefix ? state.prefix  + ' ' : '',
+				state.name
+			) )
+			//.replace( '%C', S(
+			//	home.info.county // TODO?
+			//) )
+		);
+	}
+	
 	function election( key, text, prefix ) {
-		var state = home.info.state;
-		if( ! state  ||  ! state.election ) return '';
 		var url = state.election[key];
 		return ! url ? '' : S(
 			'<div>',
 				'<a target="_blank" href="', url, '">',
-					text.replace( '%', S(
-						prefix && state.prefix ? state.prefix  + ' ' : '',
-						state.name
-					) ),
+					fix( text, prefix ),
 				'</a>',
 			'</div>'
 		);
@@ -870,9 +935,9 @@ function electionInfo() {
 		remove( 'County' );
 		return S(
 			'<div style="padding-top:0.5em;">',
-				'<div>',
+				'<div class="heading" style="padding-bottom:4px">',
 					county, ' County ',
-					title || ' Election Information',
+					title || ' Voter Info',
 				'</div>',
 				leo.phone ? S( '<div>', 'Phone: ', leo.phone, '</div>' ) : '',
 				leo.email ? S( '<div>', 'Email: ', linkto(leo.email), '</div>' ) : '',
@@ -909,9 +974,14 @@ function setVoteHtml() {
 	);
 	var location = formatLocation( vote.info, 'vote-icon-50.png', 'Your Voting Location', extra );
 	if( mapplet ) $title.append( S(
-		'<div style="padding-top:0.5em;">',
-			location,
+		'<div>',
 			electionInfo(),
+			'<div style="padding-top:1em">',
+			'</div>',
+			formatHome(),
+			'<div style="padding-top:0.75em">',
+			'</div>',
+			location,
 		'</div>'
 	));
 	vote.html = S(
@@ -1004,7 +1074,7 @@ function initMap( a, m ) {
 
 function formatLocation( info, icon, title, extra ) {
 	return S(
-		'<div style="font-weight:bold; font-size:110%;">',
+		'<div class="heading">',
 			title,
 		'</div>',
 		'<div style="padding-top:0.5em;">',
@@ -1106,7 +1176,7 @@ function closehelp( callback ) {
 	}
 }
 
-function submit( addr ) {
+function submit( addr, estimate ) {
 	home = {};
 	vote = {};
 	map && map.clearOverlays();
@@ -1166,7 +1236,6 @@ function findPrecinct( place ) {
 	home.info = mapInfo( place );
 	if( ! home.info ) { $title.empty(); sorry(); return; }
 	var address = currentAddress = place.address;
-	$title.html( formatHome() );
 	
 	getleo( home.info, function( leo ) {
 		home.leo = leo;
@@ -1190,7 +1259,8 @@ function sorry() {
 function sorryHtml() {
 	return S(
 		'<div>',
-			'<div class="orange">',
+			home.info ? electionInfo() : '',
+			'<div class="orange" style="margin-top:1em;">',
 				'<div>',
 					'Sorry, we did not find your voting place.',
 				'</div>',
@@ -1199,7 +1269,6 @@ function sorryHtml() {
 				'</div>',
 				helpUsAdd,
 			'</div>',
-			home.info ? electionInfo() : '',
 		'</div>'
 	);
 }
@@ -1288,6 +1357,20 @@ function formatMap( a ) {
 }
 
 var $window = $(window), $title = $('#title'), $map = $('#mapbox'), $spinner = $('#spinner');
+
+(function() {
+	var loc = google.loader && google.loader.ClientLocation;
+	var address = loc && loc.address;
+	var state = stateByAbbr( address && address.region );
+	if( state ) {
+		home = { info:{ state:state }, leo:{} }
+		$title.append(S(
+			'<div class="orange" style="margin-bottom:6px;">',
+				electionInfo({ estimate:true }),
+			'</div>'
+		));
+	}
+})();
 
 if( mapplet ) {
 	(function() {
