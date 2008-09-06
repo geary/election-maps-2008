@@ -756,6 +756,17 @@ var available = S(
 	'</div>'
 );
 
+var locationWarning = S(
+	'<div style="padding-top:1em; xline-height:1.2em; xcolor:gray; xfont-size:80%;">',
+		'<span style="color:red; font-weight:bold;">',
+			'Important&nbsp; ',
+		'</span>',
+		'Verify your voting location with your local election officials. ',
+		'This location is an estimate. ',
+		'It may be incorrect and may change before election day.',
+	'</div>'
+);
+
 writeBody = function() {
 	document.write(
 		'<div id="spinner">',
@@ -966,12 +977,6 @@ function setVoteHtml() {
 			//'</a>',
 		'</div>'
 	);
-	var footer = S(
-		'<div style="padding-top:1em; line-height:1.2em; color:gray; font-size:80%;">',
-			'This is a voting location for the US election on November 4, 2008. ',
-			'Please check with your state or local election officials to verify your voting location.',
-		'</div>'
-	);
 	var location = formatLocation( vote.info, 'vote-icon-50.png', 'Your Voting Location', extra );
 	if( mapplet ) $title.append( S(
 		'<div>',
@@ -982,12 +987,13 @@ function setVoteHtml() {
 			'<div style="padding-top:0.75em">',
 			'</div>',
 			location,
+			locationWarning,
 		'</div>'
 	));
 	vote.html = S(
 		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
 			location,
-			footer,
+			locationWarning,
 		'</div>'
 	);
 }
@@ -1074,7 +1080,7 @@ function initMap( a, m ) {
 
 function formatLocation( info, icon, title, extra ) {
 	return S(
-		'<div class="heading">',
+		'<div style="font-weight:bold; font-size:110%;">',
 			title,
 		'</div>',
 		'<div style="padding-top:0.5em;">',
