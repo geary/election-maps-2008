@@ -739,10 +739,10 @@ else {
 var available = S(
 	'<div class="orange">',
 		'<div>',
-			'Voting locations are currently available for DC, DE, NH, NM, OH, SC, and VT. ',
+			'Voter registration information is available for all states.',
 		'</div>',
 		'<div style="margin-top:0.5em;">',
-			'Voter registration information is available for all states. ',
+			'Voting locations will be available by mid-October.',
 		'</div>',
 	'</div>'
 );
