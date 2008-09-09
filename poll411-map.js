@@ -761,6 +761,15 @@ var locationWarning = S(
 		'<span style="color:red; font-weight:bold;">',
 			'Important&nbsp; ',
 		'</span>',
+		'To ensure that this voting location is correct, please verify it with your local election officials.',
+	'</div>'
+);
+
+var interpolatedLocationWarning = S(
+	'<div style="padding-top:1em; xline-height:1.2em; xcolor:gray; xfont-size:80%;">',
+		'<span style="color:red; font-weight:bold;">',
+			'Important&nbsp; ',
+		'</span>',
 		'Verify your voting location with your local election officials. ',
 		'This location is an estimate. ',
 		'It may be incorrect and may change before election day.',
