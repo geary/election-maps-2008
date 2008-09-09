@@ -736,14 +736,6 @@ else {
 		);
 }
 
-var helpUsAdd = S(
-	'<div style="margin-top:0.5em;">',
-		'<a target="_blank" href="https://spreadsheets.google.com/viewform?key=pjlpIDhF6TGdUGD-5lOSJCQ">',
-			'Help us add your voting location',
-		'</a>',
-	'</div>'
-);
-
 var available = S(
 	'<div class="orange">',
 		'<div>',
@@ -752,7 +744,6 @@ var available = S(
 		'<div style="margin-top:0.5em;">',
 			'Voter registration information is available for all states. ',
 		'</div>',
-		helpUsAdd,
 	'</div>'
 );
 
@@ -1282,7 +1273,6 @@ function sorryHtml() {
 				'<div style="padding-top:0.5em;">',
 					'We are working to provide this data soon. Please check with your state or local election officials to verify your voting location.',
 				'</div>',
-				helpUsAdd,
 			'</div>',
 		'</div>'
 	);
