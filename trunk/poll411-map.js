@@ -1375,16 +1375,17 @@ var $window = $(window), $title = $('#title'), $map = $('#mapbox'), $spinner = $
 
 (function() {
 	var loc = google.loader && google.loader.ClientLocation;
+	if( ! loc ) return;
 	var address = loc && loc.address;
-	var state = stateByAbbr( address && address.region );
-	if( state ) {
-		home = { info:{ state:state }, leo:{} }
-		$title.append(S(
-			'<div class="orange" style="margin-bottom:6px;">',
-				electionInfo({ estimate:true }),
-			'</div>'
-		));
-	}
+	if( ! address  ||  address.country != 'USA' ) return;
+	var state = stateByAbbr( address.region );
+	if( ! state ) return;
+	home = { info:{ state:state }, leo:{} };
+	$title.append(S(
+		'<div class="orange" style="margin-bottom:6px;">',
+			electionInfo({ estimate:true }),
+		'</div>'
+	));
 })();
 
 if( mapplet ) {
