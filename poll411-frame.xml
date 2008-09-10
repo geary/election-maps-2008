@@ -39,7 +39,7 @@
 		);
 	}
 	
-	script( mapplet.baseUrl + 'poll411-map.js', 60 );
+	script( gadget.baseUrl + 'poll411-map.js', 60 );
 	
 </script>
 
