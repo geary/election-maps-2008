@@ -80,451 +80,58 @@ function cacheUrl( url, cache, always ) {
 }
 
 var states = [
-	{
-		'abbr': 'AL',
-		'name': 'Alabama',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'AK',
-		'name': 'Alaska',
-		'parties': {
-			'dem': { 'date': '02-05', 'type': 'caucus' },
-			'gop': { 'date': '02-05', 'type': 'caucus' }
-		}
-	},
-	{
-		'abbr': 'AZ',
-		'name': 'Arizona',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'AR',
-		'name': 'Arkansas',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'CA',
-		'name': 'California',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'CO',
-		'name': 'Colorado',
-		'parties': {
-			'dem': { 'date': '02-05', 'type': 'caucus' },
-			'gop': { 'date': '02-05', 'type': 'caucus' }
-		}
-	},
-	{
-		'abbr': 'CT',
-		'name': 'Connecticut',
-		'votesby': 'town',
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'DE',
-		'name': 'Delaware',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'DC',
-		'name': 'District of Columbia',
-		'prefix': 'the',
-		'parties': {
-			'dem': { 'date': '02-12' },
-			'gop': { 'date': '02-12' }
-		}
-	},
-	{
-		'abbr': 'FL',
-		'name': 'Florida',
-		'parties': {
-			'dem': { 'date': '01-29' },
-			'gop': { 'date': '01-29' }
-		}
-	},
-	{
-		'abbr': 'GA',
-		'name': 'Georgia',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'HI',
-		'name': 'Hawaii',
-		'parties': {
-			'dem': { 'date': '02-19', 'type': 'caucus' },
-			'gop': { 'date': '01-25', 'type': 'caucus' }
-		}
-	},
-	{
-		'abbr': 'ID',
-		'name': 'Idaho',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '02-05', 'type': 'caucus' },
-			'gop': { 'date': '05-27' }
-		}
-	},
-	{
-		'abbr': 'IL',
-		'name': 'Illinois',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'IN',
-		'name': 'Indiana',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '05-06' },
-			'gop': { 'date': '05-06' }
-		}
-	},
-	{
-		'abbr': 'IA',
-		'name': 'Iowa',
-		'parties': {
-			'dem': { 'date': '01-03', 'type': 'caucus' },
-			'gop': { 'date': '01-03', 'type': 'caucus' }
-		}
-	},
-	{
-		'abbr': 'KS',
-		'name': 'Kansas',
-		'votesby': 'district',
-		'parties': {
-			'dem': { 'date': '02-05', 'type': 'caucus' },
-			'gop': { 'date': '02-09', 'type': 'caucus' }
-		}
-	},
-	{
-		'abbr': 'KY',
-		'name': 'Kentucky',
-		'parties': {
-			'dem': { 'date': '05-20' },
-			'gop': { 'date': '05-20' }
-		}
-	},
-	{
-		'abbr': 'LA',
-		'name': 'Louisiana',
-		'parties': {
-			'dem': { 'date': '02-09' },
-			'gop': { 'date': '01-22', 'type': 'caucus' }
-		}
-	},
-	{
-		'abbr': 'ME',
-		'name': 'Maine',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '02-10', 'type': 'caucus' },
-			'gop': { 'date': '02-01', 'type': 'caucus' }
-		}
-	},
-	{
-		'abbr': 'MD',
-		'name': 'Maryland',
-		'parties': {
-			'dem': { 'date': '02-12' },
-			'gop': { 'date': '02-12' }
-		}
-	},
-	{
-		'abbr': 'MA',
-		'name': 'Massachusetts',
-		'votesby': 'town',
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'MI',
-		'name': 'Michigan',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '01-15' },
-			'gop': { 'date': '01-15' }
-		}
-	},
-	{
-		'abbr': 'MN',
-		'name': 'Minnesota',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '02-05', 'type': 'caucus' },
-			'gop': { 'date': '02-05', 'type': 'caucus' }
-		}
-	},
-	{
-		'abbr': 'MS',
-		'name': 'Mississippi',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '03-11' },
-			'gop': { 'date': '03-11' }
-		}
-	},
-	{
-		'abbr': 'MO',
-		'name': 'Missouri',
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'MT',
-		'name': 'Montana',
-		'parties': {
-			'dem': { 'date': '06-03' },
-			'gop': { 'date': '02-05', 'type': 'caucus' }
-		}
-	},
-	{
-		'abbr': 'NE',
-		'name': 'Nebraska',
-		'votesby': 'district',
-		'parties': {
-			'dem': { 'date': '02-09', 'type': 'caucus' },
-			'gop': { 'date': '05-13' }
-		}
-	},
-	{
-		'abbr': 'NV',
-		'name': 'Nevada',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '01-19', 'type': 'caucus' },
-			'gop': { 'date': '01-19', 'type': 'caucus' }
-		}
-	},
-	{
-		'abbr': 'NH',
-		'name': 'New Hampshire',
-		'tall': true,
-		'votesby': 'town',
-		'parties': {
-			'dem': { 'date': '01-08' },
-			'gop': { 'date': '01-08' }
-		}
-	},
-	{
-		'abbr': 'NJ',
-		'name': 'New Jersey',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'NM',
-		'name': 'New Mexico',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '02-05', 'type': 'caucus', 'votesby': 'district' },
-			'gop': { 'date': '06-03', 'shape': 'county' }
-		}
-	},
-	{
-		'abbr': 'NY',
-		'name': 'New York',
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'NC',
-		'name': 'North Carolina',
-		'parties': {
-			'dem': { 'date': '05-06' },
-			'gop': { 'date': '05-06' }
-		}
-	},
-	{
-		'abbr': 'ND',
-		'name': 'North Dakota',
-		'parties': {
-			'dem': { 'date': '02-05', 'type': 'caucus' },
-			'gop': { 'date': '02-05', 'type': 'caucus' }
-		}
-	},
-	{
-		'abbr': 'OH',
-		'name': 'Ohio',
-		'parties': {
-			'dem': { 'date': '03-04' },
-			'gop': { 'date': '03-04' }
-		}
-	},
-	{
-		'abbr': 'OK',
-		'name': 'Oklahoma',
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'OR',
-		'name': 'Oregon',
-		'parties': {
-			'dem': { 'date': '05-20' },
-			'gop': { 'date': '05-20' }
-		}
-	},
-	{
-		'abbr': 'PA',
-		'name': 'Pennsylvania',
-		'parties': {
-			'dem': { 'date': '04-22' },
-			'gop': { 'date': '04-22' }
-		}
-	},
-	{
-		'abbr': 'PR',
-		'name': 'Puerto Rico',
-		'parties': {
-			'dem': { 'date': '06-01' },
-			//'gop': { 'date': '02-24' }
-			'gop': { 'date': 'n/a' }
-		}
-	},
-	{
-		'abbr': 'RI',
-		'name': 'Rhode Island',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '03-04' },
-			'gop': { 'date': '03-04' }
-		}
-	},
-	{
-		'abbr': 'SC',
-		'name': 'South Carolina',
-		'parties': {
-			'dem': { 'date': '01-26' },
-			'gop': { 'date': '01-19' }
-		}
-	},
-	{
-		'abbr': 'SD',
-		'name': 'South Dakota',
-		'parties': {
-			'dem': { 'date': '06-03' },
-			'gop': { 'date': '06-03' }
-		}
-	},
-	{
-		'abbr': 'TN',
-		'name': 'Tennessee',
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'TX',
-		'name': 'Texas',
-		'parties': {
-			'dem': { 'date': '03-04' },
-			'gop': { 'date': '03-04' }
-		}
-	},
-	{
-		'abbr': 'UT',
-		'name': 'Utah',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '02-05' },
-			'gop': { 'date': '02-05' }
-		}
-	},
-	{
-		'abbr': 'VT',
-		'name': 'Vermont',
-		'tall': true,
-		'votesby': 'town',
-		'parties': {
-			'dem': { 'date': '03-04' },
-			'gop': { 'date': '03-04' }
-		}
-	},
-	{
-		'abbr': 'VA',
-		'name': 'Virginia',
-		'parties': {
-			'dem': { 'date': '02-12' },
-			'gop': { 'date': '02-12' }
-		}
-	},
-	{
-		'abbr': 'WA',
-		'name': 'Washington',
-		'parties': {
-			'dem': { 'date': '02-09', 'type': 'caucus' },
-			'gop': { 'date': '02-09', 'type': 'caucus' }
-		}
-	},
-	{
-		'abbr': 'WV',
-		'name': 'West Virginia',
-		'parties': {
-			'dem': { 'date': '05-13' },
-			'gop': { 'date': '05-13' }
-		}
-	},
-	{
-		'abbr': 'WI',
-		'name': 'Wisconsin',
-		'tall': true,
-		'parties': {
-			'dem': { 'date': '02-19' },
-			'gop': { 'date': '02-19' }
-		}
-	},
-	{
-		'abbr': 'WY',
-		'name': 'Wyoming',
-		'parties': {
-			'dem': { 'date': '03-08', 'type': 'caucus' },
-			'gop': { 'date': '01-05', 'type': 'caucus' }
-		}
-	}
+	{ "abbr":"AL", "name":"Alabama", "bounds":[[-88.4711,30.2198],[-84.8892,35.0012]] },
+	{ "abbr":"AK", "name":"Alaska", "bounds":[[172.4613,51.3718],[-129.9863,71.3516]] },
+	{ "abbr":"AZ", "name":"Arizona", "bounds":[[-114.8152,31.3316],[-109.0425,37.0003]] },
+	{ "abbr":"AR", "name":"Arkansas", "bounds":[[-94.6162,33.0021],[-89.7034,36.5019]] },
+	{ "abbr":"CA", "name":"California", "bounds":[[-124.4108,32.5366],[-114.1361,42.0062]] },
+	{ "abbr":"CO", "name":"Colorado", "bounds":[[-109.0480,36.9948],[-102.0430,41.0039]] },
+	{ "abbr":"CT", "name":"Connecticut", "bounds":[[-73.7272,40.9875],[-71.7993,42.0500]] },
+	{ "abbr":"DE", "name":"Delaware", "bounds":[[-75.7865,38.4517],[-75.0471,39.8045]] },
+	{ "abbr":"DC", "name":"District of Columbia", "bounds":[[-77.1174,38.7912],[-76.9093,38.9939]] },
+	{ "abbr":"FL", "name":"Florida", "bounds":[[-87.6003,24.5457],[-80.0312,31.0030]] },
+	{ "abbr":"GA", "name":"Georgia", "bounds":[[-85.6067,30.3567],[-80.8856,35.0012]] },
+	{ "abbr":"HI", "name":"Hawaii", "bounds":[[-159.7644,18.9483],[-154.8078,22.2290]] },
+	{ "abbr":"ID", "name":"Idaho", "bounds":[[-117.2415,41.9952],[-111.0471,49.0002]] },
+	{ "abbr":"IL", "name":"Illinois", "bounds":[[-91.5108,36.9838],[-87.4962,42.5101]] },
+	{ "abbr":"IN", "name":"Indiana", "bounds":[[-88.0275,37.7835],[-84.8070,41.7597]] },
+	{ "abbr":"IA", "name":"Iowa", "bounds":[[-96.6372,40.3795],[-90.1635,43.5014]] },
+	{ "abbr":"KS", "name":"Kansas", "bounds":[[-102.0539,36.9948],[-94.5943,40.0016]] },
+	{ "abbr":"KY", "name":"Kentucky", "bounds":[[-89.4186,36.4964],[-81.9700,39.1198]] },
+	{ "abbr":"LA", "name":"Louisiana", "bounds":[[-94.0412,28.9273],[-88.8162,33.0185]] },
+	{ "abbr":"ME", "name":"Maine", "bounds":[[-71.0818,43.0578],[-66.9522,47.4612]] },
+	{ "abbr":"MD", "name":"Maryland", "bounds":[[-79.4889,37.9149],[-75.0471,39.7223]] },
+	{ "abbr":"MA", "name":"Massachusetts", "bounds":[[-73.4862,41.2668],[-69.9262,42.8880]] },
+	{ "abbr":"MI", "name":"Michigan", "bounds":[[-90.4154,41.6940],[-82.4136,48.1897]] },
+	{ "abbr":"MN", "name":"Minnesota", "bounds":[[-97.2287,43.5014],[-89.4898,49.3836]] },
+	{ "abbr":"MS", "name":"Mississippi", "bounds":[[-91.6532,30.1815],[-88.0987,34.9957]] },
+	{ "abbr":"MO", "name":"Missouri", "bounds":[[-95.7664,35.9980],[-89.1338,40.6096]] },
+	{ "abbr":"MT", "name":"Montana", "bounds":[[-116.0475,44.3613],[-104.0475,49.0002]] },
+	{ "abbr":"NE", "name":"Nebraska", "bounds":[[-104.0530,40.0016],[-95.3063,43.0030]] },
+	{ "abbr":"NV", "name":"Nevada", "bounds":[[-120.0019,35.0012],[-114.0429,42.0007]] },
+	{ "abbr":"NH", "name":"New Hampshire", "bounds":[[-72.5551,42.6963],[-70.7039,45.3033]] },
+	{ "abbr":"NJ", "name":"New Jersey", "bounds":[[-75.5620,38.9336],[-73.8915,41.3599]] },
+	{ "abbr":"NM", "name":"New Mexico", "bounds":[[-109.0480,31.3316],[-103.0014,37.0003]] },
+	{ "abbr":"NY", "name":"New York", "bounds":[[-79.7628,40.5438],[-71.8541,45.0185]] },
+	{ "abbr":"NC", "name":"North Carolina", "bounds":[[-84.3196,33.8455],[-75.5182,36.5895]] },
+	{ "abbr":"ND", "name":"North Dakota", "bounds":[[-104.0475,45.9332],[-96.5606,49.0002]] },
+	{ "abbr":"OH", "name":"Ohio", "bounds":[[-84.8180,38.4243],[-80.5186,41.9788]] },
+	{ "abbr":"OK", "name":"Oklahoma", "bounds":[[-103.0014,33.6374],[-94.4300,37.0003]] },
+	{ "abbr":"OR", "name":"Oregon", "bounds":[[-124.5532,41.9952],[-116.4638,46.2618]] },
+	{ "abbr":"PA", "name":"Pennsylvania", "bounds":[[-80.5186,39.7223],[-74.6966,42.2691]] },
+	{ "abbr":"PR", "name":"Puerto Rico", "bounds":[[-67.2699,17.9350],[-65.2763,18.5156]] },
+	{ "abbr":"RI", "name":"Rhode Island", "bounds":[[-71.8596,41.3216],[-71.1202,42.0171]] },
+	{ "abbr":"SC", "name":"South Carolina", "bounds":[[-83.3392,32.0327],[-78.5414,35.2148]] },
+	{ "abbr":"SD", "name":"South Dakota", "bounds":[[-104.0585,42.4882],[-96.4346,45.9441]] },
+	{ "abbr":"TN", "name":"Tennessee", "bounds":[[-90.3114,34.9847],[-81.6797,36.6771]] },
+	{ "abbr":"TX", "name":"Texas", "bounds":[[-106.6162,25.8383],[-93.5154,36.5019]] },
+	{ "abbr":"UT", "name":"Utah", "bounds":[[-114.0484,37.0003],[-109.0425,42.0007]] },
+	{ "abbr":"VT", "name":"Vermont", "bounds":[[-73.4314,42.7291],[-71.5036,45.0130]] },
+	{ "abbr":"VA", "name":"Virginia", "bounds":[[-83.6733,36.5512],[-75.2443,39.4649]] },
+	{ "abbr":"WA", "name":"Washington", "bounds":[[-124.7285,45.5443],[-116.9183,49.0002]] },
+	{ "abbr":"WV", "name":"West Virginia", "bounds":[[-82.6437,37.2029],[-77.7199,40.6370]] },
+	{ "abbr":"WI", "name":"Wisconsin", "bounds":[[-92.8855,42.4936],[-86.9704,46.9628]] },
+	{ "abbr":"WY", "name":"Wyoming", "bounds":[[-111.0525,40.9984],[-104.0530,45.0021]] }
 ];
 
 var stateUS = {
@@ -615,6 +222,54 @@ stateUrlTabbed.forEach( function( tabbed ) {
 		elections: cols[5]
 	};
 });
+
+// GAsync v2 by Michael Geary
+// Commented version and description at:
+// http://mg.to/2007/06/22/write-the-same-code-for-google-mapplets-and-maps-api
+// Free beer and free speech license. Enjoy!
+
+function GAsync( obj ) {
+	
+	function callback() {
+		args[nArgs].apply( null, results );
+	}
+	
+	function queue( iResult, name, next ) {
+		
+		function ready( value ) {
+			results[iResult] = value;
+			if( ! --nCalls )
+				callback();
+		}
+		
+		var a = [];
+		if( next.join )
+			a = a.concat(next), ++iArg;
+		if( mapplet ) {
+			a.push( ready );
+			obj[ name+'Async' ].apply( obj, a );
+		}
+		else {
+			results[iResult] = obj[name].apply( obj, a );
+		}
+	}
+	
+	//var mapplet = ! window.GBrowserIsCompatible;
+	
+	var args = arguments, nArgs = args.length - 1;
+	var results = [], nCalls = 0;
+	
+	for( var iArg = 1;  iArg < nArgs;  ++iArg ) {
+		var name = args[iArg];
+		if( typeof name == 'object' )
+			obj = name;
+		else
+			queue( nCalls++, name, args[iArg+1] );
+	}
+	
+	if( ! mapplet )
+		callback();
+}
 
 var userAgent = navigator.userAgent.toLowerCase(),
 	msie = /msie/.test( userAgent ) && !/opera/.test( userAgent );
@@ -823,20 +478,6 @@ function url( base, params, delim ) {
 		if( v != null ) a[a.length] = [ p, v ].join('=');
 	}
 	return a.length ? [ base, a.sort().join('&') ].join( delim || '?' ) : base;
-};
-
-function loadMap( a ) {
-	GBrowserIsCompatible() && setTimeout( function() {
-		$jsmap = $('#jsmap');
-		var map = new GMap2( $jsmap[0], {
-			mapTypes: [
-				G_NORMAL_MAP,
-				G_SATELLITE_MAP,
-				G_SATELLITE_3D_MAP
-			]
-		});
-		initMap( a, map );
-	}, 1 );
 }
 
 function linkto( addr ) {
@@ -998,8 +639,7 @@ function setVoteHtml() {
 	);
 }
 
-function initMap( a, m ) {
-	map = m;
+function initMap( a ) {
 	setVoteHtml();
 	
 	function ready() {
@@ -1279,15 +919,12 @@ function sorryHtml() {
 }
 
 function setMap( a ) {
-	if( mapplet ) {
-		initMap( a, new GMap2 );
-	}
-	else {
+	if( ! mapplet ) {
 		a.width = $map.width();
 		$map.height( a.height = $window.height() - $map.offset().top );
 		$map.html( formatMap(a) );
-		loadMap( a );
 	}
+	initMap( a );
 }
 
 function formatAddress( address ) {
@@ -1376,6 +1013,35 @@ var $window = $(window), $title = $('#title'), $map = $('#mapbox'), $spinner = $
 			electionInfo({ estimate:true }),
 		'</div>'
 	));
+	
+	if( mapplet ) {
+		map = new GMap2;
+		zoom();
+	}
+	else {
+		GBrowserIsCompatible() && setTimeout( function() {
+			$jsmap = $('#jsmap');
+			var map = new GMap2( $jsmap[0], {
+				mapTypes: [
+					G_NORMAL_MAP,
+					G_SATELLITE_MAP,
+					G_SATELLITE_3D_MAP
+				]
+			});
+			zoom();
+		}, 1 );
+	}
+	
+	function zoom() {
+		var bounds = state.bounds;
+		bounds = new GLatLngBounds(
+			new GLatLng( bounds[0][1], bounds[0][0] ),
+			new GLatLng( bounds[1][1], bounds[1][0] )
+		);
+		GAsync( map, 'getBoundsZoomLevel', [ bounds ], function( zoom ) {
+			map.setCenter( bounds.getCenter(), zoom );
+		});
+	}
 })();
 
 if( mapplet ) {
