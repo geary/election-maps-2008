@@ -620,7 +620,7 @@ function setVoteHtml() {
 		'</div>'
 	);
 	var location = formatLocation( vote.info, 'vote-icon-50.png', 'Your Voting Location', extra );
-	if( mapplet ) $title.append( S(
+	$title.append( mapplet ? S(
 		'<div>',
 			electionInfo(),
 			'<div style="padding-top:1em">',
@@ -631,7 +631,20 @@ function setVoteHtml() {
 			location,
 			locationWarning,
 		'</div>'
-	));
+	) : S(
+		'<div style="padding-bottom:6px; border-bottom:1px solid #AAA;">',
+			'<table cellpadding="0" cellspacing="0" style="width:100%;">',
+				'<tr>',
+					'<td>',
+						formatHome(),
+					'</td>',
+					'<td>',
+						electionInfo(),
+					'</td>',
+				'</tr>',
+			'</table>',
+		'</div>'
+	) );
 	vote.html = S(
 		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
 			location,
@@ -693,8 +706,12 @@ function initMap( a ) {
 	function go() {
 		setVoteHtml();
 		
-		if( ! mapplet )
+		if( ! mapplet ) {
 			GEvent.addListener( map, 'load', ready );
+			var height = $window.height() - $map.offset().top;
+			$map.height( height );
+			$jsmap.height( height );
+		}
 		
 		// Initial position with marker centered on home, or halfway between home and voting place
 		var hi = home.info, vi = vote.info;
