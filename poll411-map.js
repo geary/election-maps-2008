@@ -632,9 +632,10 @@ function setVoteHtml() {
 			locationWarning,
 		'</div>'
 	) : S(
-		'<div style="padding-bottom:6px; border-bottom:1px solid #AAA;">',
+		// TODO: refactor
+		'<div style="padding:6px 0; border-top:1px solid #AAA; border-bottom:1px solid #AAA;">',
 			'<table cellpadding="0" cellspacing="0" style="width:100%;">',
-				'<tr>',
+				'<tr valign="top">',
 					'<td>',
 						formatHome(),
 					'</td>',
