@@ -302,7 +302,7 @@ document.write(
 	'<style type="text/css">',
 		'body.gadget { margin:0; padding:0; }',
 		'#wrapper, #wrapper * { font-family:Arial,sans-serif; font-size:10pt; }',
-		//'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(', baseUrl, 'spinner.gif); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30; }',
+		'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(', baseUrl, 'spinner.gif); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30; }',
 		'#spinner { filter:alpha(opacity=30); }',
 		'#title { margin-bottom:4px; }',
 		'#title, #mapbox { overflow: auto; }',
@@ -806,27 +806,18 @@ function getleo( info, callback ) {
 }
 
 function lookup( address, callback ) {
-	if( mapplet )
-		var url = S(
-			'http://pollinglocation.apis.google.com/?q=',
-			encodeURIComponent(address)
-		);
-	else
-		var url = S( 'http://s.mg.to/elections/proxy.php?q=', encodeURIComponent(address) );
-	
+	var url = S(
+		'http://pollinglocation.apis.google.com/?q=',
+		encodeURIComponent(address)
+	);
 	getJSON( url, callback );
 }
 
 function getJSON( url, callback ) {
-	if( mapplet ) {
-		_IG_FetchContent( url, function( text ) {
-			var json = eval( '(' + text + ')' );
-			callback( json );
-		});
-	}
-	else {
-		$.getJSON( url + '&callback=?', callback );
-	}
+	_IG_FetchContent( url, function( text ) {
+		var json = eval( '(' + text + ')' );
+		callback( json );
+	});
 }
 
 function closehelp( callback ) {
