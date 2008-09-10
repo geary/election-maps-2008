@@ -633,7 +633,7 @@ function setVoteHtml() {
 		'</div>'
 	) : S(
 		// TODO: refactor
-		'<div style="padding:6px 0; border-top:1px solid #AAA; border-bottom:1px solid #AAA;">',
+		'<div style="padding:6px 0; margin:4px 0 0 0; border-top:1px solid #AAA; border-bottom:1px solid #AAA;">',
 			'<table cellpadding="0" cellspacing="0" style="width:100%;">',
 				'<tr valign="top">',
 					'<td>',
