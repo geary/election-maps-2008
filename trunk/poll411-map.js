@@ -3,7 +3,7 @@
 // Free Beer and Free Speech License (MIT+GPL)
 // http://freebeerfreespeech.org/
 
-var opt = window.mapplet ? mapplet : {};
+var opt = window.gadget ? gadget : window.mapplet ? mapplet : {};
 
 var baseUrl = opt.baseUrl || 'http://poll411.s3.amazonaws.com/';
 var dataUrl = opt.dataUrl || baseUrl;
@@ -283,11 +283,13 @@ var home, vote;
 var key = {
 	'gigapad': 'ABQIAAAAgNQJhbWKFHRJJiHCXotPZxTCDaeoAnk9GZSdGi854AcXbJXoXRS9QqxqDWHL54Twi5thIIANaCUAeA',
 	'gigapad.local': 'ABQIAAAAgNQJhbWKFHRJJiHCXotPZxTM3oEyKJfFfMe3pRkahPyHmmHL_xSjOVWnaIMs0gtUrFuoOJzsQiPnKA',
+	'gmodules.com': 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRTZqGWfQErE9pT-IucjscazSdFnjBSzjqfxm1CQj7RDgG-OoyNfebJK0w',
 	'maps.gmodules.com': 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRTqV_PyyxRizIwUkTfU6T-V7M7btRRpOM29SpcTDh2dojFpfRwpoTTMWw',
 	'mg.to': 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRQjDwyFD3YNj60GgWGUlJCU_q5i9hSSSzj0ergKKMY55eRpMa05FE3Wog',
 	'padlet': 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRSuIOvo2pGs7VouOPMgaUBd9TDiaBTE5gjPTrifBPED7VUFoeKD_Ysmkw',
 	'padlet.local': 'ABQIAAAAgNQJhbWKFHRJJiHCXotPZxTbToHSggDWprRoD6gaXq5geEyxiBTRRmW6BwPHdCzJ2mh90uajjkpAOA',
 	's.mg.to': 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRQ9jbX8zKuYy1oz9F5p7GBNeAnoJRS9Itc8RizuhplTF59tia4NLgrdHQ',
+	'www.gmodules.com': 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRSf0RMTBV-KKR6hvCL9Kx2eVMqFbxQJkQOf-iqm2g6XkyYWJQsN9S97qg',
 	'': ''
 }[location.host];
 
@@ -430,14 +432,13 @@ writeBody = function() {
 			'<div id="title">',
 			'</div>',
 			'<div id="mapbox">',
-				available,
+				mapplet ? available : '',
 			'</div>',
 		'</div>'
 	);
 };
 
-if( mapplet )
-	writeBody();
+writeBody();
 
 if( mapplet ) {
 	document.write(
@@ -640,7 +641,22 @@ function setVoteHtml() {
 }
 
 function initMap( a ) {
-	setVoteHtml();
+	if( mapplet ) {
+		go();
+	}
+	else {
+		GBrowserIsCompatible() && setTimeout( function() {
+			$jsmap = $('#jsmap');
+			map = new GMap2( $jsmap[0], {
+				mapTypes: [
+					G_NORMAL_MAP,
+					G_SATELLITE_MAP,
+					G_SATELLITE_3D_MAP
+				]
+			});
+			go();
+		}, 1 );
+	}
 	
 	function ready() {
 		setTimeout( function() {
@@ -674,48 +690,52 @@ function initMap( a ) {
 		if( a.open ) marker.openInfoWindowHtml( a.html, options );
 	}
 	
-	if( ! mapplet )
-		GEvent.addListener( map, 'load', ready );
-	
-	// Initial position with marker centered on home, or halfway between home and voting place
-	var hi = home.info, vi = vote.info;
-	if( ! hi ) return;
-	var latlng = hi.latlng;
-	if( vi ) {
-		latlng = new GLatLng(
-			( hi.lat + vi.lat ) / 2,
-			( hi.lng + vi.lng ) / 2
-		);
-	}
-	//var center = latlng;
-	//var width = $jsmap.width(), height = $jsmap.height();
-	map.setCenter( latlng, a.zoom );
-	if( ! mapplet ) {
-		// Move map down a bit
-		//var point = map.fromLatLngToDivPixel( latlng );
-		//point = new GPoint(
-		//	point.x /*- width * .075*/,
-		//	point.y - height * .275
-		//);
-		//map.setCenter( map.fromDivPixelToLatLng(point), a.zoom );
-		map.addControl( new GSmallMapControl );
-		map.addControl( new GMapTypeControl );
-		if( localsearch ) {
-			//alert( window.GControl );
-			//debugger;
-			//map.addControl(
-			//	new google.maps.LocalSearch(),
-			//	new GControlPosition( G_ANCHOR_BOTTOM_RIGHT, new GSize(10,20) )
-			//);
-			var gls = new google.maps.LocalSearch();
-			var gs = new GSize(10,20);
-			var gcp = new GControlPosition( G_ANCHOR_BOTTOM_RIGHT, gs )
-			map.addControl( gls, gcp );
+	function go() {
+		setVoteHtml();
+		
+		if( ! mapplet )
+			GEvent.addListener( map, 'load', ready );
+		
+		// Initial position with marker centered on home, or halfway between home and voting place
+		var hi = home.info, vi = vote.info;
+		if( ! hi ) return;
+		var latlng = hi.latlng;
+		if( vi ) {
+			latlng = new GLatLng(
+				( hi.lat + vi.lat ) / 2,
+				( hi.lng + vi.lng ) / 2
+			);
 		}
+		//var center = latlng;
+		//var width = $jsmap.width(), height = $jsmap.height();
+		map.setCenter( latlng, a.zoom );
+		if( ! mapplet ) {
+			// Move map down a bit
+			//var point = map.fromLatLngToDivPixel( latlng );
+			//point = new GPoint(
+			//	point.x /*- width * .075*/,
+			//	point.y - height * .275
+			//);
+			//map.setCenter( map.fromDivPixelToLatLng(point), a.zoom );
+			map.addControl( new GSmallMapControl );
+			map.addControl( new GMapTypeControl );
+			if( localsearch ) {
+				//alert( window.GControl );
+				//debugger;
+				//map.addControl(
+				//	new google.maps.LocalSearch(),
+				//	new GControlPosition( G_ANCHOR_BOTTOM_RIGHT, new GSize(10,20) )
+				//);
+				var gls = new google.maps.LocalSearch();
+				var gs = new GSize(10,20);
+				var gcp = new GControlPosition( G_ANCHOR_BOTTOM_RIGHT, gs )
+				map.addControl( gls, gcp );
+			}
+		}
+		if( mapplet )
+			ready();
+		spin( false );
 	}
-	if( mapplet )
-		ready();
-	spin( false );
 }
 
 function formatLocation( info, icon, title, extra ) {
@@ -810,6 +830,8 @@ function getJSON( url, callback ) {
 }
 
 function closehelp( callback ) {
+	if( ! mapplet )
+		return callback();
 	var $remove = $('.removehelp');
 	if( $.browser.msie  ||  $remove.css('display') == 'none' ) {
 		callback();
@@ -1014,25 +1036,7 @@ var $window = $(window), $title = $('#title'), $map = $('#mapbox'), $spinner = $
 		'</div>'
 	));
 	
-	if( mapplet ) {
-		map = new GMap2;
-		zoom();
-	}
-	else {
-		GBrowserIsCompatible() && setTimeout( function() {
-			$jsmap = $('#jsmap');
-			var map = new GMap2( $jsmap[0], {
-				mapTypes: [
-					G_NORMAL_MAP,
-					G_SATELLITE_MAP,
-					G_SATELLITE_3D_MAP
-				]
-			});
-			zoom();
-		}, 1 );
-	}
-	
-	function zoom() {
+	zoom = function() {
 		var bounds = state.bounds;
 		bounds = new GLatLngBounds(
 			new GLatLng( bounds[0][1], bounds[0][0] ),
@@ -1041,6 +1045,11 @@ var $window = $(window), $title = $('#title'), $map = $('#mapbox'), $spinner = $
 		GAsync( map, 'getBoundsZoomLevel', [ bounds ], function( zoom ) {
 			map.setCenter( bounds.getCenter(), zoom );
 		});
+	}
+	
+	if( mapplet ) {
+		map = new GMap2;
+		zoom();
 	}
 })();
 
@@ -1080,7 +1089,12 @@ if( mapplet ) {
 	})();
 }
 else {
-	submit( decodeURIComponent( location.hash.slice(1) ) );
+	(function() {
+		var p = new _IG_Prefs();
+		function str( key, def ) { return p.getString(key) || ''+def || ''; }
+		var addr = p.getString('address');
+		submit( addr );
+	})();
 }
 
 });
