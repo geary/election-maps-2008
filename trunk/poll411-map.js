@@ -302,8 +302,6 @@ document.write(
 	'<style type="text/css">',
 		'body.gadget { margin:0; padding:0; }',
 		'#wrapper, #wrapper * { font-family:Arial,sans-serif; font-size:10pt; }',
-		'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(', baseUrl, 'spinner.gif); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30; }',
-		'#spinner { filter:alpha(opacity=30); }',
 		'#title { margin-bottom:4px; }',
 		'#title, #mapbox { overflow: auto; }',
 		'.heading { font-weight:bold; font-size:110%; }',
@@ -319,10 +317,17 @@ if( mapplet ) {
 			'#PollingPlaceSearch { background-color:#EEE; border:1px solid #AAA; margin:0; padding:6px; width:95%; }',
 			'.PollingPlaceSearchForm { margin:0; padding:0; }',
 			'.PollingPlaceSearchTitle { /*font-weight:bold;*/ /*font-size:110%;*/ /*padding-bottom:4px;*/ }',
-			//'/*.PollingPlaceSearchSpinner { float:right; margin-right:4px; width:16px; height:16px; background-image:url(spinner16.gif); background-position:1000px 0px; background-repeat:no-repeat; }*/',
 			//'.PollingPlaceSearchLabelBox { position:relative; float:left; margin-right:6px; }',
 			'.PollingPlaceSearchInput { width:100%; }',
 			'#title { margin-top:12px; }',
+		'</style>'
+	);
+}
+else {
+	document.write(
+		'<style type="text/css">',
+			'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(', baseUrl, 'spinner.gif); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30; }',
+			'#spinner { filter:alpha(opacity=30); }',
 		'</style>'
 	);
 }
