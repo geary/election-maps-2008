@@ -8,6 +8,10 @@ var opt = window.gadget ? gadget : window.mapplet ? mapplet : {};
 var baseUrl = opt.baseUrl || 'http://poll411.s3.amazonaws.com/';
 var dataUrl = opt.dataUrl || baseUrl;
 
+var today = new Date;
+today.setHours( 0, 0, 0, 0 );
+var electionDay = new Date( 2008, 10, 4 );
+
 var sampleAddr = '1600 Pennsylvania Ave 20006';
 
 function writeScript( url ) {
@@ -386,6 +390,27 @@ expandit = function( node ) {
 	 return false;
 }
 
+var seconds = 1000, minutes = 60 * seconds, hours = 60 * minutes,
+	days = 24 * hours, weeks = 7 * days;
+
+var dayNames = [
+	'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+];
+
+var monthNames = [
+	'January', 'February', 'March', 'April', 'May', 'June',
+	'July', 'August', 'September', 'October', 'November', 'December'
+];
+
+function formatDate( date ) {
+	date = new Date( date );
+	return S(
+		dayNames[ date.getDay() ], ', ',
+		monthNames[ date.getMonth() ], ' ',
+		date.getDate()
+	);
+}
+
 function electionInfo( a ) {
 	a = a || {};
 	var state = home.info.state;
@@ -415,19 +440,32 @@ function electionInfo( a ) {
 		)
 	) : '';
 	
-	//console.log( state );
+	var sameDay = state.gsx$sameday.$t;
+	if( sameDay ) sameDay = S(
+		'<div style="margin-bottom:0.5em;">',
+			state.name, ' residents may register to vote at their polling place on Election Day.',
+		'</div>'
+	);
+	
 	var comments = state.gsx$comments.$t;
 	if( comments ) comments = S(
-		'<div style="margin-bottom:8px;">',
+		'<div style="margin-bottom:0.5em;">',
 			comments,
 		'</div>'
 	);
 	
+	//var w = window.open();
+	//w.document.write( biglist() );
+	//w.document.close();
+	
 	return S(
 		'<div>',
-			'<div class="heading" style="margin-bottom:4px;">',
+			'<div class="heading" style="font-size:110%; margin-bottom:0.5em;">',
 				fix('%S Voter Info'),
 			'</div>',
+			deadline( state, 'gsx$postmark', 'postmarked' )  ||
+			deadline( state, 'gsx$receive', '<strong>received</strong> by your election officials' ),
+			sameDay,
 			comments,
 			election( 'gsx$areyouregistered', 'Are you registered to vote?' ),
 			election( 'gsx$registrationinfo', 'How to register in %S', true ),
@@ -447,6 +485,39 @@ function electionInfo( a ) {
 			//.replace( '%C', S(
 			//	home.info.county // TODO?
 			//) )
+		);
+	}
+	
+	//function biglist() {
+	//	return S(
+	//		'<div style="margin-bottom:0.5em;">',
+	//			states.mapjoin( function( state ) {
+	//				return S(
+	//					'<div>',
+	//						'<b>', state.name, '</b>',
+	//					'</div>',
+	//					deadline( state, 'gsx$postmark', '' )
+	//				);
+	//			}),
+	//		'</div>'
+	//	);
+	//}
+	
+	function deadline( state, key, text ) {
+		var before = +state[key].$t;
+		if( ! before ) return '';
+		var date = electionDay - before*days;
+		var remain = Math.floor( ( date - today ) / days );
+		return S(
+			'<div style="font-weight:bold; margin-bottom:0.5em;">',
+				remain < 0 ? '' :
+				remain < 1 ? 'Last day to register' :
+				remain + ' days to register',
+			'</div>',
+			'<div style="margin-bottom:0.5em;">',
+				'Registration must be ', text, ' by<br />',
+				'<strong>', formatDate(date), '</strong>',
+			'</div>'
 		);
 	}
 	
