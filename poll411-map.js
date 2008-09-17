@@ -990,7 +990,8 @@ function formatMap( a ) {
 
 var $window = $(window), $title = $('#title'), $map = $('#mapbox'), $spinner = $('#spinner');
 
-var stateSheet = 'http://spreadsheets.google.com/feeds/list/p9CuB_zeAq5WrrUJlgUtNBg/1/public/values?alt=json';
+//var stateSheet = 'http://spreadsheets.google.com/feeds/list/p9CuB_zeAq5WrrUJlgUtNBg/1/public/values?alt=json';
+var stateSheet = opt.dataUrl + 'states.json';
 getJSON( stateSheet, function( json ) {
 	json.feed.entry.forEach( function( state ) {
 		statesByAbbr[ state.abbr = state.gsx$abbr.$t ] = state;
