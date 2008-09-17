@@ -459,7 +459,7 @@ function electionInfo( a ) {
 	//w.document.close();
 	
 	return S(
-		'<div>',
+		'<div class="orange" style="margin-bottom:6px;">',
 			'<div class="heading" style="font-size:110%; margin-bottom:0.5em;">',
 				fix('%S Voter Info'),
 			'</div>',
@@ -467,6 +467,9 @@ function electionInfo( a ) {
 			deadline( state, 'gsx$receive', '<strong>received</strong> by your election officials' ),
 			sameDay,
 			comments,
+			//'<div>',
+			//	state.name, ' voter hotline: ', state.gsx$hotline.$t,
+			//'</div>',
 			election( 'gsx$areyouregistered', 'Are you registered to vote?' ),
 			election( 'gsx$registrationinfo', 'How to register in %S', true ),
 			election( 'gsx$absenteeinfo', 'Get an absentee ballot' ),
@@ -1006,11 +1009,7 @@ getJSON( stateSheet, function( json ) {
 	var state = stateByAbbr( address.region );
 	if( ! state ) return;
 	home = { info:{ state:state }, leo:{} };
-	$title.append(S(
-		'<div class="orange" style="margin-bottom:6px;">',
-			electionInfo({ estimate:true }),
-		'</div>'
-	));
+	$title.append( electionInfo({ estimate:true }) );
 	
 	zoom = function() {
 		function latlng( lat, lng ) { return new GLatLng( +lat.$t, +lng.$t ) }
