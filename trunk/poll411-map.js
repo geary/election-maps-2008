@@ -389,7 +389,7 @@ expandit = function( node ) {
 function electionInfo( a ) {
 	a = a || {};
 	var state = home.info.state;
-	if( ! state ) return '';
+	if( ! state  ||  state == stateUS ) return '';
 	
 	var estimate = a.estimate ? expander(
 		S(
@@ -414,11 +414,21 @@ function electionInfo( a ) {
 			'</div>'
 		)
 	) : '';
+	
+	//console.log( state );
+	var comments = state.gsx$comments.$t;
+	if( comments ) comments = S(
+		'<div style="margin-bottom:8px;">',
+			comments,
+		'</div>'
+	);
+	
 	return S(
 		'<div>',
 			'<div class="heading" style="margin-bottom:4px;">',
 				fix('%S Voter Info'),
 			'</div>',
+			comments,
 			election( 'gsx$areyouregistered', 'Are you registered to vote?' ),
 			election( 'gsx$registrationinfo', 'How to register in %S', true ),
 			election( 'gsx$absenteeinfo', 'Get an absentee ballot' ),
@@ -707,10 +717,12 @@ function lookup( address, callback ) {
 	getJSON( url, callback );
 }
 
-function getJSON( url, callback ) {
+function getJSON( url, callback, cache ) {
 	_IG_FetchContent( url, function( text ) {
 		var json = eval( '(' + text + ')' );
 		callback( json );
+	}, {
+		refreshInterval: cache || 300
 	});
 }
 
