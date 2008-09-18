@@ -32,7 +32,11 @@ function parseQuery( query ) {
 	return params;
 }
 
-var params = parseQuery( unescape(location.search).replace( /^\?[^?]*\?/, '' ) );
+var params = parseQuery(
+	unescape(location.search)
+		.replace( /^\?[^?]*\?/, '' )
+		.replace( '#', '&' )
+);
 
 if( ! Array.prototype.forEach ) {
 	Array.prototype.forEach = function( fun /*, thisp*/ ) {
