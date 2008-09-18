@@ -1,6 +1,6 @@
 // Copyright 2008 Michael Geary
 // http://mg.to/
-// Free Beer and Free Speech License (MIT+GPL)
+// Free Beer and Free Speech License (any OSI license)
 // http://freebeerfreespeech.org/
 
 var opt = window.gadget ? gadget : window.mapplet ? mapplet : {};
