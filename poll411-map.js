@@ -186,6 +186,7 @@ document.write(
 		'#title { margin-bottom:4px; }',
 		'#title, #mapbox { overflow: auto; }',
 		'.heading { font-weight:bold; font-size:110%; }',
+		params.home ? '.removehelp { display:none; }' : '',
 	'</style>'
 );
 
@@ -312,7 +313,7 @@ writeBody = function() {
 			'<div id="title">',
 			'</div>',
 			'<div id="mapbox">',
-				mapplet ? available : '',
+				mapplet && ! params.home ? available : '',
 			'</div>',
 		'</div>'
 	);
