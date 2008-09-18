@@ -189,7 +189,7 @@ if( mapplet ) {
 	document.write(
 		'<style type="text/css">',
 			'#PollingPlaceSearch, #PollingPlaceSearch td { font-size:10pt; margin:0; padding:0; }',
-			'#PollingPlaceSearch { background-color:#EEE; border:1px solid #AAA; margin:0; padding:6px; width:95%; }',
+			'#PollingPlaceSearch { background-color:#E8ECF9; margin:0; padding:6px; width:95%; }',
 			'.PollingPlaceSearchForm { margin:0; padding:0; }',
 			'.PollingPlaceSearchTitle { /*font-weight:bold;*/ /*font-size:110%;*/ /*padding-bottom:4px;*/ }',
 			//'.PollingPlaceSearchLabelBox { position:relative; float:left; margin-right:6px; }',
