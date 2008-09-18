@@ -175,8 +175,6 @@ var key = {
 	'': ''
 }[location.host];
 
-writeScript( 'http://www.google.com/jsapi' );
-
 document.write(
 	'<style type="text/css">',
 		'body.gadget { margin:0; padding:0; }',
@@ -184,8 +182,6 @@ document.write(
 		'#title { margin-bottom:4px; }',
 		'#title, #mapbox { overflow: auto; }',
 		'.heading { font-weight:bold; font-size:110%; }',
-		'.orange { padding:6px; width:95%; background-color:#FFEAC0; border:1px solid #FFBA90; }',
-		'.pink { padding:6px; width:95%; background-color:#FFD0D0; border:1px solid #FF9090; }',
 	'</style>'
 );
 
@@ -274,7 +270,7 @@ else {
 }
 
 var available = S(
-	'<div class="orange">',
+	'<div>',
 		'<div>',
 			'Voter registration information is available for all states.',
 		'</div>',
@@ -416,30 +412,6 @@ function electionInfo( a ) {
 	var state = home.info.state;
 	if( ! state  ||  state == stateUS ) return '';
 	
-	var estimate = a.estimate ? expander(
-		S(
-			'<div style="margin-top:0.5em; font-size:90%;">',
-				'Not your home state?',
-			'</div>'
-		),
-		S(
-			'<div class="pink">',
-				'<div>',
-					'Sorry we got your location wrong!',
-				'</div>',
-				'<div style="margin-top:0.5em;">',
-					'It was our best guess based on your computer\'s ',
-					'<a target="_blank" href="http://www.google.com/search?q=ip+address">',
-						'IP address',
-					'</a>',
-				'</div>',
-				'<div style="margin-top:0.5em;">',
-					'Enter your home address in the box above and click Search for more accurate information.',
-				'</div>',
-			'</div>'
-		)
-	) : '';
-	
 	var sameDay = state.gsx$sameday.$t;
 	if( sameDay ) sameDay = S(
 		'<div style="margin-bottom:0.5em;">',
@@ -459,7 +431,7 @@ function electionInfo( a ) {
 	//w.document.close();
 	
 	return S(
-		'<div class="orange" style="margin-bottom:6px;">',
+		'<div style="margin-bottom:0.5em;">',
 			'<div class="heading" style="font-size:110%; margin-bottom:0.5em;">',
 				fix('%S Voter Info'),
 			'</div>',
@@ -477,7 +449,6 @@ function electionInfo( a ) {
 					state.gsx$hotline.$t,
 				'</span>',
 			'</div>',
-			estimate,
 			local(),
 		'</div>'
 	);
@@ -818,7 +789,7 @@ function closehelp( callback ) {
 	}
 }
 
-function submit( addr, estimate ) {
+function submit( addr ) {
 	home = {};
 	vote = {};
 	map && map.clearOverlays();
@@ -902,7 +873,7 @@ function sorryHtml() {
 	return S(
 		'<div>',
 			home.info ? electionInfo() : '',
-			'<div class="orange" style="margin-top:1em;">',
+			'<div style="margin-top:1em;">',
 				'<div>',
 					'Sorry, we did not find your voting place.',
 				'</div>',
@@ -1005,15 +976,6 @@ getJSON( stateSheet, function( json ) {
 		states.push( state );
 	});
 	
-	var loc = google.loader && google.loader.ClientLocation;
-	if( ! loc ) return;
-	var address = loc && loc.address;
-	if( ! address  ||  address.country != 'USA' ) return;
-	var state = stateByAbbr( address.region );
-	if( ! state ) return;
-	home = { info:{ state:state }, leo:{} };
-	$title.append( electionInfo({ estimate:true }) );
-	
 	zoom = function() {
 		function latlng( lat, lng ) { return new GLatLng( +lat.$t, +lng.$t ) }
 		var bounds = new GLatLngBounds(
@@ -1027,10 +989,7 @@ getJSON( stateSheet, function( json ) {
 	
 	if( mapplet ) {
 		map = new GMap2;
-		zoom();
-	}
-	
-	if( mapplet ) {
+		
 		(function() {
 			function e( id ) { return document.getElementById('PollingPlaceSearch'+id); }
 			var /*spinner = e('Spinner'),*/ /*label = e('Label'),*/ input = e('Input'), button = e('Button');
