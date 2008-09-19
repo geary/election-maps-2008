@@ -434,6 +434,10 @@ function electionInfo( a ) {
 	//w.document.write( biglist() );
 	//w.document.close();
 	
+	var absentee = {
+		'Early': 'Absentee ballot and early voting information',
+		'Mail': 'Vote by mail information'
+	}[state.gsx$absentee.$t] || 'Get an absentee ballot';
 	return S(
 		'<div style="margin-bottom:0.5em;">',
 			'<div class="heading" style="font-size:110%; margin-bottom:0.75em;">',
@@ -452,7 +456,7 @@ function electionInfo( a ) {
 			'<ul style="margin-top:0; margin-bottom:0;">',
 				election( 'gsx$areyouregistered', 'Are you registered to vote?' ),
 				election( 'gsx$registrationinfo', 'How to register in %S', true ),
-				election( 'gsx$absenteeinfo', 'Get an absentee ballot' ),
+				election( 'gsx$absenteeinfo', absentee ),
 				election( 'gsx$electionwebsite', '%S election website' ),
 			'</ul>',
 			'<div style="margin:1.0em 0 0.5em 0;">',
