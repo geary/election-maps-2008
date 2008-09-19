@@ -568,7 +568,9 @@ function setVoteHtml() {
 			//'</a>',
 		'</div>'
 	);
-	var location = formatLocation( vote.info, 'vote-icon-50.png', 'Your Voting Location', extra );
+	function location( infowindow ) {
+		return formatLocation( vote.info, infowindow ? 'vote-icon-50.png' : 'marker-red.png', 'Your Voting Location', infowindow, extra );
+	}
 	$title.append( mapplet ? S(
 		'<div>',
 			electionInfo(),
@@ -577,7 +579,7 @@ function setVoteHtml() {
 			formatHome(),
 			'<div style="padding-top:0.75em">',
 			'</div>',
-			location,
+			location(),
 			locationWarning,
 		'</div>'
 	) : S(
@@ -597,7 +599,7 @@ function setVoteHtml() {
 	) );
 	vote.html = S(
 		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
-			location,
+			location( true ),
 			locationWarning,
 		'</div>'
 	);
@@ -628,7 +630,7 @@ function initMap( a ) {
 				place: home,
 				image: baseUrl + 'marker-green.png',
 				open: only,
-				html: formatHome( true/*only*/ )
+				html: formatHome( true )
 			});
 			if( vote.info )
 				setMarker({
@@ -705,16 +707,17 @@ function initMap( a ) {
 	}
 }
 
-function formatLocation( info, icon, title, extra ) {
+function formatLocation( info, icon, title, infowindow, extra ) {
+	var size = infowindow ? { width:50, height:50 } : { width:20, height:34 };
 	return S(
 		'<div style="font-weight:bold; font-size:110%;">',
 			title,
 		'</div>',
 		'<div style="padding-top:0.5em;">',
 			'<table cellpadding="0" cellspacing="0">',
-				'<tr valign="middle">',
-					'<td style="width:50px; padding-right:.75em;">',
-						'<img src="', cacheUrl( baseUrl + icon ), '" style="width:50px; height:50px;" />',
+				'<tr valign="top">',
+					'<td style="width:20px; padding-right:.75em;">',
+						'<img src="', cacheUrl( baseUrl + icon ), '" style="width:', size.width, 'px; height:', size.height, 'px;" />',
 					'</td>',
 					'<td>',
 						'<div>',
@@ -851,10 +854,10 @@ function submit( addr ) {
 	});
 }
 
-function formatHome( extra ) {
+function formatHome( infowindow ) {
 	return S(
 		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
-			formatLocation( home.info, 'home-icon-50.png', 'Your Home' ),
+			formatLocation( home.info, infowindow ? 'home-icon-50.png' : 'marker-green.png', 'Your Home', infowindow ),
 			//extra ? electionInfo() : '',
 		'</div>'
 	);
