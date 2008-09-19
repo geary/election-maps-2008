@@ -430,6 +430,24 @@ function electionInfo( a ) {
 		'</div>'
 	);
 	
+	var deadlineText = {
+		mail: {
+			left: 'Days left to register by mail',
+			last: 'Last day to register by mail',
+			mustbe: 'Registration must be postmarked by'
+		},
+		receive: {
+			left: 'Days left for registration to be received by your election officials',
+			last: 'Last day for registration to be received by your election officials by today.',
+			mustbe: 'Registration must be <strong>received</strong> by'
+		},
+		inperson: {
+			left: 'Days left to register in person',
+			last: 'Last day to register in person',
+			mustbe: 'In person registration allowed through'
+		}
+	};
+	
 	//var w = window.open();
 	//w.document.write( biglist() );
 	//w.document.close();
@@ -446,8 +464,9 @@ function electionInfo( a ) {
 			'<div style="margin-bottom:0.75em;">',
 				fix('State: <strong>%S</strong>'),
 			'</div>',
-			deadline( state, 'gsx$postmark', 'postmarked' )  ||
-			deadline( state, 'gsx$receive', '<strong>received</strong> by your election officials' ),
+			deadline( state, 'gsx$postmark', 'mail' )  ||
+			deadline( state, 'gsx$receive', 'receive' ),
+			deadline( state, 'gsx$inperson', 'inperson' ),
 			sameDay,
 			comments,
 			'<div style="margin-bottom:0.75em;">',
@@ -496,9 +515,10 @@ function electionInfo( a ) {
 	//	);
 	//}
 	
-	function deadline( state, key, text ) {
+	function deadline( state, key, type ) {
 		var before = +state[key].$t;
 		if( ! before ) return '';
+		var dt = deadlineText[type];
 		var date = electionDay - before*days;
 		var remain = Math.floor( ( date - today ) / days );
 		return S(
@@ -506,11 +526,11 @@ function electionInfo( a ) {
 					remain < 6 ? ' color:red;' : '',
 			'">',
 				remain < 0 ? '' :
-				remain < 1 ? 'Last day to register' :
-				' Days left to register: <strong>' + remain + '</strong>',
+				remain < 1 ? dt.last :
+				' ', dt.left, ': <strong>' + remain + '</strong>',
 			'</div>',
 			'<div style="margin-bottom:0.75em;">',
-				'Registration must be ', text, ' by:<br />',
+				dt.mustbe, ':<br />',
 				'<strong>', formatDate(date), '</strong>',
 			'</div>'
 		);
@@ -986,7 +1006,7 @@ function formatMap( a ) {
 
 var $window = $(window), $title = $('#title'), $map = $('#mapbox'), $spinner = $('#spinner');
 
-//var stateSheet = 'http://spreadsheets.google.com/feeds/list/p9CuB_zeAq5WrrUJlgUtNBg/1/public/values?alt=json';
+//var stateSheet = 'http://spreadsheets.google.com/feeds/list/p9CuB_zeAq5WrrUJlgUtNBg/2/public/values?alt=json';
 var stateSheet = dataUrl + 'states.json';
 getJSON( stateSheet, function( json ) {
 	json.feed.entry.forEach( function( state ) {
