@@ -437,20 +437,28 @@ function electionInfo( a ) {
 	
 	return S(
 		'<div style="margin-bottom:0.5em;">',
-			'<div class="heading" style="font-size:110%; margin-bottom:0.5em;">',
-				fix('%S Voter Info'),
+			'<div class="heading" style="font-size:110%; margin-bottom:0.75em;">',
+				fix('Registration Info'),
+			'</div>',
+			'<div style="margin-bottom:0.75em;">',
+				fix('State: <strong>%S</strong>'),
 			'</div>',
 			deadline( state, 'gsx$postmark', 'postmarked' )  ||
 			deadline( state, 'gsx$receive', '<strong>received</strong> by your election officials' ),
 			sameDay,
 			comments,
-			election( 'gsx$areyouregistered', 'Are you registered to vote?' ),
-			election( 'gsx$registrationinfo', 'How to register in %S', true ),
-			election( 'gsx$absenteeinfo', 'Get an absentee ballot' ),
-			election( 'gsx$electionwebsite', '%S election website' ),
-			'<div style="margin:0.5em 0;">',
+			'<div style="margin-bottom:0.75em;">',
+				'Get information about voting in your state:',
+			'</div>',
+			'<ul style="margin-top:0; margin-bottom:0;">',
+				election( 'gsx$areyouregistered', 'Are you registered to vote?' ),
+				election( 'gsx$registrationinfo', 'How to register in %S', true ),
+				election( 'gsx$absenteeinfo', 'Get an absentee ballot' ),
+				election( 'gsx$electionwebsite', '%S election website' ),
+			'</ul>',
+			'<div style="margin:1.0em 0 0.5em 0;">',
 				state.name, ' voter hotline: ',
-				'<span style="white-space:pre;">',
+				'<span style="white-space:nowrap;">',
 					state.gsx$hotline.$t,
 				'</span>',
 			'</div>',
@@ -491,13 +499,15 @@ function electionInfo( a ) {
 		var date = electionDay - before*days;
 		var remain = Math.floor( ( date - today ) / days );
 		return S(
-			'<div style="font-weight:bold; margin-bottom:0.5em;">',
+			'<div style="margin-bottom:0.75em;',
+					remain < 6 ? ' color:red;' : '',
+			'">',
 				remain < 0 ? '' :
 				remain < 1 ? 'Last day to register' :
-				remain + ' days to register',
+				' Days left to register: <strong>' + remain + '</strong>',
 			'</div>',
-			'<div style="margin-bottom:0.5em;">',
-				'Registration must be ', text, ' by<br />',
+			'<div style="margin-bottom:0.75em;">',
+				'Registration must be ', text, ' by:<br />',
 				'<strong>', formatDate(date), '</strong>',
 			'</div>'
 		);
@@ -506,11 +516,11 @@ function electionInfo( a ) {
 	function election( key, text, prefix ) {
 		var url = state[key].$t;
 		return ! url ? '' : S(
-			'<div>',
-				'<a target="_blank" href="', url, '">',
+			'<li style="margin-bottom:0.5em; margin-left:-1.25em;">',
+				'<a target="_blank" href="', url, '" style="font-size:110%;">',
 					fix( text, prefix ),
 				'</a>',
-			'</div>'
+			'</li>'
 		);
 	}
 	
