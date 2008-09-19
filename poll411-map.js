@@ -313,7 +313,6 @@ writeBody = function() {
 			'<div id="title">',
 			'</div>',
 			'<div id="mapbox">',
-				mapplet && ! params.home ? available : '',
 			'</div>',
 		'</div>'
 	);
@@ -893,10 +892,8 @@ function sorryHtml() {
 			home.info ? electionInfo() : '',
 			'<div style="margin-top:1em;">',
 				'<div>',
-					'Sorry, we did not find your voting place.',
-				'</div>',
-				'<div style="padding-top:0.5em;">',
-					'We are working to provide this data soon. Please check with your state or local election officials to verify your voting location.',
+					'All voting location information will be available by mid-October. ',
+					'Until then, please check with your state or local election officials to verify your voting location.',
 				'</div>',
 			'</div>',
 		'</div>'
