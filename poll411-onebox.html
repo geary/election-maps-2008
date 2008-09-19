@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+	<title>Poll411 Mapplet Test</title>
+	<style type="text/css">
+		p { margin-top:2em; }
+	</style>
+</head>
+<body>
+	
+	<h2>Calling the Poll411 Mapplet from an external form</h2>
+	<h3>
+		(View Source to see the code)
+	</h3>
+
+	<p>Version 1: External function in &lt;script&gt; tag</p>
+
+	<form action="javascript:Poll411Submit()">
+		<input type="text" id="Poll411Input1" value="1600 Amphitheatre #123, Mtn. View CA" style="width:30em;" />
+		<button type="submit">Get voting information</button>
+	</form>
+	
+	<script type="text/javascript">
+		function Poll411Submit() {
+			var addr = document.getElementById('Poll411Input1').value;
+			location =
+				'http://maps.google.com/maps/mpl?moduleurl=http://maps.google.com/mapfiles/mapplets/elections/2008/us-voter-info/us-voter-info.xml%23home=' +
+				encodeURIComponent( addr.replace( /[ &+=<>?%"]/g, '!' ) );
+		}
+	</script>
+
+	<p>Version 2: Inline JavaScript</p>
+
+	<form action="javascript:location = 'http://maps.google.com/maps/mpl?moduleurl=http://maps.google.com/mapfiles/mapplets/elections/2008/us-voter-info/us-voter-info.xml%' + '23home=' + encodeURIComponent( document.getElementById('Poll411Input2').value.replace( /[ &+=&gt;&lt;?%%22]/g, '!' ) );">
+		<input type="text" id="Poll411Input2" value="1600 Amphitheatre #123, Mtn. View CA" style="width:30em;" />
+		<button type="submit">Get voting information</button>
+	</form>
+
+</body>
+</html>
