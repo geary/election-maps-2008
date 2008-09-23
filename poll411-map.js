@@ -3,6 +3,8 @@
 // Free Beer and Free Speech License (any OSI license)
 // http://freebeerfreespeech.org/
 
+window.console && typeof console.log == 'function' && console.log( location );  // TEMP
+
 var opt = window.gadget ? gadget : window.mapplet ? mapplet : {};
 
 var baseUrl = opt.baseUrl || 'http://poll411.s3.amazonaws.com/';
@@ -1087,7 +1089,7 @@ getJSON( stateSheet, function( json ) {
 	else {
 		(function() {
 			var p = new _IG_Prefs();
-			function str( key, def ) { return p.getString(key) || ''+def || ''; }
+			//function str( key, def ) { return p.getString(key) || ''+def || ''; }
 			var addr = p.getString('address');
 			submit( addr );
 		})();
