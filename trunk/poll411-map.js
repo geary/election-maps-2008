@@ -3,7 +3,7 @@
 // Free Beer and Free Speech License (any OSI license)
 // http://freebeerfreespeech.org/
 
-window.console && typeof console.log == 'function' && console.log( location );  // TEMP
+window.console && typeof console.log == 'function' && console.log( location.href );  // TEMP
 
 var opt = window.gadget ? gadget : window.mapplet ? mapplet : {};
 
