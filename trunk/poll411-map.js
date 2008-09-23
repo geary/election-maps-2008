@@ -217,7 +217,7 @@ else {
 		var panelMin = 150;
 		var panelWidth = ( panelMin + ( width - 500 ) * .75 ).toFixed();
 		var mapWidth = width - panelWidth;
-		console.log( width, panelWidth, mapWidth );
+		//console.log( width, panelWidth, mapWidth );
 		document.write(
 			'<style type="text/css">',
 				'#title { float:left; width:', panelWidth, 'px; height:100%; }',
