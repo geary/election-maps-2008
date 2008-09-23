@@ -208,8 +208,25 @@ else {
 		'<style type="text/css">',
 			'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(', baseUrl, 'spinner.gif); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30; }',
 			'#spinner { filter:alpha(opacity=30); }',
+			'#title { padding-top:4px; }',
 		'</style>'
 	);
+	
+	var width = $(window).width(), height = $(window).height();
+	//if( width >= 500 ) {
+		var panelMin = 150;
+		var panelWidth = ( panelMin + ( width - 500 ) * .75 ).toFixed();
+		var mapWidth = width - panelWidth;
+		console.log( width, panelWidth, mapWidth );
+		document.write(
+			'<style type="text/css">',
+				'#title { float:left; width:', panelWidth, 'px; height:100%; }',
+				'#mapbox { float:left; width:', mapWidth, 'px; height:100%; }',
+			'</style>'
+		);
+	//}
+	//else {
+	//}
 }
 
 if( mapplet ) {
@@ -469,9 +486,11 @@ function electionInfo( a ) {
 			deadline( state, 'gsx$inperson', 'inperson' ),
 			sameDay,
 			comments,
-			'<div style="margin-bottom:0.75em;">',
-				'Get information about voting in your state:',
-			'</div>',
+			mapplet ? S(
+				'<div style="margin-bottom:0.75em;">',
+					'Get information about voting in your state:',
+				'</div>'
+			) : '',
 			'<ul style="margin-top:0; margin-bottom:0;">',
 				election( 'gsx$areyouregistered', 'Are you registered to vote?' ),
 				election( 'gsx$registrationinfo', 'How to register in %S', true ),
@@ -538,9 +557,10 @@ function electionInfo( a ) {
 	
 	function election( key, text, prefix ) {
 		var url = state[key].$t;
+		var size = mapplet ? 'font-size:110%;' : '';
 		return ! url ? '' : S(
 			'<li style="margin-bottom:0.5em; margin-left:-1.25em;">',
-				'<a target="_blank" href="', url, '" style="font-size:110%;">',
+				'<a target="_blank" href="', url, '" style="', size, '">',
 					fix( text, prefix ),
 				'</a>',
 			'</li>'
@@ -594,7 +614,8 @@ function setVoteHtml() {
 	function location( infowindow ) {
 		return formatLocation( vote.info, infowindow ? 'vote-icon-50.png' : 'marker-red.png', 'Your Voting Location', infowindow, extra );
 	}
-	$title.append( mapplet ? S(
+	var vertical = true;
+	$title.append( vertical ? S(
 		'<div>',
 			electionInfo(),
 			'<div style="padding-top:1em">',
