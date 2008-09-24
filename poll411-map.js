@@ -1096,4 +1096,6 @@ getJSON( stateSheet, function( json ) {
 	}
 });
 
-});
+_IG_Analytics( 'UA-5730550-1', '/' );
+
+});  // end $(function(){})
