@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+	<title></title>
+	<script type="text/javascript">
+		
+		var params = parseQuery( location.search.slice(1) );
+		var home = params.home || '';
+		location =
+			'http://maps.google.com/maps/mpl?moduleurl=http://maps.google.com/mapfiles/mapplets/elections/2008/us-voter-info/us-voter-info.xml%23home=' +
+			encodeURIComponent( home.replace( /[ &+=<>?%"]/g, '!' ) );
+		
+		function parseQuery( query ) {
+			var params = {};
+			if( query ) {
+				var array = query.split( '&' );
+				for( var i = 0, n = array.length;  i < n;  ++i ) {
+					var p = array[i].split( '=' ),
+						k = decodeURIComponent(p[0]),
+						v = decodeURIComponent(p[1]);
+					if( k ) params[k] = v;
+				}
+			}
+			return params;
+		}
+		
+	</script>
+</head>
+<body>
+</body>
+</html>

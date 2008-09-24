@@ -13,26 +13,40 @@
 		(View Source to see the code)
 	</h3>
 
-	<p>Version 1: External function in &lt;script&gt; tag</p>
+	<p>Version 1: Simple form submit with redirector (maps.google.com)</p>
+
+	<form method="get" action="http://maps.google.com/mapfiles/mapplets/elections/2008/us-voter-info/us-voter-info.html">
+		<input type="text" name="home" value="1600 Amphitheatre #123, Mtn. View CA" style="width:30em;" />
+		<button type="submit">Get voting information</button>
+	</form>
+	
+	<p>Version 2: Simple form submit with redirector (local test copy)</p>
+
+	<form method="get" action="poll411-redirect.html">
+		<input type="text" name="home" value="1600 Amphitheatre #123, Mtn. View CA" style="width:30em;" />
+		<button type="submit">Get voting information</button>
+	</form>
+	
+	<p>Version 3: External function in &lt;script&gt; tag</p>
 
 	<form action="javascript:Poll411Submit()">
-		<input type="text" id="Poll411Input1" value="1600 Amphitheatre #123, Mtn. View CA" style="width:30em;" />
+		<input type="text" id="Poll411Input3" value="1600 Amphitheatre #123, Mtn. View CA" style="width:30em;" />
 		<button type="submit">Get voting information</button>
 	</form>
 	
 	<script type="text/javascript">
 		function Poll411Submit() {
-			var addr = document.getElementById('Poll411Input1').value;
+			var addr = document.getElementById('Poll411Input3').value;
 			location =
 				'http://maps.google.com/maps/mpl?moduleurl=http://maps.google.com/mapfiles/mapplets/elections/2008/us-voter-info/us-voter-info.xml%23home=' +
 				encodeURIComponent( addr.replace( /[ &+=<>?%"]/g, '!' ) );
 		}
 	</script>
 
-	<p>Version 2: Inline JavaScript</p>
+	<p>Version 4: Inline JavaScript</p>
 
-	<form action="javascript:location = 'http://maps.google.com/maps/mpl?moduleurl=http://maps.google.com/mapfiles/mapplets/elections/2008/us-voter-info/us-voter-info.xml%' + '23home=' + encodeURIComponent( document.getElementById('Poll411Input2').value.replace( /[ &+=&gt;&lt;?%%22]/g, '!' ) );">
-		<input type="text" id="Poll411Input2" value="1600 Amphitheatre #123, Mtn. View CA" style="width:30em;" />
+	<form action="javascript:location = 'http://maps.google.com/maps/mpl?moduleurl=http://maps.google.com/mapfiles/mapplets/elections/2008/us-voter-info/us-voter-info.xml%' + '23home=' + encodeURIComponent( document.getElementById('Poll411Input4').value.replace( /[ &+=&gt;&lt;?%%22]/g, '!' ) );">
+		<input type="text" id="Poll411Input4" value="1600 Amphitheatre #123, Mtn. View CA" style="width:30em;" />
 		<button type="submit">Get voting information</button>
 	</form>
 
