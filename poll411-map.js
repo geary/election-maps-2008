@@ -306,8 +306,8 @@ var available = S(
 
 var locationWarning = S(
 	'<div style="padding-top:1em; xline-height:1.2em; xcolor:gray; xfont-size:80%;">',
-		'<span style="color:red; font-weight:bold;">',
-			'Important&nbsp; ',
+		'<span style="font-weight:bold;">',
+			'Important: ',
 		'</span>',
 		'To ensure that this voting location is correct, please verify it with your local election officials.',
 	'</div>'
@@ -501,7 +501,7 @@ function electionInfo( a ) {
 			'</ul>',
 			'<div style="margin:1.0em 0 0.5em 0;">',
 				state.name, ' voter hotline: ',
-				'<span style="white-space:nowrap;">',
+				'<span style="white-space:nowrap; font-weight:bold;">',
 					state.gsx$hotline.$t,
 				'</span>',
 			'</div>',
@@ -559,7 +559,8 @@ function electionInfo( a ) {
 	
 	function election( key, text, prefix ) {
 		var url = state[key].$t;
-		var size = mapplet ? 'font-size:110%;' : '';
+		//var size = mapplet ? 'font-size:110%;' : '';
+		var size = 'font-weight:bold;';
 		return ! url ? '' : S(
 			'<li style="margin-bottom:0.5em; margin-left:-1.25em;">',
 				'<a target="_blank" href="', url, '" style="', size, '">',
