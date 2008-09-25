@@ -559,8 +559,7 @@ function electionInfo( a ) {
 	
 	function election( key, text, prefix ) {
 		var url = state[key].$t;
-		//var size = mapplet ? 'font-size:110%;' : '';
-		var size = 'font-weight:bold;';
+		var size = mapplet ? 'font-size:110%;' : '';
 		return ! url ? '' : S(
 			'<li style="margin-bottom:0.5em; margin-left:-1.25em;">',
 				'<a target="_blank" href="', url, '" style="', size, '">',
