@@ -1,0 +1,87 @@
+// poll411-maker.html
+// Copyright 2008 Michael Geary
+// http://mg.to/
+// Free Beer and Free Speech License (any OSI license)
+// http://freebeerfreespeech.org/
+
+::gadget
+
+<!-- Begin US Voter Info gadget by Google -->
+<style type="text/css">
+  /* Font */
+  #Poll411 { font:{{font}}; }
+  /* Sizes */
+  #Poll411 { width:{{width}}px; }
+  #Poll411Input { width:{{inputWidth}}px; }
+  #Poll411Button { width:75px; height:1.85em; }
+  #Poll411Frame { width:100%; height:{{height}}px; }
+  /* Colors */
+  #Poll411 { border:1px solid #AAA; }
+  #Poll411Label { color:#777; }
+  #Poll411Frame { border-top:1px solid #DDD; }
+  /* Layout */
+  #Poll411 { margin:0; padding:6px; }
+  #Poll411Form { margin:0; padding:0; }
+  #Poll411Title { float:left; padding-bottom:4px; }
+  #Poll411LabelBox { position:relative; float:left; margin-right:6px; }
+  #Poll411Label { position:absolute; left:5px; top:0; z-index:1; cursor: text; }
+  #Poll411ButtonBox { float:left; }
+  #Poll411Frame { display:none; margin-top:6px; }
+</style>
+<div id="Poll411">
+  <div id="Poll411Title">
+    Find your 2008 voter information. Enter your <strong>home</strong> address:
+  </div>
+  <div style="clear:both;">
+  </div>
+  <form id="Poll411Form" onsubmit="return Poll411.submit()">
+    <div id="Poll411LabelBox">
+      <label id="Poll411Label" for="Poll411Input">
+        {{example}}
+      </label>
+      <input id="Poll411Input" type="text" onfocus="Poll411.focus()" onblur="Poll411.blur()" />
+    </div>
+    <div id="Poll411ButtonBox">
+      <button type="submit" id="Poll411Button"> Search</button>
+    </div>
+  </form>
+  <div style="clear:left;">
+  </div>
+  <div id="Poll411Frame">
+  </div>
+</div>
+<script type="text/javascript">
+  (function() {
+    function e( id ) { return document.getElementById('Poll411'+id); }
+    var label = e('Label'), input = e('Input'), button = e('Button'), frame = e('Frame');
+    
+    Poll411 = {
+      
+      focus: function() {
+        label.style.textIndent = '-1000px';
+      },
+      
+      blur: function() {
+        if( input.value === '' )
+          label.style.textIndent = '0px';
+      },
+      
+      submit: function() {
+        frame.style.display = 'block';
+        frame.innerHTML = [
+          '<iframe ',
+            'src="http://www.gmodules.com/ig/ifr?url=http://election-maps-2008.googlecode.com/svn/trunk/poll411-frame.xml&amp;synd=open&amp;nocache=1&amp;up_address=', encodeURIComponent(input.value), '&amp;up_font={{urlfont}}" ',
+            'style="width:100%; height:100%;" ',
+            'frameborder="0" ',
+            'scrolling="no" ',
+          '/>'
+        ].join('');
+        return false;
+      }
+    };
+    
+    Poll411.focus();
+    Poll411.blur();
+  })();
+</script>
+<!-- End US Voter Info gadget by Google -->
