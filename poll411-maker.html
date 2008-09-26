@@ -11,9 +11,7 @@
   /* Font */
   #Poll411Gadget { font:{{font}}; }
   /* Sizes */
-  #Poll411Gadget { width:{{width}}px; }
-  #Poll411Input { width:{{inputWidth}}px; }
-  #Poll411Button { width:75px; height:1.85em; }
+  #Poll411Gadget, #Poll411Form { width:{{width}}px; }
   #Poll411Frame { width:100%; height:{{height}}px; }
   /* Colors */
   #Poll411Gadget { border:1px solid #AAA; }
@@ -21,10 +19,10 @@
   #Poll411Frame { border-top:1px solid #DDD; }
   /* Layout */
   #Poll411Gadget { margin:0; padding:6px; }
-  #Poll411Form { margin:0; padding:0; }
-  #Poll411Title { float:left; padding-bottom:4px; }
-  #Poll411InputBox { float:left; margin-right:6px; }
-  #Poll411ButtonBox { float:left; }
+  #Poll411Title { padding-bottom:4px; }
+  #Poll411Form { margin:0; padding:0; vertical-align:middle; }
+  #Poll411Input { width:100%; }
+  #Poll411Button { margin-left:6px; }
   #Poll411Frame { display:none; margin-top:6px; }
 </style>
 
@@ -34,18 +32,18 @@
   <div id="Poll411Title">
     Find your 2008 voter information. Enter your <strong>home</strong> address:
   </div>
-  <div style="clear:both;">
-  </div>
   <form id="Poll411Form" onsubmit="return Poll411.submit()">
-    <div id="Poll411InputBox">
-      <input type="text" id="Poll411Input" class="example" onfocus="Poll411.focus()" onblur="Poll411.blur()" />
-    </div>
-    <div id="Poll411ButtonBox">
-      <button type="submit" id="Poll411Button"> Search</button>
-    </div>
+    <table cellpadding="0" cellspacing="0" style="width:100%;">
+      <tr valign="middle">
+        <td style="width:99%;">
+          <input type="text" id="Poll411Input" class="example" onfocus="Poll411.focus()" onblur="Poll411.blur()" />
+        </td>
+        <td style="width:1%;">
+          <button type="submit" id="Poll411Button"> Search</button>
+        </td>
+      </tr>
+    </table>
   </form>
-  <div style="clear:left;">
-  </div>
   <div id="Poll411Frame">
   </div>
 </div>

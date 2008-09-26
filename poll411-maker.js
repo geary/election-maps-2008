@@ -172,8 +172,7 @@ function center( $item ) {
 }
 
 var variables = {
-	width: width,
-	inputWidth: width - 101,
+	width: width - 14,
 	height: height - 80,
 	example: p.getString('example'),
 	font: p.getString('font'),
