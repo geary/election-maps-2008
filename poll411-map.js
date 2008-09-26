@@ -893,7 +893,7 @@ function submit( addr ) {
 					});
 				}
 				else {
-					$title.append( sorryHtml() );
+					sorry();
 				}
 			}
 		});
@@ -928,8 +928,8 @@ function findPrecinct( place ) {
 }
 
 function sorry() {
-	$map.html( sorryHtml() );
-	if( mapplet ) setMap( home.info );
+	$title.append( sorryHtml() );
+	setMap( home.info );
 	spin( false );
 }
 
