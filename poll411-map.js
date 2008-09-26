@@ -948,6 +948,7 @@ function sorryHtml() {
 }
 
 function setMap( a ) {
+	if( ! a ) return;
 	if( ! mapplet ) {
 		a.width = $map.width();
 		$map.height( a.height = $window.height() - $map.offset().top );

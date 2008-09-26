@@ -28,6 +28,7 @@
 	var gadget = {
 		moduleId: __MODULE_ID__,
 		baseUrl: 'http://election-maps-2008.googlecode.com/svn/trunk/'
+		gadgetUrl: 'http://election-maps-2008.googlecode.com/svn/trunk/poll411-frame.xml',
 	};
 	
 	function script( url, seconds ) {
