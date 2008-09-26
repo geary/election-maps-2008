@@ -114,6 +114,9 @@ function cacheUrl( url, cache, always ) {
 var userAgent = navigator.userAgent.toLowerCase(),
 	msie = /msie/.test( userAgent ) && !/opera/.test( userAgent );
 
+if( msie ) $('body')[0].scroll = 'no';
+$('body').css({ margin:0, padding:0 });
+
 var p = new _IG_Prefs();
 var width = $(window).width();
 var height = $(window).height();
@@ -139,7 +142,7 @@ document.write(
 			'</div>',
 		'</div>',
 	'</div>',
-	'<div id="havecode" class="popupOuter" style="width:95%; height:85%;">',
+	'<div id="havecode" class="popupOuter" style="width:95%;">',
 		'<div class="popupInner">',
 			'<div style="text-align:center;">',
 				'<div style="font-size:16px; font-weight:bold; margin-bottom:8px;">',
@@ -147,7 +150,7 @@ document.write(
 				'</div>',
 				'<div style="font-size:12px;">',
 					'<form id="codeform" name="codeform" style="margin:0; padding:0;">',
-						'<textarea id="thecode" name="thecode" style="width:100%; height:80%; font-family: Consolas,Courier New,Courier,monospace;" value=""/>',
+						'<textarea id="codearea" name="codearea" style="width:100%; height:80%; font-family: Consolas,Courier New,Courier,monospace;" value=""/>',
 					'</form>',
 				'</div>',
 			'</div>',
@@ -155,7 +158,8 @@ document.write(
 	'</div>'
 );
 
-var $getcode = $('#getcode'), $havecode = $('#havecode');
+var $getcode = $('#getcode'), $havecode = $('#havecode'), $codearea = $('#codearea');
+$codearea.height( height - 100 );
 center( $getcode );
 center( $havecode );
 
@@ -168,18 +172,19 @@ function center( $item ) {
 
 T( 'poll411-maker:gadget', {
 	width: width,
-	inputWidth: width - 100,
+	inputWidth: width - 101,
 	height: height - 80,
 	example: p.getString('example'),
-	font: p.getString('font')
+	font: p.getString('font'),
+	gadget: opt.gadgetUrl
 }, function( html ) {
-	$('#outerlimits').html( html );
+	$('#outerlimits').html( html ).height( height );
 	$getcode.show();
 	$('#btnGetCode').click( function() {
-		$('#thecode').val( html );
+		$codearea.val( html );
 		$havecode.show();
-		document.codeform.thecode.focus()
-		document.codeform.thecode.select()
+		document.codeform.codearea.focus()
+		document.codeform.codearea.select()
 	});
 });
 
