@@ -115,7 +115,6 @@ var userAgent = navigator.userAgent.toLowerCase(),
 	msie = /msie/.test( userAgent ) && !/opera/.test( userAgent );
 
 var p = new _IG_Prefs();
-//function str( key, def ) { return p.getString(key) || ''+def || ''; }
 var width = $(window).width();
 var height = $(window).height();
 
@@ -183,52 +182,6 @@ T( 'poll411-maker:gadget', {
 		document.codeform.thecode.select()
 	});
 });
-
-//document.write(
-//	'<style type="text/css">',
-//		'body.gadget { margin:0; padding:0; }',
-//		'#wrapper, #wrapper * { font-family:Arial,sans-serif; font-size:10pt; }',
-//		'#title { margin-bottom:4px; }',
-//		'#title, #mapbox { overflow: auto; }',
-//		'.heading { font-weight:bold; font-size:110%; }',
-//		params.home ? '.removehelp { display:none; }' : '',
-//	'</style>'
-//);
-//
-//	document.write(
-//		'<style type="text/css">',
-//			'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(', baseUrl, 'spinner.gif); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30; }',
-//			'#spinner { filter:alpha(opacity=30); }',
-//			'#title { padding-top:4px; }',
-//		'</style>'
-//	);
-//	
-//	var width = $(window).width(), height = $(window).height();
-//	//if( width >= 500 ) {
-//		var panelMin = 150;
-//		var panelWidth = ( panelMin + ( width - 500 ) * .75 ).toFixed();
-//		var mapWidth = width - panelWidth;
-//		//console.log( width, panelWidth, mapWidth );
-//		document.write(
-//			'<style type="text/css">',
-//				'#title { float:left; width:', panelWidth, 'px; height:100%; }',
-//				'#mapbox { float:left; width:', mapWidth, 'px; height:100%; }',
-//			'</style>'
-//		);
-//	//}
-//	//else {
-//	//}
-//
-//function getJSON( url, callback, cache ) {
-//	_IG_FetchContent( url, function( text ) {
-//		var json = eval( '(' + text + ')' );
-//		callback( json );
-//	}, {
-//		refreshInterval: cache || 300
-//	});
-//}
-
-//});  // end $(function(){})
 
 })( jQuery );
 
