@@ -17,14 +17,13 @@
   #Poll411Frame { width:100%; height:{{height}}px; }
   /* Colors */
   #Poll411Gadget { border:1px solid #AAA; }
-  #Poll411Label { color:#777; }
+  #Poll411Input.example { color:#666; }
   #Poll411Frame { border-top:1px solid #DDD; }
   /* Layout */
   #Poll411Gadget { margin:0; padding:6px; }
   #Poll411Form { margin:0; padding:0; }
   #Poll411Title { float:left; padding-bottom:4px; }
-  #Poll411LabelBox { position:relative; float:left; margin-right:6px; }
-  #Poll411Label { position:absolute; left:5px; top:0; z-index:1; cursor: text; }
+  #Poll411InputBox { float:left; margin-right:6px; }
   #Poll411ButtonBox { float:left; }
   #Poll411Frame { display:none; margin-top:6px; }
 </style>
@@ -38,11 +37,8 @@
   <div style="clear:both;">
   </div>
   <form id="Poll411Form" onsubmit="return Poll411.submit()">
-    <div id="Poll411LabelBox">
-      <label id="Poll411Label" for="Poll411Input">
-        {{example}}
-      </label>
-      <input id="Poll411Input" type="text" onfocus="Poll411.focus()" onblur="Poll411.blur()" />
+    <div id="Poll411InputBox">
+      <input type="text" id="Poll411Input" class="example" onfocus="Poll411.focus()" onblur="Poll411.blur()" />
     </div>
     <div id="Poll411ButtonBox">
       <button type="submit" id="Poll411Button"> Search</button>
@@ -58,15 +54,23 @@
     function e( id ) { return document.getElementById('Poll411'+id); }
     var label = e('Label'), input = e('Input'), button = e('Button'), frame = e('Frame');
     
+    var example = "{{example}}";
+    input.value = example;
+    
     Poll411 = {
       
       focus: function() {
-        label.style.textIndent = '-1000px';
+        if( input.value == example ) {
+          input.className = '';
+          input.value = '';
+        }
       },
       
       blur: function() {
-        if( input.value === '' )
-          label.style.textIndent = '0px';
+        if( input.value ==  ''  ||  input.value == example ) {
+          input.className = 'example';
+          input.value = example;
+        }
       },
       
       submit: function() {
@@ -82,9 +86,6 @@
         return false;
       }
     };
-    
-    Poll411.focus();
-    Poll411.blur();
   })();
 </script>
 <!-- End US Voter Info gadget by Google -->
