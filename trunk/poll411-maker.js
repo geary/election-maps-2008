@@ -142,15 +142,16 @@ document.write(
 			'</div>',
 		'</div>',
 	'</div>',
-	'<div id="havecode" class="popupOuter" style="width:95%;">',
+	'<div id="havecode" class="popupOuter" style="width:95%; height:90%;">',
 		'<div class="popupInner">',
-			'<div style="text-align:center;">',
+			'<div>',
 				'<div style="font-size:16px; font-weight:bold; margin-bottom:8px;">',
-					'Copy and paste the HTML below to include this gadget on your webpage.',
+					'Copy and paste this HTML to include the gadget on your website:',
 				'</div>',
 				'<div style="font-size:12px;">',
 					'<form id="codeform" name="codeform" style="margin:0; padding:0;">',
-						'<textarea id="codearea" name="codearea" style="width:100%; height:80%; font-family: Consolas,Courier New,Courier,monospace;" value=""/>',
+						'<textarea id="codearea" name="codearea" style="width:100%; height:80%; font-family: Consolas,Courier New,Courier,monospace;" value="">',
+						'</textarea>',
 					'</form>',
 				'</div>',
 			'</div>',
@@ -185,7 +186,7 @@ T( 'poll411-maker:head', variables, function( head ) {
 	$('#outerlimits').html( body ).height( height );
 	$getcode.show();
 	$('#btnGetCode').click( function() {
-		$codearea.val( body );
+		$codearea.val( head + '\n' + body );
 		$havecode.show();
 		document.codeform.codearea.focus()
 		document.codeform.codearea.select()
