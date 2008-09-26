@@ -6,34 +6,6 @@
 
 (function( $ ) {
 
-if( ! Array.prototype.forEach ) {
-	Array.prototype.forEach = function( fun /*, thisp*/ ) {
-		var thisp = arguments[1];
-		for( var i = 0, n = this.length;  i < n;  ++i ) {
-			if( i in this )
-				fun.call( thisp, this[i], i, this );
-		}
-	};
-}
-
-if( ! Array.prototype.map ) {
-	Array.prototype.map = function( fun /*, thisp*/ ) {
-		var len = this.length;
-		var res = new Array( len );
-		var thisp = arguments[1];
-		for( var i = 0;  i < len;  ++i ) {
-			if( i in this )
-				res[i] = fun.call( thisp, this[i], i, this );
-		}
-		
-		return res;
-	};
-}
-
-Array.prototype.mapjoin = function( fun, delim ) {
-	return this.map( fun ).join( delim || '' );
-};
-
 htmlEscape = function( text ) {
 	var div = document.createElement( 'div' );
 	div.appendChild( document.createTextNode(text) );
@@ -41,11 +13,6 @@ htmlEscape = function( text ) {
 };
 
 $.extend( $.fn, {
-	
-	//html: function( a ) {
-	//	if( a == null ) return this[0] && this[0].innerHTML;
-	//	return this.empty().append( join( a.charAt ? arguments : a ) );
-	//},
 	
 	setClass: function( cls, add ) {
 		return this[ add ? 'addClass' : 'removeClass' ]( cls );
@@ -56,10 +23,6 @@ $.extend( $.fn, {
 	}
 	
 });
-
-function join( array, delim ) {
-	return Array.prototype.join.call( array, delim || '' );
-}
 
 function fetch( url, callback ) {
 	_IG_FetchContent( url, callback, {
@@ -100,19 +63,8 @@ T.urls = {};
 
 var opt = gadget;
 
-var sampleAddr = '1600 Pennsylvania Ave 20006';
-
 function writeScript( url ) {
 	document.write( '<script type="text/javascript" src="', url, '"></script>' );
-}
-
-function cacheUrl( url, cache, always ) {
-	if( opt.nocache  &&  ! always ) return url + '?q=' + new Date().getTime();
-	if( opt.nocache ) cache = 0;
-	if( typeof cache != 'number' ) cache = 300;
-	url = _IG_GetCachedUrl( url, { refreshInterval:cache } );
-	if( ! url.match(/^http:/) ) url = 'http://' + location.host + url;
-	return url;
 }
 
 var userAgent = navigator.userAgent.toLowerCase(),
