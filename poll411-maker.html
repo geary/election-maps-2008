@@ -7,9 +7,11 @@
 ::head
 
 <!-- Begin US Voter Info gadget by Google -->
+<!-- Copy this entire block of code into your HTML page -->
+
 <style type="text/css">
   /* Font */
-  #Poll411Gadget { font:{{font}}; }
+  #Poll411Gadget, #Poll411Gadget * { font:{{font}}; }
   /* Sizes */
   #Poll411Gadget, #Poll411Form { width:{{width}}px; }
   #Poll411Frame { width:100%; height:{{height}}px; }
@@ -47,6 +49,7 @@
   <div id="Poll411Frame">
   </div>
 </div>
+
 <script type="text/javascript">
   (function() {
     function e( id ) { return document.getElementById('Poll411'+id); }
@@ -72,10 +75,12 @@
       },
       
       submit: function() {
+        var addr = input.value;
+        if( addr == example ) addr = addr.replace( /^.*: /, '' );
         frame.style.display = 'block';
         frame.innerHTML = [
           '<iframe ',
-            'src="http://www.gmodules.com/ig/ifr?url={{gadget}}&amp;synd=open&amp;nocache=1&amp;up_address=', encodeURIComponent(input.value), '&amp;up_font={{urlfont}}" ',
+            'src="http://www.gmodules.com/ig/ifr?url={{gadget}}&amp;synd=open&amp;nocache=1&amp;up_address=', encodeURIComponent(addr), '&amp;up_font={{urlfont}}" ',
             'style="width:100%; height:100%;" ',
             'frameborder="0" ',
             'scrolling="no" ',
@@ -86,4 +91,5 @@
     };
   })();
 </script>
+
 <!-- End US Voter Info gadget by Google -->
