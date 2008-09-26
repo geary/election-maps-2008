@@ -61,13 +61,19 @@ function join( array, delim ) {
 	return Array.prototype.join.call( array, delim || '' );
 }
 
+function fetch( url, callback ) {
+	_IG_FetchContent( url, callback, {
+		refreshInterval: opt.nocache ? 1 : opt.cache || 300
+	});
+}
+
 T = function( name, values, give) {
 	name = name.split(':');
 	var url = opt.baseUrl + name[0] + '.html', part = name[1];
 	if( T.urls[url] )
 		return ready();
 	
-	_IG_FetchContent( url, function( data ) {
+	fetch( url, function( data ) {
 		var a = data.replace( /\r\n/g, '\n' ).split( /\n::/g );
 		var o = T.urls[url] = {};
 		for( var i = 1, n = a.length;  i < n;  ++i ) {
@@ -75,8 +81,6 @@ T = function( name, values, give) {
 			o[k] = $.trim(v);
 		}
 		ready();
-	}, {
-		refreshInterval: opt.nocache ? 1 : opt.cache || 300
 	});
 	
 	function ready() {
