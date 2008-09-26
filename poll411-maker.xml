@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+
+<ModulePrefs
+    title="2008 US Voter Info"
+    description="2008 US Voter Info"
+    author="Michael Geary"
+    author_affiliation="Google, Inc."
+    author_email="elections@google.com"
+    thumbnail=""
+    screenshot=""
+    title_url=""
+    width="620"
+    height="480">
+  <Require feature="analytics"/>
+</ModulePrefs>
+
+<UserPref name="font" datatype="string" display_name="Font" default_value="10pt Arial,sans-serif"/>
+<UserPref name="example" datatype="string" display_name="Example" default_value="Example: 1600 Pennsylvania Ave 20006"/>
+
+<Content type="html">
+<![CDATA[
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.js">
+</script>
+
+<script type="text/javascript">
+	var gadget = {
+		moduleId: __MODULE_ID__,
+		baseUrl: 'http://election-maps-2008.googlecode.com/svn/trunk/'
+	};
+	
+	function script( url, seconds ) {
+		document.write(
+			'<script type="text/javascript" src="',
+				_IG_GetCachedUrl( url, { refreshInterval:seconds } ),
+			'">',
+			'<\/script>'
+		);
+	}
+	
+	script( gadget.baseUrl + 'poll411-maker.js', 60 );
+	
+</script>
+
+]]>
+</Content>
+
+</Module>
