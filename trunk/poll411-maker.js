@@ -141,7 +141,7 @@ T( 'poll411-maker:head', variables, function( head ) {
 	$('#outerlimits').html( body ).height( height );
 	$getcode.show();
 	$('#btnGetCode').click( function() {
-		$codearea.val( head + '\n' + body );
+		$codearea.val( head + '\n\n' + body + '\n' );
 		$havecode.show();
 		document.codeform.codearea.focus()
 		document.codeform.codearea.select()
