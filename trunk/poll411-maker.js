@@ -170,18 +170,22 @@ function center( $item ) {
 	});
 }
 
-T( 'poll411-maker:gadget', {
+var variables = {
 	width: width,
 	inputWidth: width - 101,
 	height: height - 80,
 	example: p.getString('example'),
 	font: p.getString('font'),
 	gadget: opt.gadgetUrl
-}, function( html ) {
-	$('#outerlimits').html( html ).height( height );
+};
+
+T( 'poll411-maker:head', variables, function( head ) {
+	$('head').append( $(head) );
+	var body = T( 'poll411-maker:body', variables );
+	$('#outerlimits').html( body ).height( height );
 	$getcode.show();
 	$('#btnGetCode').click( function() {
-		$codearea.val( html );
+		$codearea.val( body );
 		$havecode.show();
 		document.codeform.codearea.focus()
 		document.codeform.codearea.select()
