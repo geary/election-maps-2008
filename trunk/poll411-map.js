@@ -7,14 +7,14 @@ window.console && typeof console.log == 'function' && console.log( location.href
 
 var opt = window.gadget ? gadget : window.mapplet ? mapplet : {};
 
-var baseUrl = opt.baseUrl || 'http://poll411.s3.amazonaws.com/';
+var prefs = new _IG_Prefs();
+
+var baseUrl = opt.baseUrl;
 var dataUrl = opt.dataUrl || baseUrl;
 
 var today = new Date;
 today.setHours( 0, 0, 0, 0 );
 var electionDay = new Date( 2008, 10, 4 );
-
-var sampleAddr = '1600 Pennsylvania Ave 20006';
 
 function writeScript( url ) {
 	document.write( '<script type="text/javascript" src="', url, '"></script>' );
@@ -181,10 +181,14 @@ var key = {
 	'': ''
 }[location.host];
 
+var fontFamily = prefs.getString('fontFamily') || 'Arial,sans-serif';
+var fontSize = prefs.getString('fontSize') || '10pt';
+var fontStyle = S( 'font-family:', fontFamily, '; font-size:', fontSize, '; ' );
+
 document.write(
 	'<style type="text/css">',
 		'body.gadget { margin:0; padding:0; }',
-		'#wrapper, #wrapper * { font-family:Arial,sans-serif; font-size:10pt; }',
+		'#wrapper, #wrapper * { ', fontStyle, ' }',
 		'#title { margin-bottom:4px; }',
 		'#title, #mapbox { overflow: auto; }',
 		'.heading { font-weight:bold; font-size:110%; }',
@@ -644,7 +648,7 @@ function setVoteHtml() {
 		'</div>'
 	) );
 	vote.html = S(
-		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
+		'<div style="', fontStyle, '">',
 			location( true ),
 			locationWarning,
 		'</div>'
@@ -902,7 +906,7 @@ function submit( addr ) {
 
 function formatHome( infowindow ) {
 	return S(
-		'<div style="font-family:Arial,sans-serif; font-size:10pt;">',
+		'<div style="', fontStyle, '">',
 			formatLocation( home.info, infowindow ? 'home-icon-50.png' : 'marker-green.png', 'Your Home', infowindow ),
 			//extra ? electionInfo() : '',
 		'</div>'
@@ -1088,12 +1092,7 @@ getJSON( stateSheet, function( json ) {
 		})();
 	}
 	else {
-		(function() {
-			var p = new _IG_Prefs();
-			//function str( key, def ) { return p.getString(key) || ''+def || ''; }
-			var addr = p.getString('address');
-			submit( addr );
-		})();
+		submit( prefs.getString('address') );
 	}
 });
 
