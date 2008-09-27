@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+
+<ModulePrefs
+    title="2008 US Voter Info"
+    description="2008 US Voter Info"
+    author="Michael Geary"
+    author_affiliation="Google, Inc."
+    author_email="elections@google.com"
+    thumbnail=""
+    screenshot=""
+    title_url=""
+    width="620"
+    height="480">
+  <Require feature="analytics"/>
+</ModulePrefs>
+
+<UserPref name="example" datatype="string" display_name="Example" default_value="Example: 1600 Pennsylvania Ave 20006"/>
+
+<UserPref name="fontFamily" datatype="string" display_name="Font&#160;Family" default_value="Arial,sans-serif"/>
+
+<UserPref name="fontSize" datatype="enum" display_name="Font&#160;Size" default_value="10">
+	<EnumValue value="6"/>
+	<EnumValue value="7"/>
+	<EnumValue value="8"/>
+	<EnumValue value="9"/>
+	<EnumValue value="10"/>
+	<EnumValue value="11"/>
+	<EnumValue value="12"/>
+	<EnumValue value="13"/>
+	<EnumValue value="14"/>
+	<EnumValue value="15"/>
+	<EnumValue value="16"/>
+	<EnumValue value="17"/>
+	<EnumValue value="18"/>
+	<EnumValue value="19"/>
+	<EnumValue value="20"/>
+	<EnumValue value="21"/>
+	<EnumValue value="22"/>
+	<EnumValue value="23"/>
+	<EnumValue value="24"/>
+</UserPref>
+
+<UserPref name="fontUnits" datatype="enum" display_name="Font&#160;Units" default_value="pt">
+	<EnumValue value="pt" display_value="Points (pt)"/>
+	<EnumValue value="px" display_value="Pixels (px)"/>
+</UserPref>
+
+<Content type="html">
+<![CDATA[
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.js">
+</script>
+
+<script type="text/javascript">
+	var gadget = {
+		moduleId: __MODULE_ID__,
+		baseUrl: 'http://election-maps-2008.googlecode.com/svn/trunk/'
+		gadgetUrl: 'http://election-maps-2008.googlecode.com/svn/trunk/poll411-frame.xml'
+	};
+	
+	function script( url, seconds ) {
+		document.write(
+			'<script type="text/javascript" src="',
+				_IG_GetCachedUrl( url, { refreshInterval:seconds } ),
+			'">',
+			'<\/script>'
+		);
+	}
+	
+	script( gadget.baseUrl + 'poll411-maker.js', 60 );
+	
+</script>
+
+]]>
+</Content>
+
+</Module>
