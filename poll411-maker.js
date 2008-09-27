@@ -73,7 +73,7 @@ var userAgent = navigator.userAgent.toLowerCase(),
 if( msie ) $('body')[0].scroll = 'no';
 $('body').css({ margin:0, padding:0 });
 
-var p = new _IG_Prefs();
+var prefs = new _IG_Prefs();
 var width = $(window).width();
 var height = $(window).height();
 
@@ -130,8 +130,9 @@ function center( $item ) {
 var variables = {
 	width: width - 14,
 	height: height - 80,
-	example: p.getString('example'),
-	font: p.getString('font'),
+	example: prefs.getString('example'),
+	fontFamily: prefs.getString('fontFamily').replace( "'", '"' ),
+	fontSize: prefs.getString('fontSize') + prefs.getString('fontUnits'),
 	gadget: opt.gadgetUrl
 };
 
