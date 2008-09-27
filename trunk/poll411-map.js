@@ -8,6 +8,7 @@ window.console && typeof console.log == 'function' && console.log( location.href
 var opt = window.gadget ? gadget : window.mapplet ? mapplet : {};
 
 var prefs = new _IG_Prefs();
+var sampleAddr = prefs.getString('address') || '1600 Pennsylvania Ave 20006';
 
 var baseUrl = opt.baseUrl;
 var dataUrl = opt.dataUrl || baseUrl;
@@ -276,7 +277,7 @@ if( mapplet ) {
 				'<div style="margin-top:0.25em;">',
 					'Example: ',
 					'<a href="#" onclick="return PollingPlaceSearch.sample();">',
-						sampleAddr,
+						htmlEscape( sampleAddr ),
 					'</a>',
 				'</div>',
 			'</div>',
@@ -1092,7 +1093,7 @@ getJSON( stateSheet, function( json ) {
 		})();
 	}
 	else {
-		submit( prefs.getString('address') );
+		submit( sampleAddr );
 	}
 });
 
