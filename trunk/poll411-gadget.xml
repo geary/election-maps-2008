@@ -20,7 +20,7 @@
 	<EnumValue value="inline" display_value="Inline Gadget"/>
 </UserPref>
 
-<UserPref name="example" datatype="string" display_name="Example" default_value="Example: 1600 Pennsylvania Ave 20006"/>
+<UserPref name="example" datatype="string" display_name="Example&#160;Addr." default_value="Example: 1600 Pennsylvania Ave 20006"/>
 
 <UserPref name="fontFamily" datatype="string" display_name="Font&#160;Family" default_value="Arial,sans-serif"/>
 
