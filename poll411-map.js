@@ -284,8 +284,6 @@ function stateByAbbr( abbr ) {
 	return statesByAbbr[abbr.toUpperCase()] || stateUS;
 }
 
-var localsearch = ! msie;
-
 mapplet = window.mapplet;
 var map, $jsmap, currentAddress;
 var home, vote;
@@ -517,16 +515,6 @@ function gadgetWrite() {
 	}
 	else {
 		writeScript( 'http://maps.google.com/maps?file=api&amp;v=2&amp;key=' + key );
-		if( localsearch ) {
-			writeScript( 'http://www.google.com/uds/api?file=uds.js&v=1.0&key=' + key );
-			writeScript( 'http://www.google.com/uds/solutions/localsearch/gmlocalsearch.js' );
-			document.write(
-				'<style type="text/css">',
-					'@import url("http://www.google.com/uds/css/gsearch.css");',
-					'@import url("http://www.google.com/uds/solutions/localsearch/gmlocalsearch.css");',
-			   '</style>'
-			);
-		}
 	}
 	
 	writeBody = function() {
@@ -829,6 +817,7 @@ function gadgetReady() {
 			GBrowserIsCompatible() && setTimeout( function() {
 				$jsmap = $('#jsmap');
 				map = new GMap2( $jsmap[0], {
+					//googleBarOptions: { showOnLoad: true },
 					mapTypes: [
 						G_NORMAL_MAP,
 						G_SATELLITE_MAP,
@@ -904,18 +893,7 @@ function gadgetReady() {
 				//map.setCenter( map.fromDivPixelToLatLng(point), a.zoom );
 				map.addControl( new GSmallMapControl );
 				map.addControl( new GMapTypeControl );
-				if( localsearch ) {
-					//alert( window.GControl );
-					//debugger;
-					//map.addControl(
-					//	new google.maps.LocalSearch(),
-					//	new GControlPosition( G_ANCHOR_BOTTOM_RIGHT, new GSize(10,20) )
-					//);
-					var gls = new google.maps.LocalSearch();
-					var gs = new GSize(10,20);
-					var gcp = new GControlPosition( G_ANCHOR_BOTTOM_RIGHT, gs )
-					map.addControl( gls, gcp );
-				}
+				map.enableGoogleBar();
 			}
 			if( mapplet )
 				ready();
