@@ -204,12 +204,11 @@ var userAgent = navigator.userAgent.toLowerCase(),
 
 // Common initialization
 
-var maker = decodeURIComponent(location.href).indexOf('source=http://www.gmodules.com/ig/creator?') > -1;
-
 var opt = window.gadget ? gadget : window.mapplet ? mapplet : {};
 
 var prefs = new _IG_Prefs();
 var pref = {
+	gadgetType: 'iframe',
 	example: '1600 Pennsylvania Ave 20006',
 	address: '',
 	fontFamily: 'Arial,sans-serif',
@@ -218,6 +217,8 @@ var pref = {
 };
 for( var name in pref ) pref[name] = prefs.getString(name) || pref[name];
 pref.ready = prefs.getBool('submit');
+
+var maker = decodeURIComponent(location.href).indexOf('source=http://www.gmodules.com/ig/creator?') > -1;
 
 var fontStyle = S( 'font-family:', pref.fontFamily, '; font-size:', pref.fontSize, pref.fontUnits, '; ' );
 
@@ -302,33 +303,54 @@ var key = {
 	'': ''
 }[location.host];
 
+// HTML snippets
+
+var infoLinks = ! mapplet ? '' : S(
+	'<div style="', fontStyle, '">',
+		'<div style="margin-top:0.5em; border-top:1px solid #CCC; padding-top:1em;">',
+			'Full election coverage:<br />',
+			'<a target="_blank" href="http://www.google.com/2008election">',
+				'Google 2008 Election Site',
+			'</a>',
+		'</div>',
+		'<div style="margin-top:1em;">',
+			'Help others find their voter information:<br />',
+			'<a target="_blank" href="http://gmodules.com/ig/creator?synd=open&nocache=1&url=http://election-maps-2008.googlecode.com/svn/trunk/poll411-gadget.xml">',
+				'Get this gadget for your website',
+			'</a>',
+		'</div>',
+		'<div style="margin-top:1em;">',
+			'<a target="_blank" href="http://maps.google.com/elections">',
+				'More election gadgets',
+			'</a>',
+		'</div>',
+	'</div>'
+);
+
 // Maker inline initialization
 
 function makerWrite() {
 	if( msie ) $('body')[0].scroll = 'no';
 	$('body').css({ margin:0, padding:0 });
 	
-	document.write(
-		'<style type="text/css">',
-			'.popupOuter { z-index:1; position:absolute; background-color:white; display:none; }',
-			'.popupInner { background-color:#E5ECF9; border:1px solid #3366CC; padding:8px; margin:4px; }',
-		'</style>',
-		'<div id="outerlimits">',
-		'</div>',
+	var overlays = pref.gadgetType == 'iframe' ? '' : S(
 		'<div id="getcode" class="popupOuter">',
 			'<div class="popupInner" style="width:225px;">',
 				'<div style="text-align:center; margin-bottom:10px;">',
 					'<button type="button" id="btnGetCode" style="font-size:24px;">',
-						'Get the Gadget',
+						'Get the Code',
 					'</button>',
 				'</div>',
 				'<div style="font-size:14px;">',
 					'<div style="margin-bottom:8px;">',
-						'Click this button for a <strong>collapsing</strong> HTML + JavaScript gadget. ',
-						'It displays only the input form above until you click the <strong>Search</strong> button, then it expands to the full height.',
+						'Click this button for an <strong>inline</strong> gadget using HTML and JavaScript. ',
 					'</div>',
-					'<div>',
-						'Not all websites support the collapsing gadget. For a simpler fixed-height <strong><code>&lt;iframe&gt;</code></strong> gadget, click <strong>Get the Code</strong> below.',
+					'<div style="margin-bottom:8px;">',
+						'The inline gadget initially displays only the search input form, without taking extra space on your page. When you click the <strong>Search</strong> button, it expands to its full height.',
+					'</div>',
+					'<div style="margin-bottom:8px;">',
+						'Not all websites support the inline gadget. ',
+						'For a simpler gadget, change the <strong>Gadget Type</strong> below to Standard Gadget.',
 					'</div>',
 				'</div>',
 			'</div>',
@@ -351,6 +373,16 @@ function makerWrite() {
 				'</div>',
 			'</div>',
 		'</div>'
+	);
+	
+	document.write(
+		'<style type="text/css">',
+			'.popupOuter { z-index:1; position:absolute; background-color:white; display:none; }',
+			'.popupInner { background-color:#E5ECF9; border:1px solid #3366CC; padding:8px; margin:4px; }',
+		'</style>',
+		'<div id="outerlimits">',
+		'</div>',
+		overlays
 	);
 	
 	var $getcode = $('#getcode'), $havecode = $('#havecode'), $codearea = $('#codearea');
@@ -503,6 +535,7 @@ function gadgetWrite() {
 			'</div>',
 			'<div id="wrapper">',
 				'<div id="title">',
+					infoLinks,
 				'</div>',
 				'<div id="mapbox">',
 				'</div>',
@@ -514,7 +547,7 @@ function gadgetWrite() {
 	
 	if( mapplet ) {
 		document.write(
-			'</div>'
+			'</div>'  // #outerlimits
 		);
 	}
 }
@@ -764,6 +797,7 @@ function gadgetReady() {
 				'</div>',
 				location(),
 				locationWarning,
+				infoLinks,
 			'</div>'
 		) : S(
 			// TODO: refactor
@@ -1008,6 +1042,7 @@ function gadgetReady() {
 			},
 			
 			submit: function() {
+				$spinner.show();
 				submit( input.value );
 				return false;
 			}
