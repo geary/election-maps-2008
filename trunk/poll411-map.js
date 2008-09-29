@@ -307,7 +307,7 @@ var key = {
 
 var infoLinks = ! mapplet ? '' : S(
 	'<div style="', fontStyle, '">',
-		'<div style="margin-top:0.5em; border-top:1px solid #CCC; padding-top:1em;">',
+		'<div style="margin-top:1em; border-top:1px solid #BBB; padding-top:1em;">',
 			'Full election coverage:<br />',
 			'<a target="_blank" href="http://www.google.com/2008election">',
 				'Google 2008 Election Site',
@@ -535,7 +535,6 @@ function gadgetWrite() {
 			'</div>',
 			'<div id="wrapper">',
 				'<div id="title">',
-					infoLinks,
 				'</div>',
 				'<div id="mapbox">',
 				'</div>',
