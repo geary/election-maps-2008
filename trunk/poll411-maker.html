@@ -4,14 +4,14 @@
 // Free Beer and Free Speech License (any OSI license)
 // http://freebeerfreespeech.org/
 
-::head
+::style
 
 <!-- Begin US Voter Info gadget by Google -->
 <!-- Copy this entire block of code into your HTML page -->
 
 <style type="text/css">
   /* Font */
-  #Poll411Gadget, #Poll411Gadget * { font-family:{{fontFamily}}; font-size:{{fontSize}}; }
+  #Poll411Gadget, #Poll411Gadget * { font-family:{{fontFamily}}; font-size:{{fontSize}}{{fontUnits}}; }
   /* Sizes */
   #Poll411Gadget, #Poll411Form { width:{{width}}px; }
   #Poll411Frame { width:100%; height:{{height}}px; }
@@ -28,7 +28,7 @@
   #Poll411Frame { display:none; margin-top:6px; }
 </style>
 
-::body
+::html
 
 <div id="Poll411Gadget">
   <div id="Poll411Title">
@@ -50,9 +50,11 @@
   </div>
 </div>
 
+::script
+
 <script type="text/javascript">
   (function() {
-    var fontFamily = '{{fontFamily}}', fontSize = '{{fontSize}}';
+    var fontFamily = '{{fontFamily}}', fontSize = '{{fontSize}}', fontUnits = '{{fontUnits}}';
     function e( id ) { return document.getElementById('Poll411'+id); }
     var label = e('Label'), input = e('Input'), button = e('Button'), frame = e('Frame');
     
@@ -81,7 +83,7 @@
         frame.style.display = 'block';
         frame.innerHTML = [
           '<iframe ',
-            'src="http://www.gmodules.com/ig/ifr?url={{gadget}}&amp;synd=open&amp;nocache=1&amp;up_address=', encodeURIComponent(addr), '&amp;up_fontFamily=', encodeURIComponent(fontFamily), '&amp;up_fontSize=', fontSize, '" ',
+            'src="http://www.gmodules.com/ig/ifr?url={{gadget}}&amp;synd=open&amp;nocache=1&amp;up_gadgetType=iframe&amp;up_address=', encodeURIComponent(addr), '&amp;up_fontFamily=', encodeURIComponent(fontFamily), '&amp;up_fontSize=', fontSize, '&amp;up_fontUnits=', fontUnits, '&amp;up_submit=1" ',
             'style="width:100%; height:100%;" ',
             'frameborder="0" ',
             'scrolling="no" ',
