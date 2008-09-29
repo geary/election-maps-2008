@@ -315,7 +315,7 @@ var infoLinks = ! mapplet ? '' : S(
 		'</div>',
 		'<div style="margin-top:1em;">',
 			'Help others find their voter information:<br />',
-			'<a target="_blank" href="http://gmodules.com/ig/creator?synd=open&nocache=1&url=http://election-maps-2008.googlecode.com/svn/trunk/poll411-gadget.xml">',
+			'<a target="_blank" href="http://gmodules.com/ig/creator?synd=open&url=http://election-maps-2008.googlecode.com/svn/trunk/poll411-gadget.xml">',
 				'Get this gadget for your website',
 			'</a>',
 		'</div>',
