@@ -38,7 +38,7 @@
 		);
 	}
 	
-	script( mapplet.baseUrl + 'poll411-map.js', 60 );
+	script( mapplet.baseUrl + 'poll411-map.js', 300 );
 	
 </script>
 
