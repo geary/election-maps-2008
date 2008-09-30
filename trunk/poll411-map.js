@@ -443,7 +443,7 @@ function gadgetWrite() {
 		document.write(
 			'<style type="text/css">',
 				'body { height:', height, 'px; }',
-				'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(', baseUrl, 'spinner.gif); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30;', pref.ready ? '' : 'display:none;', '}',
+				'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(', cacheUrl( baseUrl + 'spinner.gif' ), '); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30;', pref.ready ? '' : 'display:none;', '}',
 				'#spinner { filter:alpha(opacity=30); }',
 				'#title { padding-top:4px; }',
 			'</style>'
