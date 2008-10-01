@@ -677,7 +677,7 @@ function gadgetReady() {
 				) : '',
 				'<ul style="margin-top:0; margin-bottom:0;">',
 					election( 'gsx$areyouregistered', 'Are you registered to vote?' ),
-					election( 'gsx$registrationinfo', 'How to register in %S', true ),
+					election( 'gsx$registrationinfo', state.abbr == 'ND' ? '%S voter qualifications' : 'How to register in %S', true ),
 					election( 'gsx$absenteeinfo', absentee ),
 					election( 'gsx$electionwebsite', '%S election website' ),
 				'</ul>',
