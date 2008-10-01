@@ -328,7 +328,7 @@ var infoLinks = ! mapplet ? '' : S(
 var attributeAlways = ! mapplet ? '' : S(
 	'<div style="', fontStyle, '">',
 		'<div style="margin-top:0.5em; border-top:1px solid #BBB; padding-top:1em;">',
-			'Project in conjunction with the ',
+			'In conjunction with the ',
 			'<a target="_blank" href="http://www.lwv.org/">',
 				'League of Women Voters',
 			'</a>',
@@ -582,7 +582,7 @@ function gadgetReady() {
 	
 	var interpolatedLocationWarning = S(
 		'<div style="padding-top:1em; xline-height:1.2em; xcolor:gray; xfont-size:80%;">',
-			'<span style="color:red; font-weight:bold;">',
+			'<span style="font-weight:bold;">',
 				'Important&nbsp; ',
 			'</span>',
 			'Verify your voting location with your local election officials. ',
@@ -725,7 +725,7 @@ function gadgetReady() {
 			var remain = Math.floor( ( date - today ) / days );
 			return S(
 				'<div style="margin-bottom:0.75em;',
-						remain < 6 ? ' color:red;' : '',
+						remain < 6 ? '' : '',
 				'">',
 					remain < 0 ? '' :
 					remain < 1 ? dt.last :
