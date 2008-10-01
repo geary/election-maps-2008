@@ -466,20 +466,26 @@ function gadgetWrite() {
 			'</style>'
 		);
 		
-		//if( width >= 500 ) {
-			var panelMin = 150;
+		if( width >= 500 ) {
+			var panelMin = 170;
 			var panelWidth = ( panelMin + ( width - 500 ) * .75 ).toFixed();
 			var mapWidth = width - panelWidth;
 			//console.log( width, panelWidth, mapWidth );
 			document.write(
 				'<style type="text/css">',
-					'#title { float:left; width:', panelWidth, 'px; xheight:100%; }',
-					'#mapbox { float:left; width:', mapWidth, 'px; xheight:100%; }',
+					'#title { float:left; width:', panelWidth, 'px; }',
+					'#mapbox { float:left; width:', mapWidth, 'px; }',
 				'</style>'
 			);
-		//}
-		//else {
-		//}
+		}
+		else {
+			document.write(
+				'<style type="text/css">',
+					'#title { width:100%; }',
+					'#mapbox { display:none; }',
+				'</style>'
+			);
+		}
 	}
 	
 	if( mapplet ) {
