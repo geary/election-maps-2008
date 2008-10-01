@@ -493,7 +493,8 @@ function gadgetWrite() {
 			'<div id="PollingPlaceSearch">',
 				'<div class="PollingPlaceSearchTitle removehelp">',
 					'<div style="margin-bottom:4px;">',
-						'Find your voting location, registration information and more. ',
+						//'Find your voting location, registration information and more. ',
+						'Find your voter registration information and more. ',
 						'Enter your <strong>home</strong>&nbsp;address:',
 					'</div>',
 				'</div>',
@@ -525,6 +526,9 @@ function gadgetWrite() {
 						'<a href="#" onclick="return PollingPlaceSearch.sample();">',
 							htmlEscape( pref.example ),
 						'</a>',
+					'</div>',
+					'<div style="margin-top:0.5em; padding-top:0.5em; border-top:1px solid #CCC;">',
+						'Coming soon: your voting location',
 					'</div>',
 				'</div>',
 			'</div>'
@@ -992,11 +996,12 @@ function gadgetReady() {
 	}
 	
 	function lookup( address, callback ) {
-		var url = S(
-			'http://pollinglocation.apis.google.com/?q=',
-			encodeURIComponent(address)
-		);
-		getJSON( url, callback );
+		//var url = S(
+		//	'http://pollinglocation.apis.google.com/?q=',
+		//	encodeURIComponent(address)
+		//);
+		//getJSON( url, callback );
+		callback({ errorcode: -1 });  // temp disable
 	}
 	
 	function getJSON( url, callback, cache ) {
