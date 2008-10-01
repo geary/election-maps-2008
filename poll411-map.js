@@ -1148,6 +1148,9 @@ function gadgetReady() {
 						'Until then, please check with your state or local election officials to verify your voting location.',
 					'</div>',
 				'</div>',
+				infoLinks,
+				attributeAlways,
+				attributeLater,
 			'</div>'
 		);
 	}
