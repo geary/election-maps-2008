@@ -317,10 +317,33 @@ var infoLinks = ! mapplet ? '' : S(
 				'Get this gadget for your website',
 			'</a>',
 		'</div>',
-		'<div style="margin-top:1em;">',
+		'<div style="margin:1em 0 1em 0;">',
 			'<a target="_blank" href="http://maps.google.com/elections">',
 				'More election gadgets',
 			'</a>',
+		'</div>',
+	'</div>'
+);
+
+var attributeAlways = ! mapplet ? '' : S(
+	'<div style="', fontStyle, '">',
+		'<div style="margin-top:0.5em; border-top:1px solid #BBB; padding-top:1em;">',
+			'Project in conjunction with the ',
+			'<a target="_blank" href="http://www.lwv.org/">',
+				'League of Women Voters',
+			'</a>',
+		'</div>',
+	'</div>'
+);
+
+var attributeLater = ! mapplet ? '' : S(
+	'<div style="', fontStyle, '">',
+		'<div style="margin-top:1em;">',
+			'Developed with the ',
+			'<a target="_blank" href="http://votinginfoproject.org/">',
+				'Voting Information Project',
+			'</a>',
+			' and State Election Officials from DC, DE, NH, OH, and VT.',
 		'</div>',
 	'</div>'
 );
@@ -523,6 +546,7 @@ function gadgetWrite() {
 			'</div>',
 			'<div id="wrapper">',
 				'<div id="title">',
+					attributeAlways,
 				'</div>',
 				'<div id="mapbox">',
 				'</div>',
@@ -785,6 +809,8 @@ function gadgetReady() {
 				location(),
 				locationWarning,
 				infoLinks,
+				attributeAlways,
+				attributeLater,
 			'</div>'
 		) : S(
 			// TODO: refactor
@@ -807,6 +833,8 @@ function gadgetReady() {
 				locationWarning,
 			'</div>'
 		);
+		if( mapplet )
+			_IG_AdjustIFrameHeight();
 	}
 	
 	function initMap( a ) {
@@ -1032,7 +1060,8 @@ function gadgetReady() {
 		vote = {};
 		map && map.clearOverlays();
 		currentAddress = addr;
-		$title.empty().height( height - $title.offset().top - 4 );
+		$title.empty();
+		if( ! mapplet ) $title.height( height - $title.offset().top - 4 );
 		$map.empty();
 		closehelp( function() {
 			geocode( addr, function( geo ) {
