@@ -533,9 +533,6 @@ function gadgetWrite() {
 							htmlEscape( pref.example ),
 						'</a>',
 					'</div>',
-					'<div style="margin-top:0.5em; padding-top:0.5em; border-top:1px solid #CCC;">',
-						'Coming soon: your voting location',
-					'</div>',
 				'</div>',
 			'</div>'
 		);
@@ -1147,7 +1144,7 @@ function gadgetReady() {
 				home.info ? electionInfo() : '',
 				'<div style="margin-top:1em;">',
 					'<div>',
-						'All voting location information will be available by mid-October. ',
+						'Coming soon! Voting location information will be available by mid-October. ',
 						'Until then, please check with your state or local election officials to verify your voting location.',
 					'</div>',
 				'</div>',
