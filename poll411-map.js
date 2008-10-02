@@ -156,6 +156,12 @@ $.extend( $.fn, {
 	
 });
 
+function analytics( path ) {
+	if( path.indexOf( 'http://maps.gmodules.com/ig/ifr' ) == 0 ) return;
+	path = path.replace( /http:\/\//, '/http/' ).replace( /mailto:/, '/mailto/' );
+	_IG_Analytics( 'UA-5730550-1', path );
+}
+
 // GAsync v2 by Michael Geary
 // Commented version and description at:
 // http://mg.to/2007/06/22/write-the-same-code-for-google-mapplets-and-maps-api
@@ -1063,6 +1069,7 @@ function gadgetReady() {
 	}
 	
 	function submit( addr ) {
+		analytics( '/lookup' );
         if( addr == pref.example ) addr = addr.replace( /^.*: /, '' );
 		home = {};
 		vote = {};
@@ -1317,10 +1324,17 @@ function gadgetReady() {
 		});
 	});
 	
-	_IG_Analytics( 'UA-5730550-1', mapplet ? '/mapplet' : '/gadget' );
+	analytics( maker ? '/creator' : mapplet ? '/mapplet' : '/gadget' );
 }
 
 // Final initialization
 
 maker ? makerWrite() : gadgetWrite();
-$( maker ? makerReady : gadgetReady );
+$(function() {
+	maker ? makerReady() : gadgetReady();
+	$('body').click( function( event ) {
+		var target = event.target;
+		if( $(target).is('a')  &&  target.href != '#' )
+			analytics( target.href );
+	});
+});
