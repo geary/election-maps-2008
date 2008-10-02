@@ -69,10 +69,15 @@ function S() {
 	return Array.prototype.join.call( arguments, '' );
 }
 
-function fetch( url, callback ) {
-	_IG_FetchContent( url, callback, {
-		refreshInterval: opt.nocache ? 1 : opt.cache || 300
-	});
+function fetch( url, callback, cache ) {
+	if( cache === false ) {
+		$.getJSON( url, callback );
+	}
+	else {
+		_IG_FetchContent( url, callback, {
+			refreshInterval: opt.nocache ? 1 : opt.cache || 300
+		});
+	}
 }
 
 T = function( name, values, give) {
@@ -964,10 +969,10 @@ function gadgetReady() {
 	
 	function geocode( address, callback ) {
 		var url = S(
-			'http://maps.google.com/maps/geo?output=json&oe=utf-8&q=',
+			'http://maps.google.com/maps/geo?output=json&callback=?&oe=utf-8&q=',
 			encodeURIComponent(address), '&key=', key
 		);
-		getJSON( url, callback );
+		getJSON( url, callback, false );
 	}
 	
 	function getleo( info, callback ) {
@@ -1009,9 +1014,9 @@ function gadgetReady() {
 	
 	function getJSON( url, callback, cache ) {
 		fetch( url, function( text ) {
-			var json = eval( '(' + text + ')' );
+			var json = typeof text == 'object' ? text : eval( '(' + text + ')' );
 			callback( json );
-		});
+		}, cache );
 	}
 	
 	function closehelp( callback ) {
