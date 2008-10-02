@@ -772,7 +772,7 @@ function gadgetReady() {
 				if( title.indexOf(what) == 0 )
 					title = title.slice( what.length + 1 );
 			}
-			var county = home.info.countyName;
+			var county = home.info.county;
 			var title = leo.title;
 			remove( county );
 			remove( 'County' );
@@ -952,6 +952,7 @@ function gadgetReady() {
 	
 	function formatLocation( info, icon, title, infowindow, extra ) {
 		var size = infowindow ? { width:50, height:50 } : { width:20, height:34 };
+		var locality = info.city ? info.city : info.county ? info.county + ' County' : '';
 		return S(
 			'<div style="font-weight:bold; font-size:110%;">',
 				title,
@@ -967,7 +968,8 @@ function gadgetReady() {
 								info.street,
 							'</div>',
 							'<div>',
-								info.city, ', ', info.state.abbr, ' ', info.zip,
+								locality ? locality  + ', ' + info.state.abbr : info.address.length > 2 ? info.address : info.state.name,
+								info.zip ? ' ' + info.zip : '',
 							'</div>',
 							extra,
 						'</td>',
@@ -984,7 +986,7 @@ function gadgetReady() {
 	
 	function geocode( address, callback ) {
 		var url = S(
-			'http://maps.google.com/maps/geo?output=json&callback=?&oe=utf-8&q=',
+			'http://maps.google.com/maps/geo?output=json&callback=?&oe=utf-8&gl=us&q=',
 			encodeURIComponent(address), '&key=', key
 		);
 		getJSON( url, callback, false );
@@ -999,7 +1001,7 @@ function gadgetReady() {
 					return;
 				}
 				function add( key ) { leo[key] = $.trim( $leo.find(key).text() ); }
-				var name = info.countyName.toUpperCase();
+				var name = info.county.toUpperCase();
 				var counties = xml.getElementsByTagName( 'county_name' );
 				for( var i = 0, county;  county = counties[i++]; ) {
 					if( county.firstChild.nodeValue == name ) {
@@ -1130,7 +1132,7 @@ function gadgetReady() {
 	function formatHome( infowindow ) {
 		return S(
 			'<div style="', fontStyle, '">',
-				formatLocation( home.info, infowindow ? 'home-icon-50.png' : 'marker-green.png', 'Your Home', infowindow ),
+				formatLocation( home.info, infowindow ? 'home-icon-50.png' : 'marker-green.png', 'Your ' + home.info.kind, infowindow ),
 				//extra ? electionInfo() : '',
 			'</div>'
 		);
@@ -1223,17 +1225,38 @@ function gadgetReady() {
 		);
 	}
 	
+	var Accuracy = {
+		country:1, state:2, county:3, city:4,
+		zip:5, street:6, intersection:7, address:8, premise:9
+	};
+	var Kind = [ '', 'Country', 'State', 'County', 'City', 'Neighborhood', 'Neighborhood', 'Neighborhood', 'Home', 'Home' ];
+	var Zoom = [ 4, 5, 6, 10, 11, 12, 13, 14, 15, 15 ];
+	
 	function mapInfo( place ) {
-		var area = place.AddressDetails.Country.AdministrativeArea;
+		var details = place.AddressDetails;
+		var accuracy = Math.min( details.Accuracy, Accuracy.address );
+		if( accuracy < Accuracy.state ) return null;
+		var country = details.Country;
+		if( ! country ) return null;
+		var area = country.AdministrativeArea;
 		if( ! area ) return null;
-		var state = stateByAbbr( area.AdministrativeAreaName );
+		var areaname = area.AdministrativeAreaName;
+		var state = statesByName[areaname] || stateByAbbr(areaname);
 		if( ! state ) return null;
-		var sub = area.SubAdministrativeArea || area;
-		var locality = sub.Locality;
-		if( ! locality ) return null;
-		var countyName = sub.SubAdministrativeAreaName || locality.LocalityName;
-		var street = locality.Thoroughfare;
-		var zip = locality.PostalCode;
+		var sub = area.SubAdministrativeArea || area, locality = sub.Locality;
+		if( locality ) {
+			var county = sub.SubAdministrativeAreaName || locality.LocalityName;
+			var city = locality.LocalityName;
+			var street = locality.Thoroughfare;
+			var zip = locality.PostalCode;
+		}
+		else if( area.AddressLine ) {
+			var addr = area.AddressLine[0] || '';
+			if( addr.match( / County$/ ) )
+				county = addr.replace( / County$/, '' );
+			else
+				city = addr;
+		}
 		var coord = place.Point.coordinates;
 		var lat = coord[1], lng = coord[0];
 		return {
@@ -1242,11 +1265,13 @@ function gadgetReady() {
 			lng: lng,
 			latlng: new GLatLng( lat, lng ),
 			street: street && street.ThoroughfareName || '',
-			city: locality.LocalityName,
-			countyName: countyName,
+			city: city || '',
+			county: county || '',
 			state: state,
 			zip: zip && zip.PostalCodeNumber || '',
-			zoom: 15,
+			zoom: Zoom[accuracy],
+			accuracy: accuracy,
+			kind: Kind[accuracy],
 			_:''
 		};
 	}
@@ -1260,7 +1285,6 @@ function gadgetReady() {
 	
 	var $window = $(window), $title = $('#title'), $map = $('#mapbox'), $spinner = $('#spinner');
 	
-	//debugger;
 	T( 'poll411-maker:style', variables, function( head ) {
 		if( ! mapplet  &&  ! pref.ready ) {
 			$('head').append( $(head) );
