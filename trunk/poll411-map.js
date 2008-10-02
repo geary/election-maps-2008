@@ -69,9 +69,19 @@ function S() {
 	return Array.prototype.join.call( arguments, '' );
 }
 
-function fetch( url, callback, cache ) {
-	if( cache === false ) {
-		$.getJSON( url, callback );
+function fetch( url, callback, jsonp ) {
+	if( jsonp ) {
+		// Custom JSONP code to avoid jQuery's cachebuster
+		var head = $('head')[0];
+		window[jsonp] = function( data ) {
+			window[jsonp ] = null;
+			try{ delete window[jsonp]; } catch( e ) {}
+			head.removeChild( script );
+			callback( data );
+		}
+		var script = document.createElement( 'script' );
+		script.src = url;
+		head.appendChild( script );
 	}
 	else {
 		_IG_FetchContent( url, callback, {
@@ -987,10 +997,10 @@ function gadgetReady() {
 	
 	function geocode( address, callback ) {
 		var url = S(
-			'http://maps.google.com/maps/geo?output=json&callback=?&oe=utf-8&gl=us&q=',
+			'http://maps.google.com/maps/geo?output=json&callback=geocoded&oe=utf-8&gl=us&q=',
 			encodeURIComponent(address), '&key=', key
 		);
-		getJSON( url, callback, false );
+		getJSON( url, callback, 'geocoded' );
 	}
 	
 	function getleo( info, callback ) {
@@ -1031,11 +1041,11 @@ function gadgetReady() {
 		//callback({ errorcode:0, address:[ '600 22nd St NW, Washington, DC 20037' ] });
 	}
 	
-	function getJSON( url, callback, cache ) {
+	function getJSON( url, callback, jsonp ) {
 		fetch( url, function( text ) {
 			var json = typeof text == 'object' ? text : eval( '(' + text + ')' );
 			callback( json );
-		}, cache );
+		}, jsonp );
 	}
 	
 	function closehelp( callback ) {
