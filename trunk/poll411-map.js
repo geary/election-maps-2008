@@ -634,7 +634,8 @@ function gadgetReady() {
 		var sameDay = state.gsx$sameday.$t;
 		if( sameDay ) sameDay = S(
 			'<div style="margin-bottom:0.5em;">',
-				state.name, ' residents may register to vote at their polling place on Election Day.',
+				state.name, ' residents may register to vote at their polling place on Election Day:<br />',
+				'<strong>Tuesday, November 4</strong>',
 			'</div>'
 		);
 		
