@@ -158,7 +158,9 @@ $.extend( $.fn, {
 
 function analytics( path ) {
 	if( path.indexOf( 'http://maps.gmodules.com/ig/ifr' ) == 0 ) return;
+	if( path.indexOf( 'http://maps.google.com/maps?f=d' ) == 0 ) path = '/directions';
 	path = path.replace( /http:\/\//, '/http/' ).replace( /mailto:/, '/mailto/' );
+	//console.log( 'analytics', path );
 	_IG_Analytics( 'UA-5730550-1', path );
 }
 
@@ -924,7 +926,13 @@ function gadgetReady() {
 			//var center = latlng;
 			//var width = $jsmap.width(), height = $jsmap.height();
 			map.setCenter( latlng, a.zoom );
-			if( ! mapplet ) {
+			if( mapplet ) {
+				GEvent.addListener( map, 'click', function( overlay, point ) {
+					if( !( overlay || point ) )
+						analytics( '/directions' );
+				});
+			}
+			else {
 				// Move map down a bit
 				//var point = map.fromLatLngToDivPixel( latlng );
 				//point = new GPoint(
@@ -1017,6 +1025,7 @@ function gadgetReady() {
 		//);
 		//getJSON( url, callback );
 		callback({ errorcode: -1 });  // temp disable
+		//callback({ errorcode:0, address:[ '600 22nd St NW, Washington, DC 20037' ] });
 	}
 	
 	function getJSON( url, callback, cache ) {
