@@ -1316,6 +1316,7 @@ function gadgetReady() {
 						
 						submit: function() {
 							//spinner.style.backgroundPosition = '0px 0px';
+							if( ! input.value ) input.value = pref.example;
 							submit( input.value );
 							return false;
 						}
