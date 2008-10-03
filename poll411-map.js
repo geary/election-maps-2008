@@ -252,10 +252,6 @@ var variables = {
 
 // Date and time
 
-var today = new Date;
-today.setHours( 0, 0, 0, 0 );
-var electionDay = new Date( 2008, 10, 4 );
-
 var seconds = 1000, minutes = 60 * seconds, hours = 60 * minutes,
 	days = 24 * hours, weeks = 7 * days;
 
@@ -276,6 +272,22 @@ function formatDate( date ) {
 		date.getDate()
 	);
 }
+
+var electionDay = new Date( 2008, 10, 4 );
+
+var today = new Date;
+today.setHours( 0, 0, 0, 0 );
+
+////  Date tester
+//if( 0 ) {
+//	today = new Date( 2008,  9, 6 );
+//	document.write(
+//		'<div style="font-weight:bold;">',
+//			'Test date: ', formatDate( today ),
+//		'</div>'
+//	);
+//}
+////
 
 // State data
 
@@ -649,17 +661,17 @@ function gadgetReady() {
 		var deadlineText = {
 			mail: {
 				left: 'Days left to register by mail',
-				last: 'Last day to register by mail',
+				last: 'Today is the last day to register by mail',
 				mustbe: 'Registration must be postmarked by'
 			},
 			receive: {
 				left: 'Days left for registration to be received by your election officials',
-				last: 'Last day for registration to be received by your election officials by today.',
+				last: 'Today is the last day for registration to be received by your election officials',
 				mustbe: 'Registration must be <strong>received</strong> by'
 			},
 			inperson: {
 				left: 'Days left to register in person',
-				last: 'Last day to register in person',
+				last: 'Today is the last day to register in person',
 				mustbe: 'In person registration allowed through'
 			}
 		};
@@ -672,6 +684,17 @@ function gadgetReady() {
 			'Early': 'Absentee ballot and early voting information',
 			'Mail': 'Vote by mail information'
 		}[state.gsx$absentee.$t] || 'Get an absentee ballot';
+		
+		var deadlines = (
+			deadline( state, 'gsx$postmark', 'mail' )  || deadline( state, 'gsx$receive', 'receive' )
+		) + deadline( state, 'gsx$inperson', 'inperson' );
+		if( ! deadlines  &&  state.abbr != 'ND' )
+			deadlines = S(
+				'<div style="margin-bottom:0.75em;">',
+					'The deadline to register for the November 4, 2008 general election has passed. ',
+					'You can still register to vote in future elections.',
+				'</div>'
+			);
 		return S(
 			'<div style="margin-bottom:0.5em;">',
 				'<div class="heading" style="font-size:110%; margin-bottom:0.75em;">',
@@ -680,9 +703,7 @@ function gadgetReady() {
 				'<div style="margin-bottom:0.75em;">',
 					fix('State: <strong>%S</strong>'),
 				'</div>',
-				deadline( state, 'gsx$postmark', 'mail' )  ||
-				deadline( state, 'gsx$receive', 'receive' ),
-				deadline( state, 'gsx$inperson', 'inperson' ),
+				deadlines,
 				sameDay,
 				comments,
 				mapplet ? S(
@@ -739,18 +760,38 @@ function gadgetReady() {
 			var dt = deadlineText[type];
 			var date = electionDay - before*days;
 			var remain = Math.floor( ( date - today ) / days );
-			return S(
-				'<div style="margin-bottom:0.75em;',
-						remain < 6 ? '' : '',
-				'">',
-					remain < 0 ? '' :
-					remain < 1 ? dt.last :
-					' ', dt.left, ': <strong>' + remain + '</strong>',
-				'</div>',
+			if( remain < 0 ) return '';
+			var sunday = type == 'mail'  &&  new Date(date).getDay() == 0;
+			
+			var sundayNote =
+				! sunday ? '' :
+				remain > 1 ?
+					'<strong>Note:</strong> Most post offices are closed Sunday. Mail your registration by <strong>Saturday</strong> to be sure of a timely postmark.' :
+				remain == 1 ?
+					'<strong>Note:</strong> Most post offices are closed Sunday. Mail your registration <strong>today</strong> to be sure of a timely postmark.' :
+				remain == 0 ?
+					"<strong>Note:</strong> Most post offices are closed today. You can still register by mail if your post office is open and has a collection today." :
+					'';
+			
+			sundayNote = sundayNote && S(
 				'<div style="margin-bottom:0.75em;">',
-					dt.mustbe, ':<br />',
-					'<strong>', formatDate(date), '</strong>',
+					sundayNote,
 				'</div>'
+			);
+			
+			var last = remain < 1; //  ||  sunday && remain < 2;
+			return S(
+				'<div style="margin-bottom:0.75em;">',
+					last ? S( '<strong>', dt.last, '</strong>' )  :
+					S( dt.left, ': <strong>', remain, '</strong>' ),
+				'</div>',
+				last ? '' : S(
+					'<div style="margin-bottom:0.75em;">',
+						dt.mustbe, ':<br />',
+						'<strong>', formatDate(date), '</strong>',
+					'</div>'
+				),
+				sundayNote
 			);
 		}
 		
@@ -1294,8 +1335,11 @@ function gadgetReady() {
 			setGadgetPoll411();
 		}
 		
-		//var stateSheet = 'http://spreadsheets.google.com/feeds/list/p9CuB_zeAq5WrrUJlgUtNBg/2/public/values?alt=json';
-		var stateSheet = dataUrl + 'states.json';
+		var stateSheet =
+			opt.spreadsheet ?
+				'http://spreadsheets.google.com/feeds/list/p9CuB_zeAq5WrrUJlgUtNBg/2/public/values?alt=json' :
+				stateSheet = dataUrl + 'states.json';
+				
 		getJSON( stateSheet, function( json ) {
 			json.feed.entry.forEach( function( state ) {
 				statesByAbbr[ state.abbr = state.gsx$abbr.$t ] = state;
