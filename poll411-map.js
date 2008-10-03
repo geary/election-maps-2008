@@ -347,9 +347,9 @@ var infoLinks = ! mapplet ? '' : S(
 
 var attributeAlways = ! mapplet ? '' : S(
 	'<div style="', fontStyle, '">',
-		'<div style="margin-top:0.5em; border-top:1px solid #BBB; padding-top:1em;">',
+		'<div style="font-size:85%; margin-top:0.5em; border-top:1px solid #BBB; padding-top:1em;">',
 			'In conjunction with the ',
-			'<a target="_blank" href="http://www.lwv.org/">',
+			'<a style="font-size:100%;" target="_blank" href="http://www.lwv.org/">',
 				'League of Women Voters',
 			'</a>',
 		'</div>',
@@ -358,9 +358,9 @@ var attributeAlways = ! mapplet ? '' : S(
 
 var attributeLater = ! mapplet ? '' : S(
 	'<div style="', fontStyle, '">',
-		'<div style="margin-top:1em;">',
+		'<div style="font-size:85%; margin-top:0.75em;">',
 			'Developed with the ',
-			'<a target="_blank" href="http://votinginfoproject.org/">',
+			'<a style="font-size:100%;" target="_blank" href="http://votinginfoproject.org/">',
 				'Voting Information Project',
 			'</a>',
 			' and State Election Officials from DC, DE, NH, OH, and VT.',
