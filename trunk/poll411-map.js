@@ -1082,16 +1082,20 @@ function gadgetReady() {
 	function closehelp( callback ) {
 		if( ! mapplet )
 			return callback();
+		
 		var $remove = $('.removehelp');
-		if( $.browser.msie  ||  $remove.css('display') == 'none' ) {
-			callback();
+		if( $remove.is(':hidden') )
+			return callback();
+		
+		if( $.browser.msie ) {
+			$remove.hide();
+			return callback();
 		}
-		else {
-			var count = $remove.length;
-			$remove.slideUp( 350, function() {
-				if( --count == 0 ) callback();
-			});
-		}
+		
+		var count = $remove.length;
+		$remove.slideUp( 350, function() {
+			if( --count == 0 ) callback();
+		});
 	}
 	
 	function setGadgetPoll411() {
@@ -1145,8 +1149,10 @@ function gadgetReady() {
 				else {
 					if( places ) {
 						$title.append( S(
-							'<div id="radios" style="padding-top:0.5em;">',
-								'<strong>Select your address:</strong>',
+							'<div id="radios">',
+								'<div id="radios" style="padding-top:0.5em;">',
+									'<strong>Select your address:</strong>',
+								'</div>',
 							'</div>'
 						));
 						var $radios = $('#radios');
@@ -1158,8 +1164,13 @@ function gadgetReady() {
 								function ready() {
 									findPrecinct( places[ radio.id.split('-')[1] ] );
 								}
-								if( $.browser.msie ) ready();
-								else $('#radios').slideUp( 350, ready );
+								if( $.browser.msie ) {
+									$radios.hide();
+									ready();
+								}
+								else {
+									$radios.slideUp( 350, ready );
+								}
 							}, 250 );
 						});
 					}
