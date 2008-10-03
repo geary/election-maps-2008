@@ -688,7 +688,7 @@ function gadgetReady() {
 		var deadlines = (
 			deadline( state, 'gsx$postmark', 'mail' )  || deadline( state, 'gsx$receive', 'receive' )
 		) + deadline( state, 'gsx$inperson', 'inperson' );
-		if( ! deadlines  &&  state.abbr != 'ND' )
+		if( ! deadlines  &&  state.abbr != 'ND'  &&  ! state.gsx$sameday.$t )
 			deadlines = S(
 				'<div style="margin-bottom:0.75em;">',
 					'The deadline to register for the November 4, 2008 general election has passed. ',
