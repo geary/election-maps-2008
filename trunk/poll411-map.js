@@ -1404,7 +1404,10 @@ function gadgetReady() {
 					
 					PollingPlaceSearch.focus();
 					PollingPlaceSearch.blur();
-					if( params.home ) PollingPlaceSearch.submit();
+					if( params.home )
+						PollingPlaceSearch.submit();
+					else
+						input.focus();
 				})();
 			}
 			else {
