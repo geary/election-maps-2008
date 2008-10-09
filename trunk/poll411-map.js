@@ -345,25 +345,20 @@ var infoLinks = ! mapplet ? '' : S(
 	'</div>'
 );
 
-var attributeAlways = ! mapplet ? '' : S(
-	'<div style="', fontStyle, '">',
+var attribution = ! mapplet ? '' : S(
+	'<div style="', fontStyle, ' color:#333;">',
 		'<div style="font-size:85%; margin-top:0.5em; border-top:1px solid #BBB; padding-top:1em;">',
 			'In conjunction with the ',
 			'<a style="font-size:100%;" target="_blank" href="http://www.lwv.org/">',
 				'League of Women Voters',
 			'</a>',
 		'</div>',
-	'</div>'
-);
-
-var attributeLater = ! mapplet ? '' : S(
-	'<div style="', fontStyle, '">',
 		'<div style="font-size:85%; margin-top:0.75em;">',
 			'Developed with the ',
 			'<a style="font-size:100%;" target="_blank" href="http://votinginfoproject.org/">',
 				'Voting Information Project',
 			'</a>',
-			' and State Election Officials from DC, DE, NH, OH, and VT.',
+			' and state election officials from Iowa, Maryland, Montana, North Carolina, Ohio, and Los Angeles County.',
 		'</div>',
 	'</div>'
 );
@@ -573,7 +568,7 @@ function gadgetWrite() {
 			'</div>',
 			'<div id="wrapper">',
 				'<div id="title">',
-					attributeAlways,
+					attribution,
 				'</div>',
 				'<div id="mapbox">',
 				'</div>',
@@ -866,8 +861,7 @@ function gadgetReady() {
 				location(),
 				locationWarning,
 				infoLinks,
-				attributeAlways,
-				attributeLater,
+				attribution,
 			'</div>'
 		) : S(
 			// TODO: refactor
@@ -1226,8 +1220,7 @@ function gadgetReady() {
 					'</div>',
 				'</div>',
 				infoLinks,
-				attributeAlways,
-				attributeLater,
+				attribution,
 			'</div>'
 		);
 	}
