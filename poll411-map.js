@@ -811,13 +811,13 @@ function gadgetReady() {
 			}
 			var county = home.info.county;
 			var title = leo.title;
-			remove( county );
-			remove( 'County' );
 			return S(
 				'<div style="padding-top:0.5em;">',
 					'<div class="heading" style="padding-bottom:4px">',
-						county, ' County ',
-						title || ' Voter Info',
+						'Local Voter Info',
+					'</div>',
+					'<div>',
+						title,
 					'</div>',
 					leo.phone ? S( '<div>', 'Phone: ', leo.phone, '</div>' ) : '',
 					leo.email ? S( '<div>', 'Email: ', linkto(leo.email), '</div>' ) : '',
