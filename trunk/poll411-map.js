@@ -322,28 +322,39 @@ var key = {
 
 // HTML snippets
 
-var infoLinks = ! mapplet ? '' : S(
-	'<div style="', fontStyle, '">',
-		'<div style="margin-top:1em; border-top:1px solid #BBB; padding-top:1em;">',
-			'Full election coverage:<br />',
-			'<a target="_blank" href="http://www.google.com/2008election">',
-				'Google 2008 Election Site',
-			'</a>',
-		'</div>',
-		'<div style="margin-top:1em;">',
-			'More election maps:<br />',
-			'<a target="_blank" href="http://maps.google.com/elections">',
-				'Google Elections Map Gallery',
-			'</a>',
-		'</div>',
-		'<div style="margin:1em 0 1em 0;">',
-			'Help others find their voter information:<br />',
-			'<a target="_blank" href="http://gmodules.com/ig/creator?synd=open&url=http://election-maps-2008.googlecode.com/svn/trunk/poll411-gadget.xml">',
-				'Get this gadget for your website',
-			'</a>',
-		'</div>',
-	'</div>'
-);
+function infoLinks() {
+	return S(
+		'<div style="', fontStyle, '">',
+			'<div style="margin-top:0.5em;">',
+				'<a href="',
+					"mailto:elections-data@google.com?subject=Voter Info Error Report&body=Thank you for reporting an error in Google's voter information for ",
+					formatInfoLocality( home.info ).replace( /"/g, ' ' ),
+					'. Please describe the error below and send us this email so we can correct the problem. Thanks!',
+				'">',
+					'Report an error',
+				'</a>',
+			'</div>',
+			'<div style="margin-top:1em; border-top:1px solid #BBB; padding-top:1em;">',
+				'Full election coverage:<br />',
+				'<a target="_blank" href="http://www.google.com/2008election">',
+					'Google 2008 Election Site',
+				'</a>',
+			'</div>',
+			'<div style="margin-top:1em;">',
+				'More election maps:<br />',
+				'<a target="_blank" href="http://maps.google.com/elections">',
+					'Google Elections Map Gallery',
+				'</a>',
+			'</div>',
+			'<div style="margin:1em 0 1em 0;">',
+				'Help others find their voter information:<br />',
+				'<a target="_blank" href="http://gmodules.com/ig/creator?synd=open&url=http://election-maps-2008.googlecode.com/svn/trunk/poll411-gadget.xml">',
+					'Get this gadget for your website',
+				'</a>',
+			'</div>',
+		'</div>'
+	);
+}
 
 var attribution = ! mapplet ? '' : S(
 	'<div style="', fontStyle, ' color:#333;">',
@@ -362,6 +373,14 @@ var attribution = ! mapplet ? '' : S(
 		'</div>',
 	'</div>'
 );
+
+function formatInfoLocality( info ) {
+	var locality = info.city ? info.city : info.county ? info.county + ' County' : '';
+	return S(
+		locality ? locality  + ', ' + info.state.abbr : info.address.length > 2 ? info.address : info.state.name,
+		info.zip ? ' ' + info.zip : ''
+	);
+}
 
 // Maker inline initialization
 
@@ -860,7 +879,7 @@ function gadgetReady() {
 				'</div>',
 				location(),
 				locationWarning,
-				infoLinks,
+				infoLinks(),
 				attribution,
 			'</div>'
 		) : S(
@@ -1011,6 +1030,17 @@ function gadgetReady() {
 						'</td>',
 					'</tr>',
 				'</table>',
+			'</div>'
+		);
+	}
+	
+	function formatInfoAddress( info ) {
+		return S(
+			'<div>',
+				info.street,
+			'</div>',
+			'<div>',
+				formatInfoLocality( info ),
 			'</div>'
 		);
 	}
@@ -1214,12 +1244,10 @@ function gadgetReady() {
 			'<div>',
 				home.info ? electionInfo() : '',
 				'<div style="margin-top:1em;">',
-					'<div>',
-						'Coming soon! Voting location information will be available by mid-October. ',
-						'Until then, please check with your state or local election officials to verify your voting location.',
-					'</div>',
+					'Voting location information is coming soon. ',
+					'In the meantime, please check with your state or local election officials to find your voting location.',
 				'</div>',
-				infoLinks,
+				infoLinks(),
 				attribution,
 			'</div>'
 		);
