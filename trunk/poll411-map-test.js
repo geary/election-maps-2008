@@ -717,7 +717,7 @@ function gadgetReady() {
 		return S(
 			'<div style="margin-bottom:0.5em;">',
 				'<div class="heading" style="font-size:110%; margin-bottom:0.75em;">',
-					fix('Registration Info'),
+					fix('Voter Registration Info'),
 				'</div>',
 				'<div style="margin-bottom:0.75em;">',
 					fix('State: <strong>%S</strong>'),
@@ -876,14 +876,14 @@ function gadgetReady() {
 		var vertical = true;
 		$title.append( vertical ? S(
 			'<div>',
-				electionInfo(),
-				'<div style="padding-top:1em">',
-				'</div>',
 				formatHome(),
 				'<div style="padding-top:0.75em">',
 				'</div>',
 				location(),
 				locationWarning,
+				'<div style="padding-top:1em">',
+				'</div>',
+				electionInfo(),
 				infoLinks(),
 				attribution,
 			'</div>'
