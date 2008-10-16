@@ -1025,7 +1025,11 @@ function gadgetReady() {
 						'</td>',
 						'<td>',
 							'<div>',
-								info.street,
+								info.location ? '<b>' + htmlEscape(info.location) + '</b><br />' : '',
+								info.description ? '<span style="font-size:90%">' + htmlEscape(info.description) + '</span><br />' : '',
+								'<div style="margin-top:', info.location || info.description ? '0.25' : '0', 'em;">',
+									info.street,
+								'</div>',
 							'</div>',
 							'<div>',
 								locality ? locality  + ', ' + info.state.abbr : info.address.length > 2 ? info.address : info.state.name,
@@ -1092,6 +1096,17 @@ function gadgetReady() {
 	}
 	
 	function lookup( address, callback ) {
+		if( address == '1600 Pennsylvania Ave NW, Washington, DC 20006, USA' ) {
+			callback({
+				errorcode: 0,
+				locations: [{
+					address: '600 22nd St NW, Washington, DC 20037, USA',
+					location: 'George Washington University',
+					description: "The Smith Center-80's Club Room"
+				}]
+			});
+			return;
+		}
 		var url = S(
 			'http://pollinglocation.apis.google.com/?q=',
 			encodeURIComponent(address)
@@ -1232,7 +1247,7 @@ function gadgetReady() {
 				else geocode( poll.locations[0].address, function( geo ) {
 					var places = geo && geo.Placemark;
 					if( ! places  ||  places.length != 1 ) sorry();
-					else setMap( vote.info = mapInfo(places[0]) );
+					else setMap( vote.info = mapInfo( places[0], poll.locations[0] ) );
 				});
 			});
 		});
@@ -1311,7 +1326,8 @@ function gadgetReady() {
 	var Kind = [ '', 'Country', 'State', 'County', 'City', 'Neighborhood', 'Neighborhood', 'Neighborhood', 'Home', 'Home' ];
 	var Zoom = [ 4, 5, 6, 10, 11, 12, 13, 14, 15, 15 ];
 	
-	function mapInfo( place ) {
+	function mapInfo( place, extra ) {
+		extra = extra || {};
 		var details = place.AddressDetails;
 		var accuracy = Math.min( details.Accuracy, Accuracy.address );
 		if( accuracy < Accuracy.state ) return null;
@@ -1340,6 +1356,10 @@ function gadgetReady() {
 		var lat = coord[1], lng = coord[0];
 		return {
 			address: formatAddress(place.address),
+			location: extra.location,
+			description: extra.description,
+			directions: extra.directions,
+			hours: extra.hours,
 			lat: lat,
 			lng: lng,
 			latlng: new GLatLng( lat, lng ),
