@@ -75,7 +75,7 @@ function fetch( url, callback, cache ) {
 	}
 	else {
 		_IG_FetchContent( url, callback, {
-			refreshInterval: opt.nocache ? 1 : opt.cache || 300
+			refreshInterval: opt.nocache ? 1 : opt.cache || 60
 		});
 	}
 }
@@ -1372,11 +1372,13 @@ function gadgetReady() {
 			setGadgetPoll411();
 		}
 		
-		var stateSheet =
-			opt.spreadsheet ?
-				'http://spreadsheets.google.com/feeds/list/p9CuB_zeAq5WrrUJlgUtNBg/2/public/values?alt=json' :
-				stateSheet = dataUrl + 'states.json';
-				
+		//var stateSheet =
+		//	opt.spreadsheet ?
+		//		'http://spreadsheets.google.com/feeds/list/p9CuB_zeAq5WrrUJlgUtNBg/2/public/values?alt=json' :
+		//		stateSheet = dataUrl + 'states.json';
+		
+		var stateSheet = 'http://spreadsheets.google.com/feeds/list/pFixcD4PqyceTSFvT6vmsWw/2/public/values?alt=json';
+		
 		getJSON( stateSheet, function( json ) {
 			json.feed.entry.forEach( function( state ) {
 				statesByAbbr[ state.abbr = state.gsx$abbr.$t ] = state;
