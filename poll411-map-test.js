@@ -622,7 +622,7 @@ function gadgetReady() {
 			'<span style="font-weight:bold;">',
 				'Important: ',
 			'</span>',
-			'To ensure that this voting location is correct, please verify it with your local election officials.',
+			'Please verify this voting location with your local election officials to ensure that it is correct.',
 		'</div>'
 	);
 	
