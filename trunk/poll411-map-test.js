@@ -323,7 +323,8 @@ var key = {
 // HTML snippets
 
 function infoLinks() {
-	var info = home.info;
+	var info = home && home.info;
+	if( ! info ) return '';
 	return S(
 		'<div style="', fontStyle, '">',
 			'<div style="margin-top:0.5em;">',
