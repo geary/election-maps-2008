@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+
+<ModulePrefs
+    title="Test US Voter Info"
+    description="Test US Voter Info"
+    author="Google, Inc."
+    author_affiliation="Google, Inc."
+    author_email="elections@google.com"
+    thumbnail=""
+    screenshot=""
+    title_url=""
+    height="1000">
+  <Require feature="sharedmap"/>
+  <Require feature="dynamic-height"/>
+  <Require feature="analytics"/>
+</ModulePrefs>
+
+<Content type="html">
+<![CDATA[
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js">
+</script>
+
+<script type="text/javascript">
+
+	var mapplet = {
+		moduleId: __MODULE_ID__,
+		baseUrl: 'http://election-maps-2008.googlecode.com/svn/trunk/'
+	};
+	
+	function script( url, seconds ) {
+		document.write(
+			'<script type="text/javascript" src="',
+				_IG_GetCachedUrl( url, { refreshInterval:seconds } ),
+			'">',
+			'<\/script>'
+		);
+	}
+	
+	script( mapplet.baseUrl + 'poll411-map-test.js', 60 );
+	
+</script>
+
+]]>
+</Content>
+
+</Module>
