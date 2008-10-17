@@ -722,7 +722,7 @@ function gadgetReady() {
 		
 		var absentee = S(
 			'<div style="margin-bottom:0.5em;">',
-				fix( state.gsx$absenteeautomatic == 'TRUE' ?
+				fix( state.gsx$absenteeautomatic.$t == 'TRUE' ?
 					'Any %S voter may vote by mail.' :
 					'Some %S voters may qualify to vote by mail.'
 				),
