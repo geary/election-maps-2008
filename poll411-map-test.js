@@ -680,19 +680,34 @@ function gadgetReady() {
 		
 		var deadlineText = {
 			mail: {
+				type: 'registration',
 				left: 'Days left to register by mail',
 				last: 'Today is the last day to register by mail',
-				mustbe: 'Registration must be postmarked by'
+				mustbe: 'Registration must be postmarked by:<br />'
 			},
 			receive: {
+				type: 'registration',
 				left: 'Days left for registration to be received by your election officials',
 				last: 'Today is the last day for registration to be received by your election officials',
-				mustbe: 'Registration must be <strong>received</strong> by'
+				mustbe: 'Registration must be <strong>received</strong> by:<br />'
 			},
 			inperson: {
+				type: 'registration',
 				left: 'Days left to register in person',
 				last: 'Today is the last day to register in person',
-				mustbe: 'In person registration allowed through'
+				mustbe: 'In person registration allowed through:<br />'
+			},
+			abmail: {
+				type: 'absentee ballot request',
+				left: 'Days left to request an absentee ballot by mail',
+				last: 'Today is the last day to request an absentee ballot by mail',
+				mustbe: 'Absentee ballot requests must be postmarked by '
+			},
+			abreceive: {
+				type: 'absentee ballot request',
+				left: 'Days left for absentee ballot request to be received by your election officials',
+				last: 'Today is the last day for an absentee ballot request to be received by your election officials',
+				mustbe: 'Absentee ballot requests must be <strong>received</strong> by '
 			}
 		};
 		
@@ -700,11 +715,24 @@ function gadgetReady() {
 		//w.document.write( biglist() );
 		//w.document.close();
 		
-		var absentee = {
+		var absenteeLinkTitle = {
 			'Early': 'Absentee ballot and early voting information',
 			'Mail': 'Vote by mail information'
 		}[state.gsx$absentee.$t] || 'Get an absentee ballot';
 		
+		var absentee = S(
+			'<div style="margin-bottom:0.5em;">',
+				fix( state.gsx$absenteeautomatic == 'TRUE' ?
+					'Any %S voter may vote by mail.' :
+					'Some %S voters may qualify to vote by mail.'
+				),
+			'</div>',
+			'<ul style="margin-top:0; margin-bottom:0;">',
+				election( 'gsx$absenteeinfo', absenteeLinkTitle ),
+			'</ul>',
+			deadline( state, 'gsx$absrequestpostmark', 'abmail' ),
+			deadline( state, 'gsx$absrequestreceive', 'abreceive' )
+		);
 		var deadlines = (
 			deadline( state, 'gsx$postmark', 'mail' )  || deadline( state, 'gsx$receive', 'receive' )
 		) + deadline( state, 'gsx$inperson', 'inperson' );
@@ -718,7 +746,13 @@ function gadgetReady() {
 		return S(
 			'<div style="margin-bottom:0.5em;">',
 				'<div class="heading" style="font-size:110%; margin-bottom:0.75em;">',
-					fix('Voter Registration Info'),
+					'Vote by Mail',
+				'</div>',
+				'<div style="margin-bottom:1em;">',
+					absentee,
+				'</div>',
+				'<div class="heading" style="font-size:110%; margin-bottom:0.75em;">',
+					'Voter Registration',
 				'</div>',
 				'<div style="margin-bottom:0.75em;">',
 					fix('State: <strong>%S</strong>'),
@@ -734,7 +768,6 @@ function gadgetReady() {
 				'<ul style="margin-top:0; margin-bottom:0;">',
 					election( 'gsx$areyouregistered', 'Are you registered to vote?' ),
 					election( 'gsx$registrationinfo', state.abbr == 'ND' ? '%S voter qualifications' : 'How to register in %S', true ),
-					election( 'gsx$absenteeinfo', absentee ),
 					election( 'gsx$electionwebsite', '%S election website' ),
 				'</ul>',
 				'<div style="margin:1.0em 0 0.5em 0;">',
@@ -786,11 +819,11 @@ function gadgetReady() {
 			var sundayNote =
 				! sunday ? '' :
 				remain > 1 ?
-					'<strong>Note:</strong> Most post offices are closed Sunday. Mail your registration by <strong>Saturday</strong> to be sure of a timely postmark.' :
+					'<strong>Note:</strong> Most post offices are closed Sunday. Mail your ' + dt.type + ' by <strong>Saturday</strong> to be sure of a timely postmark.' :
 				remain == 1 ?
-					'<strong>Note:</strong> Most post offices are closed Sunday. Mail your registration <strong>today</strong> to be sure of a timely postmark.' :
+					'<strong>Note:</strong> Most post offices are closed Sunday. Mail your ' + dt.type + ' <strong>today</strong> to be sure of a timely postmark.' :
 				remain == 0 ?
-					"<strong>Note:</strong> Most post offices are closed today. You can still register by mail if your post office is open and has a collection today." :
+					"<strong>Note:</strong> Most post offices are closed today. You can still mail your ' + dt.type + ' if your post office is open and has a collection today." :
 					'';
 			
 			sundayNote = sundayNote && S(
@@ -807,7 +840,7 @@ function gadgetReady() {
 				'</div>',
 				last ? '' : S(
 					'<div style="margin-bottom:0.75em;">',
-						dt.mustbe, ':<br />',
+						dt.mustbe,
 						'<strong>', formatDate(date), '</strong>',
 					'</div>'
 				),
@@ -1263,11 +1296,14 @@ function gadgetReady() {
 	function sorryHtml() {
 		return S(
 			'<div>',
-				home.info ? electionInfo() : '',
-				'<div style="margin-top:1em;">',
+				formatHome(),
+				'<div style="padding-top:0.75em">',
+				'</div>',
+				'<div style="margin-bottom:1em;">',
 					'Voting location information is coming soon. ',
 					'In the meantime, please check with your state or local election officials to find your voting location.',
 				'</div>',
+				home.info ? electionInfo() : '',
 				infoLinks(),
 				attribution,
 			'</div>'
