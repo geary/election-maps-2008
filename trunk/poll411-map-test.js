@@ -697,17 +697,29 @@ function gadgetReady() {
 				last: 'Today is the last day to register in person',
 				mustbe: 'In person registration allowed through:<br />'
 			},
-			abmail: {
+			armail: {
 				type: 'absentee ballot request',
 				left: 'Days left to request an absentee ballot by mail',
 				last: 'Today is the last day to request an absentee ballot by mail',
 				mustbe: 'Absentee ballot requests must be postmarked by '
 			},
-			abreceive: {
+			arreceive: {
 				type: 'absentee ballot request',
 				left: 'Days left for absentee ballot request to be received by your election officials',
 				last: 'Today is the last day for an absentee ballot request to be received by your election officials',
 				mustbe: 'Absentee ballot requests must be <strong>received</strong> by '
+			},
+			avmail: {
+				type: 'completed absentee ballot',
+				left: 'Days left to mail your completed absentee ballot',
+				last: 'Today is the last day to mail your completed absentee ballot',
+				mustbe: 'Completed absentee ballots must be postmarked by '
+			},
+			avreceive: {
+				type: 'completed absentee ballot',
+				left: 'Days left for a completed absentee ballot to be received by your election officials',
+				last: 'Today is the last day for a completed absentee ballot to be received by your election officials',
+				mustbe: 'Completed absentee ballots must be <strong>received</strong> by '
 			}
 		};
 		
@@ -730,8 +742,10 @@ function gadgetReady() {
 			'<ul style="margin-top:0; margin-bottom:0;">',
 				election( 'gsx$absenteeinfo', absenteeLinkTitle ),
 			'</ul>',
-			deadline( state, 'gsx$absrequestpostmark', 'abmail' ),
-			deadline( state, 'gsx$absrequestreceive', 'abreceive' )
+			deadline( state, 'gsx$absrequestpostmark', 'armail' ),
+			deadline( state, 'gsx$absrequestreceive', 'arreceive' ),
+			deadline( state, 'gsx$absvotepostmark', 'avmail' ),
+			deadline( state, 'gsx$absvotereceive', 'avreceive' )
 		);
 		var deadlines = (
 			deadline( state, 'gsx$postmark', 'mail' )  || deadline( state, 'gsx$receive', 'receive' )
@@ -809,7 +823,7 @@ function gadgetReady() {
 		
 		function deadline( state, key, type ) {
 			var before = +state[key].$t;
-			if( ! before ) return '';
+			if( before == '' ) return '';
 			var dt = deadlineText[type];
 			var date = electionDay - before*days;
 			var remain = Math.floor( ( date - today ) / days );
