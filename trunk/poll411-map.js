@@ -1216,6 +1216,9 @@ function gadgetReady() {
 	
 	function submit( addr ) {
 		analytics( '/lookup' );
+		addr = $.trim( addr );
+		var state = statesByAbbr[ addr.toUpperCase() ];
+		if( state ) addr = state.name;
         if( addr == pref.example ) addr = addr.replace( /^.*: /, '' );
 		home = {};
 		vote = {};
