@@ -1457,7 +1457,7 @@ function gadgetReady() {
 				states.push( state );
 			});
 			
-			zoom = function() {
+			zoom = function( state ) {
 				function latlng( lat, lng ) { return new GLatLng( +lat.$t, +lng.$t ) }
 				var bounds = new GLatLngBounds(
 					latlng( state.gsx$south, state.gsx$west ),
@@ -1470,6 +1470,8 @@ function gadgetReady() {
 			
 			if( mapplet ) {
 				map = new GMap2;
+				if( params.state )
+					zoom( statesByAbbr[ params.state.toUpperCase() ] );
 				
 				(function() {
 					function e( id ) { return document.getElementById('PollingPlaceSearch'+id); }
