@@ -438,9 +438,6 @@ function makerWrite() {
 			'.popupOuter { z-index:1; position:absolute; background-color:white; display:none; }',
 			'.popupInner { background-color:#E5ECF9; border:1px solid #3366CC; padding:8px; margin:4px; }',
 		'</style>',
-		'<div style="font-weight:bold;">',
-			'Test',
-		'</div>',
 		'<div id="outerlimits">',
 		'</div>',
 		overlays
@@ -750,13 +747,13 @@ function gadgetReady() {
 		var deadlines = (
 			deadline( state, 'gsx$postmark', 'mail' )  || deadline( state, 'gsx$receive', 'receive' )
 		) + deadline( state, 'gsx$inperson', 'inperson' );
-		if( ! deadlines  &&  state.abbr != 'ND'  &&  ! state.gsx$sameday.$t )
-			deadlines = S(
-				'<div style="margin-bottom:0.75em;">',
-					'The deadline to register for the November 4, 2008 general election has passed. ',
-					'You can still register to vote in future elections.',
-				'</div>'
-			);
+		//if( ! deadlines  &&  state.abbr != 'ND'  &&  ! state.gsx$sameday.$t )
+		//	deadlines = S(
+		//		'<div style="margin-bottom:0.75em;">',
+		//			'The deadline to mail your registration for the November 4, 2008 general election has passed. ',
+		//			//state.gsx$regcomments.$t || '',
+		//		'</div>'
+		//	);
 		return S(
 			'<div style="margin-bottom:0.5em;">',
 				'<div class="heading" style="font-size:110%; margin-bottom:0.75em;">',
@@ -771,7 +768,7 @@ function gadgetReady() {
 				'<div style="margin-bottom:0.75em;">',
 					fix('State: <strong>%S</strong>'),
 				'</div>',
-				deadlines,
+				deadlines || '',
 				sameDay,
 				comments,
 				mapplet ? S(
@@ -1442,11 +1439,6 @@ function gadgetReady() {
 			
 			setGadgetPoll411();
 		}
-		
-		//var stateSheet =
-		//	opt.spreadsheet ?
-		//		'http://spreadsheets.google.com/feeds/list/p9CuB_zeAq5WrrUJlgUtNBg/2/public/values?alt=json' :
-		//		stateSheet = dataUrl + 'states.json';
 		
 		var stateSheet = 'http://spreadsheets.google.com/feeds/list/pFixcD4PqyceTSFvT6vmsWw/2/public/values?alt=json';
 		
