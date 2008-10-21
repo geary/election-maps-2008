@@ -75,7 +75,7 @@ function fetch( url, callback, cache ) {
 	}
 	else {
 		_IG_FetchContent( url, callback, {
-			refreshInterval: opt.nocache ? 1 : opt.cache || 300
+			refreshInterval: opt.nocache ? 1 : opt.cache || 60
 		});
 	}
 }
@@ -323,7 +323,8 @@ var key = {
 // HTML snippets
 
 function infoLinks() {
-	var info = home.info;
+	var info = home && home.info;
+	if( ! info ) return '';
 	return S(
 		'<div style="', fontStyle, '">',
 			'<div style="margin-top:0.5em;">',
@@ -619,7 +620,7 @@ function gadgetReady() {
 			'<span style="font-weight:bold;">',
 				'Important: ',
 			'</span>',
-			'To ensure that this voting location is correct, please verify it with your local election officials.',
+			'Please verify this voting location with your local election officials to ensure that it is correct.',
 		'</div>'
 	);
 	
@@ -676,19 +677,46 @@ function gadgetReady() {
 		
 		var deadlineText = {
 			mail: {
+				type: 'registration',
 				left: 'Days left to register by mail',
 				last: 'Today is the last day to register by mail',
-				mustbe: 'Registration must be postmarked by'
+				mustbe: 'Registration must be postmarked by:<br />'
 			},
 			receive: {
+				type: 'registration',
 				left: 'Days left for registration to be received by your election officials',
 				last: 'Today is the last day for registration to be received by your election officials',
-				mustbe: 'Registration must be <strong>received</strong> by'
+				mustbe: 'Registration must be <strong>received</strong> by:<br />'
 			},
 			inperson: {
+				type: 'registration',
 				left: 'Days left to register in person',
 				last: 'Today is the last day to register in person',
-				mustbe: 'In person registration allowed through'
+				mustbe: 'In person registration allowed through:<br />'
+			},
+			armail: {
+				type: 'absentee ballot request',
+				left: 'Days left to request an absentee ballot by mail',
+				last: 'Today is the last day to request an absentee ballot by mail',
+				mustbe: 'Absentee ballot requests must be postmarked by '
+			},
+			arreceive: {
+				type: 'absentee ballot request',
+				left: 'Days left for absentee ballot request to be received by your election officials',
+				last: 'Today is the last day for an absentee ballot request to be received by your election officials',
+				mustbe: 'Absentee ballot requests must be <strong>received</strong> by '
+			},
+			avmail: {
+				type: 'completed absentee ballot',
+				left: 'Days left to mail your completed absentee ballot',
+				last: 'Today is the last day to mail your completed absentee ballot',
+				mustbe: 'Completed absentee ballots must be postmarked by '
+			},
+			avreceive: {
+				type: 'completed absentee ballot',
+				left: 'Days left for a completed absentee ballot to be received by your election officials',
+				last: 'Today is the last day for a completed absentee ballot to be received by your election officials',
+				mustbe: 'Completed absentee ballots must be <strong>received</strong> by '
 			}
 		};
 		
@@ -696,30 +724,51 @@ function gadgetReady() {
 		//w.document.write( biglist() );
 		//w.document.close();
 		
-		var absentee = {
+		var absenteeLinkTitle = {
 			'Early': 'Absentee ballot and early voting information',
 			'Mail': 'Vote by mail information'
 		}[state.gsx$absentee.$t] || 'Get an absentee ballot';
 		
+		var absentee = S(
+			'<div style="margin-bottom:0.5em;">',
+				fix( state.gsx$absenteeautomatic.$t == 'TRUE' ?
+					'Any %S voter may vote by mail.' :
+					'Some %S voters may qualify to vote by mail.'
+				),
+			'</div>',
+			'<ul style="margin-top:0; margin-bottom:0;">',
+				election( 'gsx$absenteeinfo', absenteeLinkTitle ),
+			'</ul>',
+			deadline( state, 'gsx$absrequestpostmark', 'armail' ),
+			deadline( state, 'gsx$absrequestreceive', 'arreceive' ),
+			deadline( state, 'gsx$absvotepostmark', 'avmail' ),
+			deadline( state, 'gsx$absvotereceive', 'avreceive' )
+		);
 		var deadlines = (
 			deadline( state, 'gsx$postmark', 'mail' )  || deadline( state, 'gsx$receive', 'receive' )
 		) + deadline( state, 'gsx$inperson', 'inperson' );
-		if( ! deadlines  &&  state.abbr != 'ND'  &&  ! state.gsx$sameday.$t )
-			deadlines = S(
-				'<div style="margin-bottom:0.75em;">',
-					'The deadline to register for the November 4, 2008 general election has passed. ',
-					'You can still register to vote in future elections.',
-				'</div>'
-			);
+		//if( ! deadlines  &&  state.abbr != 'ND'  &&  ! state.gsx$sameday.$t )
+		//	deadlines = S(
+		//		'<div style="margin-bottom:0.75em;">',
+		//			'The deadline to mail your registration for the November 4, 2008 general election has passed. ',
+		//			//state.gsx$regcomments.$t || '',
+		//		'</div>'
+		//	);
 		return S(
 			'<div style="margin-bottom:0.5em;">',
 				'<div class="heading" style="font-size:110%; margin-bottom:0.75em;">',
-					fix('Registration Info'),
+					'Vote by Mail',
+				'</div>',
+				'<div style="margin-bottom:1em;">',
+					absentee,
+				'</div>',
+				'<div class="heading" style="font-size:110%; margin-bottom:0.75em;">',
+					'Voter Registration',
 				'</div>',
 				'<div style="margin-bottom:0.75em;">',
 					fix('State: <strong>%S</strong>'),
 				'</div>',
-				deadlines,
+				deadlines || '',
 				sameDay,
 				comments,
 				mapplet ? S(
@@ -730,7 +779,6 @@ function gadgetReady() {
 				'<ul style="margin-top:0; margin-bottom:0;">',
 					election( 'gsx$areyouregistered', 'Are you registered to vote?' ),
 					election( 'gsx$registrationinfo', state.abbr == 'ND' ? '%S voter qualifications' : 'How to register in %S', true ),
-					election( 'gsx$absenteeinfo', absentee ),
 					election( 'gsx$electionwebsite', '%S election website' ),
 				'</ul>',
 				'<div style="margin:1.0em 0 0.5em 0;">',
@@ -772,7 +820,7 @@ function gadgetReady() {
 		
 		function deadline( state, key, type ) {
 			var before = +state[key].$t;
-			if( ! before ) return '';
+			if( before == '' ) return '';
 			var dt = deadlineText[type];
 			var date = electionDay - before*days;
 			var remain = Math.floor( ( date - today ) / days );
@@ -782,11 +830,11 @@ function gadgetReady() {
 			var sundayNote =
 				! sunday ? '' :
 				remain > 1 ?
-					'<strong>Note:</strong> Most post offices are closed Sunday. Mail your registration by <strong>Saturday</strong> to be sure of a timely postmark.' :
+					'<strong>Note:</strong> Most post offices are closed Sunday. Mail your ' + dt.type + ' by <strong>Saturday</strong> to be sure of a timely postmark.' :
 				remain == 1 ?
-					'<strong>Note:</strong> Most post offices are closed Sunday. Mail your registration <strong>today</strong> to be sure of a timely postmark.' :
+					'<strong>Note:</strong> Most post offices are closed Sunday. Mail your ' + dt.type + ' <strong>today</strong> to be sure of a timely postmark.' :
 				remain == 0 ?
-					"<strong>Note:</strong> Most post offices are closed today. You can still register by mail if your post office is open and has a collection today." :
+					"<strong>Note:</strong> Most post offices are closed today. You can still mail your ' + dt.type + ' if your post office is open and has a collection today." :
 					'';
 			
 			sundayNote = sundayNote && S(
@@ -803,7 +851,7 @@ function gadgetReady() {
 				'</div>',
 				last ? '' : S(
 					'<div style="margin-bottom:0.75em;">',
-						dt.mustbe, ':<br />',
+						dt.mustbe,
 						'<strong>', formatDate(date), '</strong>',
 					'</div>'
 				),
@@ -873,14 +921,14 @@ function gadgetReady() {
 		var vertical = true;
 		$title.append( vertical ? S(
 			'<div>',
-				electionInfo(),
-				'<div style="padding-top:1em">',
-				'</div>',
 				formatHome(),
 				'<div style="padding-top:0.75em">',
 				'</div>',
 				location(),
 				locationWarning,
+				'<div style="padding-top:1em">',
+				'</div>',
+				electionInfo(),
 				infoLinks(),
 				attribution,
 			'</div>'
@@ -1022,7 +1070,11 @@ function gadgetReady() {
 						'</td>',
 						'<td>',
 							'<div>',
-								info.street,
+								info.location ? '<b>' + htmlEscape(info.location) + '</b><br />' : '',
+								info.description ? '<span style="font-size:90%">' + htmlEscape(info.description) + '</span><br />' : '',
+								'<div style="margin-top:', info.location || info.description ? '0.25' : '0', 'em;">',
+									info.street,
+								'</div>',
 							'</div>',
 							'<div>',
 								locality ? locality  + ', ' + info.state.abbr : info.address.length > 2 ? info.address : info.state.name,
@@ -1089,12 +1141,23 @@ function gadgetReady() {
 	}
 	
 	function lookup( address, callback ) {
-		//var url = S(
-		//	'http://pollinglocation.apis.google.com/?q=',
-		//	encodeURIComponent(address)
-		//);
-		//getJSON( url, callback );
-		callback({ errorcode: -1 });  // temp disable
+		if( address == '1600 Pennsylvania Ave NW, Washington, DC 20006, USA' ) {
+			callback({
+				errorcode: 0,
+				locations: [{
+					address: '600 22nd St NW, Washington, DC 20037, USA',
+					location: 'George Washington University',
+					description: "The Smith Center-80's Club Room"
+				}]
+			});
+			return;
+		}
+		var url = S(
+			'http://pollinglocation.apis.google.com/?q=',
+			encodeURIComponent(address)
+		);
+		getJSON( url, callback );
+		//callback({ errorcode: -1 });  // temp disable
 		//callback({ errorcode:0, address:[ '600 22nd St NW, Washington, DC 20037' ] });
 	}
 	
@@ -1226,10 +1289,10 @@ function gadgetReady() {
 			home.leo = leo;
 			lookup( address, function( poll ) {
 				if( poll.errorcode != 0 ) sorry();
-				else geocode( poll.address[0] || poll.locations[0].address, function( geo ) {  // TEMP FORMAT CHANGE
+				else geocode( poll.locations[0].address, function( geo ) {
 					var places = geo && geo.Placemark;
 					if( ! places  ||  places.length != 1 ) sorry();
-					else setMap( vote.info = mapInfo(places[0]) );
+					else setMap( vote.info = mapInfo( places[0], poll.locations[0] ) );
 				});
 			});
 		});
@@ -1244,11 +1307,14 @@ function gadgetReady() {
 	function sorryHtml() {
 		return S(
 			'<div>',
-				home.info ? electionInfo() : '',
-				'<div style="margin-top:1em;">',
+				formatHome(),
+				'<div style="padding-top:0.75em">',
+				'</div>',
+				'<div style="margin-bottom:1em;">',
 					'Voting location information is coming soon. ',
 					'In the meantime, please check with your state or local election officials to find your voting location.',
 				'</div>',
+				home.info ? electionInfo() : '',
 				infoLinks(),
 				attribution,
 			'</div>'
@@ -1308,7 +1374,8 @@ function gadgetReady() {
 	var Kind = [ '', 'Country', 'State', 'County', 'City', 'Neighborhood', 'Neighborhood', 'Neighborhood', 'Home', 'Home' ];
 	var Zoom = [ 4, 5, 6, 10, 11, 12, 13, 14, 15, 15 ];
 	
-	function mapInfo( place ) {
+	function mapInfo( place, extra ) {
+		extra = extra || {};
 		var details = place.AddressDetails;
 		var accuracy = Math.min( details.Accuracy, Accuracy.address );
 		if( accuracy < Accuracy.state ) return null;
@@ -1337,6 +1404,10 @@ function gadgetReady() {
 		var lat = coord[1], lng = coord[0];
 		return {
 			address: formatAddress(place.address),
+			location: extra.location,
+			description: extra.description,
+			directions: extra.directions,
+			hours: extra.hours,
 			lat: lat,
 			lng: lng,
 			latlng: new GLatLng( lat, lng ),
@@ -1369,7 +1440,7 @@ function gadgetReady() {
 			setGadgetPoll411();
 		}
 		
-		var stateSheet = 'http://spreadsheets.google.com/feeds/list/p9CuB_zeAq5WrrUJlgUtNBg/2/public/values?alt=json';
+		var stateSheet = 'http://spreadsheets.google.com/feeds/list/pFixcD4PqyceTSFvT6vmsWw/2/public/values?alt=json';
 		
 		getJSON( stateSheet, function( json ) {
 			json.feed.entry.forEach( function( state ) {
