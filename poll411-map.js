@@ -1156,7 +1156,7 @@ function gadgetReady() {
 			'http://pollinglocation.apis.google.com/?q=',
 			encodeURIComponent(address)
 		);
-		getJSON( url, callback, false );
+		getJSON( url, callback );
 		//callback({ errorcode: -1 });  // temp disable
 		//callback({ errorcode:0, address:[ '600 22nd St NW, Washington, DC 20037' ] });
 	}
