@@ -1287,18 +1287,43 @@ function gadgetReady() {
 		home.info = mapInfo( place );
 		if( ! home.info ) { $title.empty(); sorry(); return; }
 		var address = currentAddress = place.address;
+		var location;
 		
 		getleo( home.info, function( leo ) {
 			home.leo = leo;
 			lookup( address, function( poll ) {
-				if( poll.errorcode != 0 ) sorry();
-				else geocode( poll.locations[0].address, function( geo ) {
-					var places = geo && geo.Placemark;
-					if( ! places  ||  places.length != 1 ) sorry();
-					else setMap( vote.info = mapInfo( places[0], poll.locations[0] ) );
-				});
+				if( poll.errorcode != 0 ) {
+					sorry();
+				}
+				else {
+					location = poll.locations[0];
+					geocode( location.address, function( geo ) {
+						var places = geo && geo.Placemark;
+						if( places  &&  places.length == 1 ) {
+							set( places, location );
+						}
+						else {
+							location.address = location.address.replace( /(,| +) *\w\w *$/, '' ) +
+								', ' + home.info.city + ', ' + home.info.state.abbr;
+							// TODO: refactor duplicate code
+							geocode( location.address, function( geo ) {
+								var places = geo && geo.Placemark;
+								if( places  &&  places.length == 1 ) {
+									set( places, location );
+								}
+								else {
+									sorry();
+								}
+							});
+						}
+					});
+				}
 			});
 		});
+		
+		function set( places, location ) {
+			setMap( vote.info = mapInfo( places[0], location ) );
+		}
 	}
 	
 	function sorry() {
