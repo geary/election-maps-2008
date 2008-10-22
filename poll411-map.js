@@ -309,6 +309,18 @@ function stateByAbbr( abbr ) {
 	return statesByAbbr[abbr.toUpperCase()] || stateUS;
 }
 
+function indexSpecialStates() {
+	var special = {
+		'N Carolina': 'North Carolina',
+		'N Dakota': 'North Dakota',
+		'S Carolina': 'South Carolina',
+		'S Dakota': 'South Dakota',
+		'W Virginia': 'West Virginia'
+	};
+	for( var abbr in special )
+		statesByName[abbr] = statesByName[ special[abbr] ];
+}
+
 mapplet = window.mapplet;
 var map, $jsmap, currentAddress;
 var home, vote;
@@ -1299,7 +1311,7 @@ function gadgetReady() {
 		currentAddress = place.address;
 		var location;
 		
-	getleo( home.info, function( leo ) {
+		getleo( home.info, function( leo ) {
 			home.leo = leo;
 			lookup( currentAddress, function( poll ) {
 				if( poll.errorcode != 0 ) {
@@ -1432,7 +1444,7 @@ function gadgetReady() {
 		var area = country.AdministrativeArea;
 		if( ! area ) return null;
 		var areaname = area.AdministrativeAreaName;
-		var state = statesByName[areaname] || stateByAbbr(areaname);
+		var state = statesByName[areaname] || statesByAbbr[ areaname.toUpperCase() ] || statesByName[ (place.address||'').replace( /, USA$/, '' ) ];
 		if( ! state ) return null;
 		var sub = area.SubAdministrativeArea || area, locality = sub.Locality;
 		if( locality ) {
@@ -1496,6 +1508,8 @@ function gadgetReady() {
 				statesByName[ state.name = state.gsx$name.$t ] = state;
 				states.push( state );
 			});
+			
+			indexSpecialStates();
 			
 			zoom = function( state ) {
 				function latlng( lat, lng ) { return new GLatLng( +lat.$t, +lng.$t ) }
