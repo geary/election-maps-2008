@@ -1241,9 +1241,9 @@ function gadgetReady() {
 			geocode( addr, function( geo ) {
 				var places = geo && geo.Placemark;
 				var n = places && places.length;
-				if( n == 0 ) {
+				if( ! n ) {
 					spin( false );
-					$title.html( 'No match for that address.' );
+					$title.html( 'We did not find that address. Please check the spelling and try again. Be sure to include your zip code or city and state.' );
 				}
 				else if( n == 1 ) {
 					findPrecinct( places[0] );
