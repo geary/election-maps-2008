@@ -359,20 +359,29 @@ function infoLinks() {
 	);
 }
 
+var fullvips = 'state and local election officials from Iowa, Maryland, Montana, North Carolina, Ohio, and Los Angeles County,';
+
 var attribution = ! mapplet ? '' : S(
 	'<div style="', fontStyle, ' color:#333;">',
 		'<div style="font-size:85%; margin-top:0.5em; border-top:1px solid #BBB; padding-top:1em;">',
+			'Developed with ',
+			'<span id="vips" style="font-size:100%;">',
+				'<a style="font-size:100%;" href="#" onclick="$(\'#vips\').html(fullvips); return false;">',
+					'state and local election officials',
+				'</a>',
+			'</span>',
+			' and the ',
+			'<a style="font-size:100%;" target="_blank" href="http://votinginfoproject.org/">',
+				'Voting Information Project',
+			'</a>',
+			'.',
+		'</div>',
+		'<div style="font-size:85%; margin-top:0.75em;">',
 			'In conjunction with the ',
 			'<a style="font-size:100%;" target="_blank" href="http://www.lwv.org/">',
 				'League of Women Voters',
 			'</a>',
-		'</div>',
-		'<div style="font-size:85%; margin-top:0.75em;">',
-			'Developed with the ',
-			'<a style="font-size:100%;" target="_blank" href="http://votinginfoproject.org/">',
-				'Voting Information Project',
-			'</a>',
-			' and state election officials from Iowa, Maryland, Montana, North Carolina, Ohio, and Los Angeles County.',
+			'.',
 		'</div>',
 	'</div>'
 );
