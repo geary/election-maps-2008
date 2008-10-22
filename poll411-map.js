@@ -903,7 +903,7 @@ function gadgetReady() {
 		//		'</a>',
 		//	'</div>'
 		//);
-		var extra = S(
+		var extra = home.info.latlng && vote.info.latlng ? S(
 			'<div>',
 				'<a target="_blank" href="http://maps.google.com/maps?f=d&saddr=', encodeURIComponent(home.info.address), '&daddr=', encodeURIComponent(vote.info.address), '&hl=en&mra=ls&ie=UTF8&iwloc=A&iwstate1=dir">',
 					'Get directions',
@@ -913,7 +913,7 @@ function gadgetReady() {
 				//	'Send',
 				//'</a>',
 			'</div>'
-		);
+		) : '';
 		function location( infowindow ) {
 			return formatLocation( vote.info, infowindow ? 'vote-icon-50.png' : 'marker-red.png', 'Your Voting Location', infowindow, extra );
 		}
@@ -977,14 +977,14 @@ function gadgetReady() {
 		
 		function ready() {
 			setTimeout( function() {
-				var only = ! vote.info;
+				var only = ! vote.info  ||  ! vote.info.latlng;
 				setMarker({
 					place: home,
 					image: baseUrl + 'marker-green.png',
 					open: only,
 					html: formatHome( true )
 				});
-				if( vote.info )
+				if( vote.info  &&  vote.info.latlng )
 					setMarker({
 						place: vote,
 						html: vote.html,
@@ -1021,7 +1021,7 @@ function gadgetReady() {
 			var hi = home.info, vi = vote.info;
 			if( ! hi ) return;
 			var latlng = hi.latlng;
-			if( vi ) {
+			if( vi  &&  vi.latlng ) {
 				latlng = new GLatLng(
 					( hi.lat + vi.lat ) / 2,
 					( hi.lng + vi.lng ) / 2
@@ -1083,6 +1083,12 @@ function gadgetReady() {
 						'</td>',
 					'</tr>',
 				'</table>',
+				info.latlng ? '' : S(
+					'<div style="padding-top: 0.5em">',
+						'We were unable to locate this voting place on the map. ',
+						'Please check with your election officals for the exact address.',
+					'</div>'
+				),
 			'</div>'
 		);
 	}
@@ -1285,43 +1291,53 @@ function gadgetReady() {
 	function findPrecinct( place ) {
 		home.info = mapInfo( place );
 		if( ! home.info ) { $title.empty(); sorry(); return; }
-		var address = currentAddress = place.address;
+		currentAddress = place.address;
 		var location;
 		
-		getleo( home.info, function( leo ) {
+	getleo( home.info, function( leo ) {
 			home.leo = leo;
-			lookup( address, function( poll ) {
+			lookup( currentAddress, function( poll ) {
 				if( poll.errorcode != 0 ) {
 					sorry();
 				}
 				else {
 					location = poll.locations[0];
-					geocode( location.address, function( geo ) {
+					var address = location.address;
+					var ok = address.match( /(,| +)\d\d\d\d\d(-\d\d\d\d)? *$/i );
+					if( ! ok ) {
+						var match = address.match( /(,| +) *([a-z][a-z])(,| *)$/i );
+						ok = match && stateByAbbr[ match[2].toUpperCase() ];
+					}
+					if( ! ok ) {
+						address = address
+							.replace( /(,| +) *\w\w *$/, '' )
+							.replace( / *, */, '' )
+							+ ', ' + home.info.city + ', ' + home.info.state.abbr;
+					}
+					geocode( address, function( geo ) {
 						var places = geo && geo.Placemark;
-						if( places  &&  places.length == 1 ) {
-							set( places, location );
-						}
-						else {
-							location.address = location.address.replace( /(,| +) *\w\w *$/, '' ) +
-								', ' + home.info.city + ', ' + home.info.state.abbr;
-							// TODO: refactor duplicate code
-							geocode( location.address, function( geo ) {
-								var places = geo && geo.Placemark;
-								if( places  &&  places.length == 1 ) {
-									set( places, location );
-								}
-								else {
-									sorry();
-								}
-							});
-						}
+						if( places  &&  places.length == 1 ) places == null;
+						set( places, location );
 					});
 				}
 			});
 		});
 		
 		function set( places, location ) {
-			setMap( vote.info = mapInfo( places[0], location ) );
+			if( places ) {
+				setMap( vote.info = mapInfo( places[0], location ) );
+			}
+			else {
+				vote.info = {
+					address: location.address.replace( / *, */, '' ),
+					location: location.location,
+					description: location.description,
+					directions: location.directions,
+					hours: location.hours,
+					_:''
+				};
+				setMap( home.info );
+			}
 		}
 	}
 	
