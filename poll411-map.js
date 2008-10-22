@@ -359,7 +359,7 @@ function infoLinks() {
 	);
 }
 
-var fullvips = 'state and local election officials from Iowa, Maryland, Montana, North Carolina, Ohio, and Los Angeles County,';
+var fullvips = 'state and local election officials from Iowa, Kansas, Maryland, Minnesota, Missouri, Montana, North Carolina, North Dakota, Ohio, and Los Angeles County,';
 
 var attribution = ! mapplet ? '' : S(
 	'<div style="', fontStyle, ' color:#333;">',
