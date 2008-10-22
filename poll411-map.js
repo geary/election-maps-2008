@@ -627,7 +627,7 @@ function gadgetReady() {
 	var interpolatedLocationWarning = S(
 		'<div style="padding-top:1em; xline-height:1.2em; xcolor:gray; xfont-size:80%;">',
 			'<span style="font-weight:bold;">',
-				'Important&nbsp; ',
+				'Important: ',
 			'</span>',
 			'Verify your voting location with your local election officials. ',
 			'This location is an estimate. ',
@@ -663,7 +663,7 @@ function gadgetReady() {
 		var sameDay = state.gsx$sameday.$t != 'TRUE' ? '' : S(
 			'<div style="margin-bottom:0.5em;">',
 				state.name, ' residents may register to vote at their polling place on Election Day:<br />',
-				'<strong>Tuesday, November 4</strong>',
+				'Tuesday, November 4',
 			'</div>'
 		);
 		
@@ -685,7 +685,7 @@ function gadgetReady() {
 				type: 'registration',
 				left: 'Days left for registration to be received by your election officials',
 				last: 'Today is the last day for registration to be received by your election officials',
-				mustbe: 'Registration must be <strong>received</strong> by:<br />'
+				mustbe: 'Registration must be received by:<br />'
 			},
 			inperson: {
 				type: 'registration',
@@ -703,7 +703,7 @@ function gadgetReady() {
 				type: 'absentee ballot request',
 				left: 'Days left for absentee ballot request to be received by your election officials',
 				last: 'Today is the last day for an absentee ballot request to be received by your election officials',
-				mustbe: 'Absentee ballot requests must be <strong>received</strong> by '
+				mustbe: 'Absentee ballot requests must be received by '
 			},
 			avmail: {
 				type: 'completed absentee ballot',
@@ -715,7 +715,7 @@ function gadgetReady() {
 				type: 'completed absentee ballot',
 				left: 'Days left for a completed absentee ballot to be received by your election officials',
 				last: 'Today is the last day for a completed absentee ballot to be received by your election officials',
-				mustbe: 'Completed absentee ballots must be <strong>received</strong> by '
+				mustbe: 'Completed absentee ballots must be received by '
 			}
 		};
 		
@@ -765,7 +765,7 @@ function gadgetReady() {
 					'Voter Registration',
 				'</div>',
 				'<div style="margin-bottom:0.75em;">',
-					fix('State: <strong>%S</strong>'),
+					fix('State: %S'),
 				'</div>',
 				deadlines || '',
 				sameDay,
@@ -782,7 +782,7 @@ function gadgetReady() {
 				'</ul>',
 				'<div style="margin:1.0em 0 0.5em 0;">',
 					state.name, ' voter hotline: ',
-					'<span style="white-space:nowrap; font-weight:bold;">',
+					'<span style="white-space:nowrap;">',
 						state.gsx$hotline.$t,
 					'</span>',
 				'</div>',
@@ -829,11 +829,11 @@ function gadgetReady() {
 			var sundayNote =
 				! sunday ? '' :
 				remain > 1 ?
-					'<strong>Note:</strong> Most post offices are closed Sunday. Mail your ' + dt.type + ' by <strong>Saturday</strong> to be sure of a timely postmark.' :
+					'Note: Most post offices are closed Sunday. Mail your ' + dt.type + ' by Saturday to be sure of a timely postmark.' :
 				remain == 1 ?
-					'<strong>Note:</strong> Most post offices are closed Sunday. Mail your ' + dt.type + ' <strong>today</strong> to be sure of a timely postmark.' :
+					'Note: Most post offices are closed Sunday. Mail your ' + dt.type + ' today to be sure of a timely postmark.' :
 				remain == 0 ?
-					"<strong>Note:</strong> Most post offices are closed today. You can still mail your ' + dt.type + ' if your post office is open and has a collection today." :
+					"Note: Most post offices are closed today. You can still mail your ' + dt.type + ' if your post office is open and has a collection today." :
 					'';
 			
 			sundayNote = sundayNote && S(
@@ -845,13 +845,11 @@ function gadgetReady() {
 			var last = remain < 1; //  ||  sunday && remain < 2;
 			return S(
 				'<div style="margin-bottom:0.75em;">',
-					last ? S( '<strong>', dt.last, '</strong>' )  :
-					S( dt.left, ': <strong>', remain, '</strong>' ),
+					last ? dt.last : S( dt.left, ': ', remain ),
 				'</div>',
 				last ? '' : S(
 					'<div style="margin-bottom:0.75em;">',
-						dt.mustbe,
-						'<strong>', formatDate(date), '</strong>',
+						dt.mustbe, formatDate(date),
 					'</div>'
 				),
 				sundayNote
@@ -860,10 +858,9 @@ function gadgetReady() {
 		
 		function election( key, text, prefix ) {
 			var url = state[key].$t;
-			var size = mapplet ? 'font-size:110%;' : '';
 			return ! url ? '' : S(
 				'<li style="margin-bottom:0.5em; margin-left:-1.25em;">',
-					'<a target="_blank" href="', url, '" style="', size, '">',
+					'<a target="_blank" href="', url, '">',
 						fix( text, prefix ),
 					'</a>',
 				'</li>'
@@ -1069,7 +1066,7 @@ function gadgetReady() {
 						'</td>',
 						'<td>',
 							'<div>',
-								info.location ? '<b>' + htmlEscape(info.location) + '</b><br />' : '',
+								info.location ? '<strong>' + htmlEscape(info.location) + '</strong><br />' : '',
 								info.description ? '<span style="font-size:90%">' + htmlEscape(info.description) + '</span><br />' : '',
 								'<div style="margin-top:', info.location || info.description ? '0.25' : '0', 'em;">',
 									info.street,
