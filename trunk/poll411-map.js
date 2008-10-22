@@ -660,8 +660,7 @@ function gadgetReady() {
 		var state = home.info.state;
 		if( ! state  ||  state == stateUS ) return '';
 		
-		var sameDay = state.gsx$sameday.$t;
-		if( sameDay ) sameDay = S(
+		var sameDay = state.gsx$sameday.$t != 'TRUE' ? '' : S(
 			'<div style="margin-bottom:0.5em;">',
 				state.name, ' residents may register to vote at their polling place on Election Day:<br />',
 				'<strong>Tuesday, November 4</strong>',
@@ -747,7 +746,7 @@ function gadgetReady() {
 		var deadlines = (
 			deadline( state, 'gsx$postmark', 'mail' )  || deadline( state, 'gsx$receive', 'receive' )
 		) + deadline( state, 'gsx$inperson', 'inperson' );
-		//if( ! deadlines  &&  state.abbr != 'ND'  &&  ! state.gsx$sameday.$t )
+		//if( ! deadlines  &&  state.abbr != 'ND'  &&  state.gsx$sameday.$t != 'TRUE' )
 		//	deadlines = S(
 		//		'<div style="margin-bottom:0.75em;">',
 		//			'The deadline to mail your registration for the November 4, 2008 general election has passed. ',
