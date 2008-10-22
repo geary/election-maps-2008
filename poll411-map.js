@@ -563,7 +563,7 @@ function gadgetWrite() {
 			'<div id="PollingPlaceSearch">',
 				'<div class="PollingPlaceSearchTitle removehelp">',
 					'<div style="margin-bottom:4px;">',
-						'Find out where and how to vote!<br />',
+						'Find your voting location and more.<br />',
 						'Enter your <strong>home</strong>&nbsp;address:',
 					'</div>',
 				'</div>',
