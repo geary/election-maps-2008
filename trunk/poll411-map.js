@@ -159,7 +159,8 @@ $.extend( $.fn, {
 function analytics( path ) {
 	if( path.indexOf( 'http://maps.gmodules.com/ig/ifr' ) == 0 ) return;
 	if( path.indexOf( 'http://maps.google.com/maps?f=d' ) == 0 ) path = '/directions';
-	path = path.replace( /http:\/\//, '/http/' ).replace( /mailto:/, '/mailto/' );
+	path = path.replace( /http:\/\//, 'http/' ).replace( /mailto:/, 'mailto/' );
+	path = ( maker ? '/creator/' : params.home ? '/onebox/' : mapplet ? '/mapplet/' : '/gadget/' ) + path;
 	//console.log( 'analytics', path );
 	_IG_Analytics( 'UA-5730550-1', path );
 }
@@ -1050,7 +1051,7 @@ function gadgetReady() {
 			if( mapplet ) {
 				GEvent.addListener( map, 'click', function( overlay, point ) {
 					if( !( overlay || point ) )
-						analytics( '/directions' );
+						analytics( 'directions' );
 				});
 			}
 			else {
@@ -1243,7 +1244,7 @@ function gadgetReady() {
 	}
 	
 	function submit( addr ) {
-		analytics( '/lookup' );
+		analytics( 'lookup' );
 		addr = $.trim( addr );
 		var state = statesByAbbr[ addr.toUpperCase() ];
 		if( state ) addr = state.name;
@@ -1578,7 +1579,7 @@ function gadgetReady() {
 		});
 	});
 	
-	analytics( maker ? '/creator' : mapplet ? '/mapplet' : '/gadget' );
+	analytics( 'view' );
 }
 
 // Final initialization
