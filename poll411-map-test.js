@@ -1,1 +1,1 @@
-window.location = 'http://maps.google.com/vote';
+window.top.location = 'http://maps.google.com/vote';
