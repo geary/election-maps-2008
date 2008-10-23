@@ -160,7 +160,7 @@ function analytics( path ) {
 	if( path.indexOf( 'http://maps.gmodules.com/ig/ifr' ) == 0 ) return;
 	if( path.indexOf( 'http://maps.google.com/maps?f=d' ) == 0 ) path = '/directions';
 	path = path.replace( /http:\/\//, 'http/' ).replace( /mailto:/, 'mailto/' );
-	path = ( maker ? '/creator/' : params.home ? '/onebox/' : mapplet ? '/mapplet/' : pref.ready ? '/inline/' : '/gadget/' ) + path;
+	path = ( maker ? '/creator/' : params.home ? '/onebox/' : mapplet ? '/mapplet/' : inline ? '/inline/' : '/gadget/' ) + path;
 	//console.log( 'analytics', path );
 	_IG_Analytics( 'UA-5730550-1', path );
 }
@@ -322,7 +322,10 @@ function indexSpecialStates() {
 		statesByName[abbr] = statesByName[ special[abbr] ];
 }
 
-mapplet = window.mapplet;
+var mapplet = window.mapplet;
+var inline = ! mapplet  &&  pref.gadgetType == 'inline';
+var iframe = ! mapplet  &&  ! inline;
+
 var map, $jsmap, currentAddress;
 var home, vote;
 
