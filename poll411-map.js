@@ -377,7 +377,7 @@ function infoLinks() {
 
 var fullvips = 'state and local election officials from Iowa, Kansas, Maryland, Minnesota, Missouri, Montana, North Carolina, North Dakota, Ohio, and Los Angeles County,';
 
-var attribution = ! mapplet ? '' : S(
+var attribution = S(
 	'<div style="', fontStyle, ' color:#333;">',
 		'<div style="font-size:85%; margin-top:0.5em; border-top:1px solid #BBB; padding-top:1em;">',
 			'Developed with ',
@@ -530,75 +530,60 @@ function gadgetWrite() {
 				'body { height:', height, 'px; }',
 				'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(', cacheUrl( baseUrl + 'spinner.gif' ), '); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30;', pref.ready ? '' : 'display:none;', '}',
 				'#spinner { filter:alpha(opacity=30); }',
-				'#title { padding-top:4px; }',
+				'#title { width:100%; }',
+				'#mapbox { width:100%; }',
 			'</style>'
 		);
-		
-		if( width >= 500 ) {
-			var panelMin = 170;
-			var panelWidth = ( panelMin + ( width - 500 ) * .75 ).toFixed();
-			var mapWidth = width - panelWidth;
-			//console.log( width, panelWidth, mapWidth );
-			document.write(
-				'<style type="text/css">',
-					'#title { float:left; width:', panelWidth, 'px; }',
-					'#mapbox { float:left; width:', mapWidth, 'px; }',
-				'</style>'
-			);
-		}
-		else {
-			document.write(
-				'<style type="text/css">',
-					'#title { width:100%; }',
-					'#mapbox { display:none; }',
-				'</style>'
-			);
-		}
 	}
 	
 	if( mapplet ) {
 		document.write(
-			'<div id="outerlimits" style="margin-right:8px;">'
-		);
-	}
-	
-	if( mapplet ) {
-		document.write(
-			'<div id="PollingPlaceSearch">',
-				'<div class="PollingPlaceSearchTitle removehelp">',
-					'<div style="margin-bottom:4px;">',
-						'Find your voting location and more.<br />',
-						'Enter your <strong>home</strong>&nbsp;address:',
+			'<div id="outerlimits" style="margin-right:8px;">',
+				'<div id="PollingPlaceSearch">',
+					'<div class="PollingPlaceSearchTitle removehelp">',
+						'<div style="margin-bottom:4px;">',
+							'Find your voting location and more.<br />',
+							'Enter your <strong>home</strong>&nbsp;address:',
+						'</div>',
+					'</div>',
+					'<!--<div id="PollingPlaceSearchSpinner" class="PollingPlaceSearchSpinner">-->',
+					'<!--</div>-->',
+					'<div>',
+						'<form id="PollingPlaceSearchForm" class="PollingPlaceSearchForm" onsubmit="return PollingPlaceSearch.submit()">',
+							'<table style="width:100%;">',
+								'<tr>',
+									'<td style="width:99%;">',
+										'<div>',
+											'<input id="PollingPlaceSearchInput" class="PollingPlaceSearchInput" type="text" value="',
+												htmlEscape( ( params.home || '' ).replace( /!/g, ' ' ) ),
+											'" />',
+										'</div>',
+									'</td>',
+									'<td style="width:1%;">',
+										'<div>',
+											'<button type="submit" id="PollingPlaceSearchButton" class="PollingPlaceSearchButton"> Search</button>',
+										'</div>',
+									'</td>',
+								'</tr>',
+							'</table>',
+						'</form>',
+					'</div>',
+					'<div class="removehelp">',
+						'<div style="margin-top:0.25em;">',
+							'Example: ',
+							'<a href="#" onclick="return PollingPlaceSearch.sample();">',
+								htmlEscape( pref.example ),
+							'</a>',
+						'</div>',
 					'</div>',
 				'</div>',
-				'<!--<div id="PollingPlaceSearchSpinner" class="PollingPlaceSearchSpinner">-->',
-				'<!--</div>-->',
-				'<div>',
-					'<form id="PollingPlaceSearchForm" class="PollingPlaceSearchForm" onsubmit="return PollingPlaceSearch.submit()">',
-						'<table style="width:100%;">',
-							'<tr>',
-								'<td style="width:99%;">',
-									'<div>',
-										'<input id="PollingPlaceSearchInput" class="PollingPlaceSearchInput" type="text" value="',
-											htmlEscape( ( params.home || '' ).replace( /!/g, ' ' ) ),
-										'" />',
-									'</div>',
-								'</td>',
-								'<td style="width:1%;">',
-									'<div>',
-										'<button type="submit" id="PollingPlaceSearchButton" class="PollingPlaceSearchButton"> Search</button>',
-									'</div>',
-								'</td>',
-							'</tr>',
-						'</table>',
-					'</form>',
+				'<div id="spinner">',
 				'</div>',
-				'<div class="removehelp">',
-					'<div style="margin-top:0.25em;">',
-						'Example: ',
-						'<a href="#" onclick="return PollingPlaceSearch.sample();">',
-							htmlEscape( pref.example ),
-						'</a>',
+				'<div id="wrapper">',
+					'<div id="title">',
+						attribution,
+					'</div>',
+					'<div id="mapbox">',
 					'</div>',
 				'</div>',
 			'</div>'
@@ -606,27 +591,15 @@ function gadgetWrite() {
 	}
 	else {
 		writeScript( 'http://maps.google.com/maps?file=api&amp;v=2&amp;key=' + key );
-	}
-	
-	writeBody = function() {
 		document.write(
 			'<div id="spinner">',
 			'</div>',
 			'<div id="wrapper">',
 				'<div id="title">',
-					attribution,
 				'</div>',
 				'<div id="mapbox">',
 				'</div>',
 			'</div>'
-		);
-	};
-	
-	writeBody();
-	
-	if( mapplet ) {
-		document.write(
-			'</div>'  // #outerlimits
 		);
 	}
 }
@@ -936,45 +909,54 @@ function gadgetReady() {
 			'</div>'
 		) : '';
 		function location( infowindow ) {
-			return formatLocation( vote.info, infowindow ? 'vote-icon-50.png' : 'marker-red.png', 'Your Voting Location', infowindow, extra );
+			return formatLocation( vote.info, infowindow || ! mapplet ? 'vote-icon-50.png' : 'marker-red.png', 'Your Voting Location', infowindow, extra );
 		}
-		var vertical = true;
-		$title.append( vertical ? S(
-			'<div>',
-				formatHome(),
-				'<div style="padding-top:0.75em">',
-				'</div>',
+		if( mapplet ) {
+			$title.append( S(
+				'<div>',
+					formatHome(),
+					'<div style="padding-top:0.75em">',
+					'</div>',
+					location(),
+					locationWarning,
+					'<div style="padding-top:1em">',
+					'</div>',
+					electionInfo(),
+					infoLinks(),
+					attribution,
+				'</div>'
+			) );
+			vote.html = S(
+				'<div style="', fontStyle, '">',
+					location( true ),
+					locationWarning,
+				'</div>'
+			);
+			_IG_AdjustIFrameHeight();
+		}
+		else {
+			$title.empty();
+			vote.html = infoWrap( S(
 				location(),
 				locationWarning,
+				'<div style="padding-top:0.75em">',
+				'</div>',
+				formatHome(),
 				'<div style="padding-top:1em">',
 				'</div>',
 				electionInfo(),
 				infoLinks(),
-				attribution,
+				attribution
+			) );
+		}
+	}
+	
+	function infoWrap( html ) {
+		return S(
+			'<div style="', fontStyle, ' margin-top:12px; height:', $map.height() - 200, 'px; overflow:auto;">',
+				html,
 			'</div>'
-		) : S(
-			// TODO: refactor
-			'<div style="padding:6px 0; margin:4px 0 0 0; border-top:1px solid #AAA; border-bottom:1px solid #AAA;">',
-				'<table cellpadding="0" cellspacing="0" style="width:100%;">',
-					'<tr valign="top">',
-						'<td>',
-							formatHome(),
-						'</td>',
-						'<td>',
-							electionInfo(),
-						'</td>',
-					'</tr>',
-				'</table>',
-			'</div>'
-		) );
-		vote.html = S(
-			'<div style="', fontStyle, '">',
-				location( true ),
-				locationWarning,
-			'</div>'
-		);
-		if( mapplet )
-			_IG_AdjustIFrameHeight();
+		)
 	}
 	
 	function initMap( a ) {
@@ -1003,7 +985,7 @@ function gadgetReady() {
 					place: home,
 					image: baseUrl + 'marker-green.png',
 					open: only,
-					html: formatHome( true )
+					html: mapplet || ! only ? formatHome(true) : infoWrap( sorryHtml() )
 				});
 				if( vote.info  &&  vote.info.latlng )
 					setMarker({
@@ -1021,7 +1003,7 @@ function gadgetReady() {
 				new GMarker( a.place.info.latlng, { icon:icon });
 			map.addOverlay( marker );
 			var options = {
-				maxWidth: mapplet ? 325 : Math.min( $jsmap.width() - 150, 325 )
+				maxWidth: mapplet ? 350 : Math.min( $jsmap.width() - 100, 350 )
 				/*, disableGoogleLinks:true*/
 			};
 			marker.bindInfoWindow( $(a.html)[0], options );
@@ -1076,7 +1058,7 @@ function gadgetReady() {
 	}
 	
 	function formatLocation( info, icon, title, infowindow, extra ) {
-		var size = infowindow ? { width:50, height:50 } : { width:20, height:34 };
+		var size = infowindow || ! mapplet ? { width:50, height:50 } : { width:20, height:34 };
 		var locality = info.city ? info.city : info.county ? info.county + ' County' : '';
 		return S(
 			'<div style="font-weight:bold; font-size:110%;">',
@@ -1257,7 +1239,6 @@ function gadgetReady() {
 		map && map.clearOverlays();
 		currentAddress = addr;
 		$title.empty();
-		if( ! mapplet ) $title.height( height - $title.offset().top - 4 );
 		$map.empty();
 		closehelp( function() {
 			geocode( addr, function( geo ) {
@@ -1309,7 +1290,7 @@ function gadgetReady() {
 	function formatHome( infowindow ) {
 		return S(
 			'<div style="', fontStyle, '">',
-				formatLocation( home.info, infowindow ? 'home-icon-50.png' : 'marker-green.png', 'Your ' + home.info.kind, infowindow ),
+				formatLocation( home.info, infowindow || ! mapplet ? 'home-icon-50.png' : 'marker-green.png', 'Your ' + home.info.kind, infowindow ),
 				//extra ? electionInfo() : '',
 			'</div>'
 		);
@@ -1369,7 +1350,7 @@ function gadgetReady() {
 	}
 	
 	function sorry() {
-		$title.append( sorryHtml() );
+		if( mapplet ) $title.append( sorryHtml() );
 		setMap( home.info );
 		spin( false );
 	}
