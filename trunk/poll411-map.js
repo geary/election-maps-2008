@@ -1491,7 +1491,7 @@ function gadgetReady() {
 			setGadgetPoll411();
 		}
 		
-		var stateSheet = 'http://spreadsheets.google.com/feeds/list/pFixcD4PqyceTSFvT6vmsWw/2/public/values?alt=json';
+		var stateSheet = 'http://spreadsheets.google.com/feeds/list/p9CuB_zeAq5X-twnx_mdbKg/2/public/values?alt=json';
 		
 		getJSON( stateSheet, function( json ) {
 			json.feed.entry.forEach( function( state ) {
