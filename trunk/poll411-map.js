@@ -953,7 +953,7 @@ function gadgetReady() {
 	
 	function infoWrap( html ) {
 		return S(
-			'<div style="', fontStyle, ' margin-top:12px; height:', $map.height() - 200, 'px; overflow:auto;">',
+			'<div style="', fontStyle, ' margin-top:12px; padding-right:4px; height:', $map.height() - 200, 'px; overflow:auto;">',
 				html,
 			'</div>'
 		)
