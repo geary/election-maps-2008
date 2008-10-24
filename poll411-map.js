@@ -1336,24 +1336,27 @@ function gadgetReady() {
 					var abbr = places[0].AddressDetails.Country.AdministrativeArea.AdministrativeAreaName;
 					var st = statesByName[abbr] || statesByAbbr[ abbr.toUpperCase() ];
 					if( st != home.info.state ) {
-						sorry();
+						setNoGeo( location );
 						return;
 					}
 				}
 				catch( e ) {}
 				setMap( vote.info = mapInfo( places[0], location ) );
+				return;
 			}
-			else {
-				vote.info = {
-					address: location.address.replace( / *, */, '' ),
-					location: location.location,
-					description: location.description,
-					directions: location.directions,
-					hours: location.hours,
-					_:''
-				};
-				setMap( home.info );
-			}
+			setNoGeo( location );
+		}
+		
+		function setNoGeo( location ) {
+			vote.info = {
+				address: location.address.replace( / *, */g, '<br />' ),
+				location: location.location,
+				description: location.description,
+				directions: location.directions,
+				hours: location.hours,
+				_:''
+			};
+			setMap( home.info );
 		}
 	}
 	
