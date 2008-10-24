@@ -1324,7 +1324,6 @@ function gadgetReady() {
 					}
 					geocode( address, function( geo ) {
 						var places = geo && geo.Placemark;
-						if( places  &&  places.length == 1 ) places == null;
 						set( places, location );
 					});
 				}
@@ -1332,7 +1331,16 @@ function gadgetReady() {
 		});
 		
 		function set( places, location ) {
-			if( places ) {
+			if( places && places.length == 1 ) {
+				try {
+					var abbr = places[0].AddressDetails.Country.AdministrativeArea.AdministrativeAreaName;
+					var st = statesByName[abbr] || statesByAbbr[ abbr.toUpperCase() ];
+					if( st != home.info.state ) {
+						sorry();
+						return;
+					}
+				}
+				catch( e ) {}
 				setMap( vote.info = mapInfo( places[0], location ) );
 			}
 			else {
