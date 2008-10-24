@@ -937,17 +937,29 @@ function gadgetReady() {
 		else {
 			$title.empty();
 			vote.html = infoWrap( S(
-				location(),
-				locationWarning,
-				'<div style="padding-top:0.75em">',
-				'</div>',
-				formatHome(),
+				homeAndVote(),
 				'<div style="padding-top:1em">',
 				'</div>',
 				electionInfo(),
 				infoLinks(),
 				attribution
 			) );
+		}
+		
+		function homeAndVote() {
+			return vote.info.latlng ? S(
+				location(),
+				locationWarning,
+				'<div style="padding-top:0.75em">',
+				'</div>',
+				formatHome()
+			) : S(
+				formatHome(),
+				'<div style="padding-top:0.75em">',
+				'</div>',
+				location(),
+				locationWarning
+			);
 		}
 	}
 	
@@ -985,7 +997,7 @@ function gadgetReady() {
 					place: home,
 					image: baseUrl + 'marker-green.png',
 					open: only,
-					html: mapplet || ! only ? formatHome(true) : infoWrap( sorryHtml() )
+					html: ! only ? formatHome(true) : ! mapplet && vote.html || infoWrap( sorryHtml() )
 				});
 				if( vote.info  &&  vote.info.latlng )
 					setMarker({
@@ -1356,6 +1368,7 @@ function gadgetReady() {
 				hours: location.hours,
 				_:''
 			};
+			setVoteHtml();
 			setMap( home.info );
 		}
 	}
