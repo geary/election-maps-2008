@@ -21,7 +21,7 @@ def main():
 	good = bad = 0
 	for row in reader:
 		n += 1
-		lat = lng = place = ''
+		addr = lat = lng = place = ''
 		if row[13] != 'Yes':
 			print 'Skip %d' % n
 		else:
