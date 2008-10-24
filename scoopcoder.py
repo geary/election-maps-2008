@@ -34,12 +34,12 @@ def main():
 				lat = lng = place = '***FAIL***'
 				bad += 1
 				print 'Bad  %d: %s' % ( n, addr )
+			time.sleep( 2 )
 		row.append( addr )
 		row.append( place )
 		row.append( lat )
 		row.append( lng )
 		writer.writerow( row )
-		time.sleep( 2 )
 	print 'Good: %d, bad: %d' % ( good, bad )
 
 if __name__ == '__main__':
