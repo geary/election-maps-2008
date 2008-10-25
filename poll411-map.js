@@ -1008,7 +1008,7 @@ function gadgetReady() {
 					});
 				if( scoop ) {
 					var icon = new GIcon( G_DEFAULT_ICON );
-					icon.image = baseUrl + 'scoop.png';
+					icon.image = cacheUrl( baseUrl + 'scoop.png' );
 					icon.shadow = null;
 					icon.iconSize = new GSize( 48, 48 );
 					icon.shadowSize = null;
