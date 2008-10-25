@@ -227,7 +227,8 @@ var pref = {
 	address: '',
 	fontFamily: 'Arial,sans-serif',
 	fontSize: '10',
-	fontUnits: 'pt'
+	fontUnits: 'pt',
+	scoop: ''
 };
 for( var name in pref ) pref[name] = prefs.getString(name) || pref[name];
 pref.ready = prefs.getBool('submit');
@@ -327,7 +328,7 @@ var inline = ! mapplet  &&  pref.gadgetType == 'inline';
 var iframe = ! mapplet  &&  ! inline;
 
 var map, $jsmap, currentAddress;
-var home, vote;
+var home, vote, scoop;
 
 var key = {
 	'gmodules.com': 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRTZqGWfQErE9pT-IucjscazSdFnjBSzjqfxm1CQj7RDgG-OoyNfebJK0w',
@@ -888,6 +889,16 @@ function gadgetReady() {
 		}
 	}
 	
+	function directionsLink( from, to ) {
+		return S(
+			'<div>',
+				'<a target="_blank" href="http://maps.google.com/maps?f=d&saddr=', encodeURIComponent(from.info.address), '&daddr=', encodeURIComponent(to.info.address), '&hl=en&mra=ls&ie=UTF8&iwloc=A&iwstate1=dir">',
+					'Get directions',
+				'</a>',
+			'</div>'
+		);
+	}
+	
 	function setVoteHtml() {
 		if( ! vote.info ) return;
 		//var largeMapLink = mapplet ? '' : S(
@@ -897,17 +908,7 @@ function gadgetReady() {
 		//		'</a>',
 		//	'</div>'
 		//);
-		var extra = home.info.latlng && vote.info.latlng ? S(
-			'<div>',
-				'<a target="_blank" href="http://maps.google.com/maps?f=d&saddr=', encodeURIComponent(home.info.address), '&daddr=', encodeURIComponent(vote.info.address), '&hl=en&mra=ls&ie=UTF8&iwloc=A&iwstate1=dir">',
-					'Get directions',
-				'</a>',
-				//' - ',
-				//'<a xtarget="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=polling+places+loc+', encodeURIComponent( a.address.replace( / /g, '+' ) ), '&ie=UTF8&z=15&iwloc=A&iwstate1=stp">',
-				//	'Send',
-				//'</a>',
-			'</div>'
-		) : '';
+		var extra = home.info.latlng && vote.info.latlng ? directionsLink( home, vote ) : '';
 		function location( infowindow ) {
 			return formatLocation( vote.info, infowindow || ! mapplet ? 'vote-icon-50.png' : 'marker-red.png', 'Your Voting Location', infowindow, extra );
 		}
@@ -996,20 +997,35 @@ function gadgetReady() {
 				setMarker({
 					place: home,
 					image: baseUrl + 'marker-green.png',
-					open: only,
+					open: ! scoop && only,
 					html: ! only ? formatHome(true) : ! mapplet && vote.html || infoWrap( sorryHtml() )
 				});
 				if( vote.info  &&  vote.info.latlng )
 					setMarker({
 						place: vote,
 						html: vote.html,
-						open: true
+						open: ! scoop
 					});
+				if( scoop ) {
+					var icon = new GIcon( G_DEFAULT_ICON );
+					icon.image = baseUrl + 'scoop.png';
+					icon.shadow = null;
+					icon.iconSize = new GSize( 48, 48 );
+					icon.shadowSize = null;
+					icon.iconAnchor = new GPoint( 15, 47 );
+					icon.infoWindowAnchor = new GPoint( 27, 0 );
+					setMarker({
+						place: scoop,
+						icon: icon,
+						html: scoop.html,
+						open: false
+					});
+				}
 			}, 500 );
 		}
 		
 		function setMarker( a ) {
-			var icon = new GIcon( G_DEFAULT_ICON );
+			var icon = a.icon || new GIcon( G_DEFAULT_ICON );
 			if( a.image ) icon.image = cacheUrl( a.image );
 			var marker = a.place.marker =
 				new GMarker( a.place.info.latlng, { icon:icon });
@@ -1032,19 +1048,30 @@ function gadgetReady() {
 				$jsmap.height( height );
 			}
 			
-			// Initial position with marker centered on home, or halfway between home and voting place
 			var hi = home.info, vi = vote.info;
 			if( ! hi ) return;
-			var latlng = hi.latlng;
-			if( vi  &&  vi.latlng ) {
-				latlng = new GLatLng(
-					( hi.lat + vi.lat ) / 2,
-					( hi.lng + vi.lng ) / 2
-				);
+			if( scoop ) {
+				si = scoop.info;
+				var bounds = new GLatLngBounds();
+				bounds.extend( si.latlng );
+				bounds.extend( hi.latlng );
+				if( vi ) bounds.extend( vi.latlng );
+				map.setCenter( bounds.getCenter(), map.getBoundsZoomLevel(bounds) );
 			}
-			//var center = latlng;
-			//var width = $jsmap.width(), height = $jsmap.height();
-			map.setCenter( latlng, a.zoom );
+			else {
+				// Initial position with marker centered on home, or halfway between home and voting place
+				var latlng = hi.latlng;
+				if( vi  &&  vi.latlng ) {
+					latlng = new GLatLng(
+						( hi.lat + vi.lat ) / 2,
+						( hi.lng + vi.lng ) / 2
+					);
+				}
+				//var center = latlng;
+				//var width = $jsmap.width(), height = $jsmap.height();
+				map.setCenter( latlng, a.zoom );
+			}
+			
 			if( mapplet ) {
 				GEvent.addListener( map, 'click', function( overlay, point ) {
 					if( !( overlay || point ) )
@@ -1185,6 +1212,16 @@ function gadgetReady() {
 		getJSON( url, callback );
 		//callback({ errorcode: -1 });  // temp disable
 		//callback({ errorcode:0, address:[ '600 22nd St NW, Washington, DC 20037' ] });
+	}
+	
+	function scooper( lat, lng, callback ) {
+		if( pref.scoop ) {
+			var url = S( 'http://s.mg.to/elections/scoop.py/find?lat=', lat, '&lng=', lng );
+			getJSON( url, callback );
+		}
+		else {
+			callback();
+		}
 	}
 	
 	function getJSON( url, callback, cache ) {
@@ -1403,7 +1440,35 @@ function gadgetReady() {
 			$map.height( a.height = $window.height() - $map.offset().top );
 			$map.html( formatMap(a) );
 		}
-		initMap( a );
+		scooper( a.lat, a.lng, function( shop ) {
+			if( shop ) {
+				scoop = {
+					info: {
+						address: shop.address,
+						lat: shop.lat,
+						lng: shop.lng,
+						latlng: new GLatLng( shop.lat, shop.lng )
+					}
+				}
+				scoop.html = S(
+					'<div style="', fontStyle, '">',
+						'<div style="font-size:125%; font-weight:bold;">',
+							'Ben & Jerry&#146;s',
+						'</div>',
+						'<div>',
+							shop.address.replace( /,/, '<br />' ),
+						'</div>',
+						directionsLink( vote && vote.info ? vote : home, scoop ),
+						'<div style="margin-top:0.5em;">',
+							'<a target="_blank" href="http://www.benandjerrys.com/">',
+								'www.benandjerrys.com',
+							'</a>',
+						'</div>',
+					'</div>'
+				);
+			}
+			initMap( a );
+		});
 	}
 	
 	function formatAddress( address ) {
@@ -1510,7 +1575,8 @@ function gadgetReady() {
 	T( 'poll411-maker:style', variables, function( head ) {
 		if( ! mapplet  &&  ! pref.ready ) {
 			$('head').append( $(head) );
-			$('body').prepend( T( 'poll411-maker:html', variables ) );
+			var part = pref.scoop ? 'scoop' : 'html';
+			$('body').prepend( T( 'poll411-maker:' + part, variables ) );
 			
 			setGadgetPoll411();
 		}
