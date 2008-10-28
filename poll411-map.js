@@ -620,11 +620,11 @@ function gadgetReady() {
 		var warning = interpolated ? S(
 			registered,
 			'Verify your voting location with your local election officials. ',
-			'This location is an estimate based on nearby addresses. ',
+			'This voting location is for the November 4 election only (not for early voting), and it is an <strong>estimate</strong> based on nearby addresses. ',
 			'It may be incorrect and may change before election day.'
 		) : S(
 			registered,
-			'This voting location is only for voters registered at the home address entered. ',
+			'This voting location is for the November 4 election only (not for early voting), and it is only for voters registered at the home address entered. ',
 			'Please verify this voting location with your local election officials to ensure that it is correct.'
 		);
 		return S(
