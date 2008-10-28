@@ -544,7 +544,7 @@ function gadgetWrite() {
 					'<div class="PollingPlaceSearchTitle removehelp">',
 						'<div style="margin-bottom:4px;">',
 							'Find your voting location and more.<br />',
-							'Enter your <strong>home</strong>&nbsp;address:',
+							'Enter the <strong>home</strong> address where you are registered to vote:',
 						'</div>',
 					'</div>',
 					'<!--<div id="PollingPlaceSearchSpinner" class="PollingPlaceSearchSpinner">-->',
@@ -614,11 +614,17 @@ function makerReady() {
 function gadgetReady() {
 	
 	function locationWarning() {
+		var registered = home.info.state.abbr == 'ND' ? '' : S(
+			'You must be registered in order to vote. '
+		);
 		var warning = interpolated ? S(
+			registered,
 			'Verify your voting location with your local election officials. ',
 			'This location is an estimate based on nearby addresses. ',
 			'It may be incorrect and may change before election day.'
 		) : S(
+			registered,
+			'This voting location is only for voters registered at the home address entered. ',
 			'Please verify this voting location with your local election officials to ensure that it is correct.'
 		);
 		return S(
@@ -908,7 +914,7 @@ function gadgetReady() {
 		//);
 		var extra = home.info.latlng && vote.info.latlng ? directionsLink( home, vote ) : '';
 		function location( infowindow ) {
-			return formatLocation( vote.info, infowindow || ! mapplet ? 'vote-icon-50.png' : 'marker-red.png', 'Your Voting Location', infowindow, extra );
+			return formatLocation( vote.info, infowindow || ! mapplet ? 'vote-icon-50.png' : 'marker-red.png', 'Voting Location', infowindow, extra );
 		}
 		if( mapplet ) {
 			$title.append( S(
