@@ -1375,6 +1375,11 @@ function gadgetReady() {
 					location = poll.locations[0];
 					var address = location.address;
 					log( 'Polling address:', address );
+					if( ! address ) {
+						if( location.location ) setNoGeo( location );
+						else sorry();
+						return;
+					}
 					var ok = address.match( /(,| +)\d\d\d\d\d(-\d\d\d\d)? *$/i );
 					if( ! ok ) {
 						var match = address.match( /(,| +) *([a-z][a-z])(,| *)$/i );
@@ -1419,7 +1424,7 @@ function gadgetReady() {
 		
 		function setNoGeo( location ) {
 			vote.info = {
-				address: location.address.replace( / *, */g, '<br />' ),
+				address: ( location.address || '' ).replace( / *, */g, '<br />' ),
 				location: location.location,
 				description: location.description,
 				directions: location.directions,
