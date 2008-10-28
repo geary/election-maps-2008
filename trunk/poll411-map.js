@@ -328,7 +328,7 @@ var inline = ! mapplet  &&  pref.gadgetType == 'inline';
 var iframe = ! mapplet  &&  ! inline;
 
 var map, $jsmap, currentAddress;
-var home, vote, scoop;
+var home, vote, scoop, interpolated;
 
 var key = {
 	'gmodules.com': 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRTZqGWfQErE9pT-IucjscazSdFnjBSzjqfxm1CQj7RDgG-OoyNfebJK0w',
@@ -613,25 +613,23 @@ function makerReady() {
 
 function gadgetReady() {
 	
-	var locationWarning = S(
-		'<div style="padding-top:1em; xline-height:1.2em; xcolor:gray; xfont-size:80%;">',
-			'<span style="font-weight:bold;">',
-				'Important: ',
-			'</span>',
-			'Please verify this voting location with your local election officials to ensure that it is correct.',
-		'</div>'
-	);
-	
-	var interpolatedLocationWarning = S(
-		'<div style="padding-top:1em; xline-height:1.2em; xcolor:gray; xfont-size:80%;">',
-			'<span style="font-weight:bold;">',
-				'Important: ',
-			'</span>',
+	function locationWarning() {
+		var warning = interpolated ? S(
 			'Verify your voting location with your local election officials. ',
-			'This location is an estimate. ',
-			'It may be incorrect and may change before election day.',
-		'</div>'
-	);
+			'This location is an estimate based on nearby addresses. ',
+			'It may be incorrect and may change before election day.'
+		) : S(
+			'Please verify this voting location with your local election officials to ensure that it is correct.'
+		);
+		return S(
+			'<div style="padding-top:1em;">',
+				'<span style="font-weight:bold;">',
+					'Important: ',
+				'</span>',
+				warning,
+			'</div>'
+		);
+	}
 	
 	function expander( link, body ) {
 		return S(
@@ -920,7 +918,7 @@ function gadgetReady() {
 					'<div style="padding-top:0.75em">',
 					'</div>',
 					location(),
-					locationWarning,
+					locationWarning(),
 					'<div style="padding-top:1em">',
 					'</div>',
 					electionInfo(),
@@ -931,7 +929,7 @@ function gadgetReady() {
 			vote.html = S(
 				'<div style="', fontStyle, '">',
 					location( true ),
-					locationWarning,
+					locationWarning(),
 				'</div>'
 			);
 			_IG_AdjustIFrameHeight();
@@ -952,7 +950,7 @@ function gadgetReady() {
 		function homeAndVote() {
 			return vote.info.latlng ? S(
 				location(),
-				locationWarning,
+				locationWarning(),
 				'<div style="padding-top:0.75em">',
 				'</div>',
 				formatHome()
@@ -961,7 +959,7 @@ function gadgetReady() {
 				'<div style="padding-top:0.75em">',
 				'</div>',
 				location(),
-				locationWarning
+				locationWarning()
 			);
 		}
 	}
@@ -1369,10 +1367,11 @@ function gadgetReady() {
 					0: ' (exact)',
 					3: ' (interpolated)'
 				}[poll.errorcode] || '');
-				if( poll.errorcode != 0 ) {
+				if( poll.errorcode != 0  && poll.errorcode != 3 ) {
 					sorry();
 				}
 				else {
+					interpolated = ( poll.errorcode == 3 );
 					location = poll.locations[0];
 					var address = location.address;
 					log( 'Polling address:', address );
