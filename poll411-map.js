@@ -1000,7 +1000,7 @@ function gadgetReady() {
 					place: home,
 					image: baseUrl + 'marker-green.png',
 					open: ! scoop && only,
-					html: ! only ? formatHome(true) : ! mapplet && vote.html || infoWrap( sorryHtml() )
+					html: mapplet || ! only ? formatHome(true) : vote.html || infoWrap( sorryHtml() )
 				});
 				if( vote.info  &&  vote.info.latlng )
 					setMarker({
