@@ -228,9 +228,11 @@ var pref = {
 	fontFamily: 'Arial,sans-serif',
 	fontSize: '10',
 	fontUnits: 'pt',
-	scoop: ''
+	scoop: '',
+	scoop1: ''
 };
 for( var name in pref ) pref[name] = prefs.getString(name) || pref[name];
+if( pref.scoop1 ) pref.scoop = pref.scoop1;
 pref.ready = prefs.getBool('submit');
 
 var maker = decodeURIComponent(location.href).indexOf('source=http://www.gmodules.com/ig/creator?') > -1;
@@ -1623,7 +1625,7 @@ function gadgetReady() {
 	T( 'poll411-maker:style', variables, function( head ) {
 		if( ! mapplet  &&  ! pref.ready ) {
 			$('head').append( $(head) );
-			var part = pref.scoop ? 'scoop' : 'html';
+			var part = pref.scoop1 ? 'scoop1' : pref.scoop ? 'scoop' : 'html';
 			$('body').prepend( T( 'poll411-maker:' + part, variables ) );
 			
 			setGadgetPoll411();
