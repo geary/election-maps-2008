@@ -914,6 +914,7 @@ function gadgetReady() {
 		}
 		if( mapplet ) {
 			$title.append( S(
+				log.print(),
 				'<div>',
 					formatHome(),
 					'<div style="padding-top:0.75em">',
@@ -938,6 +939,7 @@ function gadgetReady() {
 		else {
 			$title.empty();
 			vote.html = infoWrap( S(
+				log.print(),
 				homeAndVote(),
 				'<div style="padding-top:1em">',
 				'</div>',
@@ -1280,6 +1282,10 @@ function gadgetReady() {
 	function submit( addr ) {
 		analytics( 'lookup' );
 		addr = $.trim( addr );
+		log();
+		log.yes = /^!!/.test( addr );
+		if( log.yes ) addr = $.trim( addr.replace( /^!!/, '' ) );
+		log( 'Input address:', addr );
 		var state = statesByAbbr[ addr.toUpperCase() ];
 		if( state ) addr = state.name;
         if( addr == pref.example ) addr = addr.replace( /^.*: /, '' );
@@ -1293,9 +1299,13 @@ function gadgetReady() {
 			geocode( addr, function( geo ) {
 				var places = geo && geo.Placemark;
 				var n = places && places.length;
+				log( 'Number of matches: ' + n );
 				if( ! n ) {
 					spin( false );
-					$title.html( 'We did not find that address. Please check the spelling and try again. Be sure to include your zip code or city and state.' );
+					$title.html( S(
+						log.print(),
+						'We did not find that address. Please check the spelling and try again. Be sure to include your zip code or city and state.'
+					) );
 				}
 				else if( n == 1 ) {
 					findPrecinct( places[0] );
@@ -1346,6 +1356,7 @@ function gadgetReady() {
 	}
 	
 	function findPrecinct( place ) {
+		log( 'Getting home map info' );
 		home.info = mapInfo( place );
 		if( ! home.info ) { $title.empty(); sorry(); return; }
 		currentAddress = place.address;
@@ -1354,12 +1365,17 @@ function gadgetReady() {
 		getleo( home.info, function( leo ) {
 			home.leo = leo;
 			lookup( currentAddress, function( poll ) {
+				log( 'Polling errorcode: ' + poll.errorcode + {
+					0: ' (exact)',
+					3: ' (interpolated)'
+				}[poll.errorcode] || '');
 				if( poll.errorcode != 0 ) {
 					sorry();
 				}
 				else {
 					location = poll.locations[0];
 					var address = location.address;
+					log( 'Polling address:', address );
 					var ok = address.match( /(,| +)\d\d\d\d\d(-\d\d\d\d)? *$/i );
 					if( ! ok ) {
 						var match = address.match( /(,| +) *([a-z][a-z])(,| *)$/i );
@@ -1371,6 +1387,7 @@ function gadgetReady() {
 							.replace( / *, */, '' )
 							+ ', ' + home.info.city + ', ' + home.info.state.abbr;
 					}
+					log( 'Modified address:', address );
 					geocode( address, function( geo ) {
 						var places = geo && geo.Placemark;
 						set( places, location );
@@ -1384,12 +1401,17 @@ function gadgetReady() {
 				try {
 					var abbr = places[0].AddressDetails.Country.AdministrativeArea.AdministrativeAreaName;
 					var st = statesByName[abbr] || statesByAbbr[ abbr.toUpperCase() ];
+					log( 'Polling state: ' + st.name );
 					if( st != home.info.state ) {
+						log( 'Polling place geocoded to wrong state' );
 						setNoGeo( location );
 						return;
 					}
 				}
-				catch( e ) {}
+				catch( e ) {
+					log( 'Error getting polling state' );
+				}
+				log( 'Getting polling place map info' );
 				setMap( vote.info = mapInfo( places[0], location ) );
 				return;
 			}
@@ -1411,7 +1433,7 @@ function gadgetReady() {
 	}
 	
 	function sorry() {
-		if( mapplet ) $title.append( sorryHtml() );
+		if( mapplet ) $title.append( log.print() + sorryHtml() );
 		setMap( home.info );
 		spin( false );
 	}
@@ -1518,22 +1540,36 @@ function gadgetReady() {
 		extra = extra || {};
 		var details = place.AddressDetails;
 		var accuracy = Math.min( details.Accuracy, Accuracy.address );
-		if( accuracy < Accuracy.state ) return null;
+		if( accuracy < Accuracy.state ) {
+			log( 'Not accurate enough' );
+			return null;
+		}
 		var country = details.Country;
-		if( ! country ) return null;
+		if( ! country ) {
+			log( 'No country' );
+			return null;
+		}
 		var area = country.AdministrativeArea;
-		if( ! area ) return null;
+		if( ! area ) {
+			log( 'No AdministrativeArea' );
+			return null;
+		}
 		var areaname = area.AdministrativeAreaName;
 		var state = statesByName[areaname] || statesByAbbr[ areaname.toUpperCase() ] || statesByName[ (place.address||'').replace( /, USA$/, '' ) ];
-		if( ! state ) return null;
+		if( ! state ) {
+			log( 'No state' );
+			return null;
+		}
 		var sub = area.SubAdministrativeArea || area, locality = sub.Locality;
 		if( locality ) {
+			log( 'Got Locality' );
 			var county = sub.SubAdministrativeAreaName || locality.LocalityName;
 			var city = locality.LocalityName;
 			var street = locality.Thoroughfare;
 			var zip = locality.PostalCode;
 		}
 		else if( area.AddressLine ) {
+			log( 'Got AddressLine' );
 			var addr = area.AddressLine[0] || '';
 			if( addr.match( / County$/ ) )
 				county = addr.replace( / County$/, '' );
@@ -1542,8 +1578,10 @@ function gadgetReady() {
 		}
 		var coord = place.Point.coordinates;
 		var lat = coord[1], lng = coord[0];
+		var formatted = formatAddress( place.address );
+		log( 'Formatted address:', formatted );
 		return {
-			address: formatAddress(place.address),
+			address: formatted,
 			location: extra.location,
 			description: extra.description,
 			directions: extra.directions,
@@ -1654,6 +1692,17 @@ function gadgetReady() {
 	});
 	
 	analytics( 'view' );
+}
+
+function log() {
+	if( arguments.length == 0 )
+		log.log = [];
+	else for( var i = -1, text;  text = arguments[++i]; )
+		log.log.push( text );
+}
+
+log.print = function() {
+	return log.yes ? S( '<div style="padding:4px; margin-bottom:4px; border:1px solid red;">', log.log.join('<br />'), '</div>' ) : '';
 }
 
 // Final initialization
