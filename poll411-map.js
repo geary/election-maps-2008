@@ -1389,12 +1389,12 @@ function gadgetReady() {
 					var ok = address.match( /(,| +)\d\d\d\d\d(-\d\d\d\d)? *$/i );
 					if( ! ok ) {
 						var match = address.match( /(,| +) *([a-z][a-z])(,| *)$/i );
-						ok = match && stateByAbbr[ match[2].toUpperCase() ];
+						ok = match && statesByAbbr[ match[2].toUpperCase() ];
 					}
 					if( ! ok ) {
 						address = address
-							.replace( /(,| +) *\w\w *$/, '' )
-							.replace( / *, */, '' )
+							.replace( /(,| +) *\w\w *$/, ' ' )
+							.replace( / *, */, ' ' )
 							+ ', ' + home.info.city + ', ' + home.info.state.abbr;
 					}
 					log( 'Modified address:', address );
