@@ -503,6 +503,14 @@ function makerWrite() {
 
 function gadgetWrite() {
 	
+	backLink = params.cnn || params.state ? S(
+		'<div style="margin:0.5em 0 0 6px; ', fontStyle, '">',
+			'<a target="_blank" alt="Return to CNN&#146;s Election Center 2008" href="http://www.cnn.com/ELECTION/2008/">',
+				'Return to CNN&#146;s Election Center 2008',
+			'</a>',
+		'</div>'
+	) : '';
+	
 	document.write(
 		'<style type="text/css">',
 			'body.gadget { margin:0; padding:0; }',
@@ -580,6 +588,7 @@ function gadgetWrite() {
 						'</div>',
 					'</div>',
 				'</div>',
+				backLink,
 				'<div id="spinner">',
 				'</div>',
 				'<div id="wrapper">',
