@@ -7,6 +7,8 @@
 
 // Utility functions and jQuery extensions
 
+var $window = $(window);
+
 function writeScript( url ) {
 	document.write( '<script type="text/javascript" src="', url, '"></script>' );
 }
@@ -602,6 +604,8 @@ function gadgetWrite() {
 		);
 	}
 	else {
+		var filler = pref.scoop && $window.height() >= 440 && $window.width() >= 395 ?
+			S( '<img style="width:395px; height:410px; border:none;" src="', cacheUrl( baseUrl + 'BenAndJerry.png' ), '" />' ) : '';
 		writeScript( 'http://maps.google.com/maps?file=api&amp;v=2&amp;key=' + key );
 		document.write(
 			'<div id="spinner">',
@@ -610,6 +614,7 @@ function gadgetWrite() {
 				'<div id="title">',
 				'</div>',
 				'<div id="mapbox">',
+					filler,
 				'</div>',
 			'</div>'
 		);
@@ -1629,7 +1634,7 @@ function gadgetReady() {
 		);
 	}
 	
-	var $window = $(window), $title = $('#title'), $map = $('#mapbox'), $spinner = $('#spinner');
+	var $title = $('#title'), $map = $('#mapbox'), $spinner = $('#spinner');
 	
 	T( 'poll411-maker:style', variables, function( head ) {
 		if( ! mapplet  &&  ! pref.ready ) {
