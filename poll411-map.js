@@ -1188,31 +1188,32 @@ function gadgetReady() {
 	}
 	
 	function getleo( info, callback ) {
-		var url = S( dataUrl, 'leo/', info.state.abbr, '.xml' );
-		if( mapplet ) {
-			_IG_FetchXmlContent( url, function( xml ) {
-				if( typeof xml == 'string' ) {
-					callback({});
-					return;
-				}
-				function add( key ) { leo[key] = $.trim( $leo.find(key).text() ); }
-				var name = info.county.toUpperCase();
-				var counties = xml.getElementsByTagName( 'county_name' );
-				for( var i = 0, county;  county = counties[i++]; ) {
-					if( county.firstChild.nodeValue == name ) {
-						var $leo = $(county.parentNode);
-						var leo = {};
-						add('name'), add('title'), add('phone'), add('fax'), add('email');
-						callback( leo );
-						return;
-					}
-				}
-				callback({});
-			}, 300 );
-		}
-		else {
-			callback({});
-		}
+		callback({});
+		//var url = S( dataUrl, 'leo/', info.state.abbr, '.xml' );
+		//if( mapplet ) {
+		//	_IG_FetchXmlContent( url, function( xml ) {
+		//		if( typeof xml == 'string' ) {
+		//			callback({});
+		//			return;
+		//		}
+		//		function add( key ) { leo[key] = $.trim( $leo.find(key).text() ); }
+		//		var name = info.county.toUpperCase();
+		//		var counties = xml.getElementsByTagName( 'county_name' );
+		//		for( var i = 0, county;  county = counties[i++]; ) {
+		//			if( county.firstChild.nodeValue == name ) {
+		//				var $leo = $(county.parentNode);
+		//				var leo = {};
+		//				add('name'), add('title'), add('phone'), add('fax'), add('email');
+		//				callback( leo );
+		//				return;
+		//			}
+		//		}
+		//		callback({});
+		//	}, 300 );
+		//}
+		//else {
+		//	callback({});
+		//}
 	}
 	
 	function lookup( address, callback ) {
