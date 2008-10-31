@@ -604,17 +604,14 @@ function gadgetWrite() {
 		);
 	}
 	else {
-		var filler = pref.scoop && $window.height() >= 440 && $window.width() >= 395 ?
-			S( '<img style="width:395px; height:410px; border:none;" src="', cacheUrl( baseUrl + 'BenAndJerry.png' ), '" />' ) : '';
 		writeScript( 'http://maps.google.com/maps?file=api&amp;v=2&amp;key=' + key );
 		document.write(
 			'<div id="spinner">',
 			'</div>',
 			'<div id="wrapper">',
-				'<div id="title">',
+				'<div id="title" style="display:none;">',
 				'</div>',
 				'<div id="mapbox">',
-					filler,
 				'</div>',
 			'</div>'
 		);
@@ -957,7 +954,7 @@ function gadgetReady() {
 			_IG_AdjustIFrameHeight();
 		}
 		else {
-			$title.empty();
+			$title.empty().show();
 			vote.html = infoWrap( S(
 				log.print(),
 				homeAndVote(),
@@ -1313,7 +1310,7 @@ function gadgetReady() {
 		vote = {};
 		map && map.clearOverlays();
 		currentAddress = addr;
-		$title.empty();
+		$title.empty().show();
 		$map.empty();
 		closehelp( function() {
 			geocode( addr, function( geo ) {
@@ -1325,7 +1322,7 @@ function gadgetReady() {
 					$title.html( S(
 						log.print(),
 						'We did not find that address. Please check the spelling and try again. Be sure to include your zip code or city and state.'
-					) );
+					)).show();
 				}
 				else if( n == 1 ) {
 					findPrecinct( places[0] );
@@ -1338,7 +1335,7 @@ function gadgetReady() {
 									'<strong>Select your address:</strong>',
 								'</div>',
 							'</div>'
-						));
+						)).show();
 						var $radios = $('#radios');
 						$radios.append( formatPlaces(places) );
 						$('input:radio',$title).click( function() {
@@ -1378,7 +1375,7 @@ function gadgetReady() {
 	function findPrecinct( place ) {
 		log( 'Getting home map info' );
 		home.info = mapInfo( place );
-		if( ! home.info ) { $title.empty(); sorry(); return; }
+		if( ! home.info ) { $title.empty().show(); sorry(); return; }
 		currentAddress = place.address;
 		var location;
 		
@@ -1634,6 +1631,18 @@ function gadgetReady() {
 		);
 	}
 	
+	function setFiller() {
+		var filler = '';
+		if( iframe ) {
+			var w = $map.width(), h = $window.height() - $map.offset().top;
+			filler = pref.scoop && ! pref.scoop1 ? S(
+				'<img style="width:395px; height:410px; border:none;" src="', cacheUrl( baseUrl + 'BenAndJerry.png' ), '" />' ) : S(
+				'<img style="width:', w, 'px; height:', h, 'px; border:none;" src="http://maps.google.com/staticmap?center=38,-95.9&span=26.9,52.7&size=', w, 'x', h, '&key=', key, '" />'
+			);
+			$map.html( filler );
+		}
+	}
+	
 	var $title = $('#title'), $map = $('#mapbox'), $spinner = $('#spinner');
 	
 	T( 'poll411-maker:style', variables, function( head ) {
@@ -1641,7 +1650,7 @@ function gadgetReady() {
 			$('head').append( $(head) );
 			var part = pref.scoop1 ? 'scoop1' : pref.scoop ? 'scoop' : 'html';
 			$('body').prepend( T( 'poll411-maker:' + part, variables ) );
-			
+			setFiller();
 			setGadgetPoll411();
 		}
 		
