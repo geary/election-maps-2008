@@ -917,7 +917,10 @@ function gadgetReady() {
 	}
 	
 	function setVoteHtml() {
-		if( ! vote.info ) return;
+		if( ! vote.info ) {
+			$title.append( log.print() );
+			return;
+		}
 		//var largeMapLink = mapplet ? '' : S(
 		//	'<div style="padding-top:0.5em;">',
 		//		'<a target="_blank" href="http://maps.google.com/maps?f=q&hl=en&geocode=&q=', encodeURIComponent( a.address.replace( / /g, '+' ) ), '&ie=UTF8&ll=', latlng, '&z=15&iwloc=addr">',
@@ -1394,7 +1397,8 @@ function gadgetReady() {
 					location = poll.locations[0];
 					var address = location.address;
 					log( 'Polling address:', address );
-					if( ! address ) {
+					if( ! address  ||  address.length < 10 ) {
+						log( 'Rejecting short address' );
 						if( location.location ) setNoGeo( location );
 						else sorry();
 						return;
