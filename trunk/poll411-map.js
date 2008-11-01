@@ -1386,10 +1386,12 @@ function gadgetReady() {
 		getleo( home.info, function( leo ) {
 			home.leo = leo;
 			lookup( currentAddress, function( poll ) {
-				log( 'Polling errorcode: ' + poll.errorcode + {
-					0: ' (exact)',
+				log( 'Polling errorcode: ' + poll.errorcode + ({
+					0: ' (exact match)',
+					1: ' (no match)',
+					2: ' (bad address)',
 					3: ' (interpolated)'
-				}[poll.errorcode] || '');
+				}[poll.errorcode] || '' ) );
 				if( poll.errorcode != 0  && poll.errorcode != 3 ) {
 					sorry();
 				}
