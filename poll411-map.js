@@ -225,7 +225,7 @@ var opt = window.gadget ? gadget : window.mapplet ? mapplet : {};
 var prefs = new _IG_Prefs();
 var pref = {
 	gadgetType: 'iframe',
-	example: '1600 Pennsylvania Ave 20006',
+	example: '1600 Pennsylvania Ave, Washington DC 20006',
 	address: '',
 	fontFamily: 'Arial,sans-serif',
 	fontSize: '10',
@@ -588,9 +588,9 @@ function gadgetWrite() {
 						'</form>',
 					'</div>',
 					'<div class="removehelp">',
-						'<div style="margin-top:0.25em;">',
-							'Example: ',
-							'<a href="#" onclick="return PollingPlaceSearch.sample();">',
+						'<div style="margin-top:0.25em; font-size:80%;">',
+							'Ex: ',
+							'<a style="" href="#" onclick="return PollingPlaceSearch.sample();">',
 								htmlEscape( pref.example ),
 							'</a>',
 						'</div>',
