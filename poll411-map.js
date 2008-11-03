@@ -239,7 +239,7 @@ pref.ready = prefs.getBool('submit');
 
 var maker = decodeURIComponent(location.href).indexOf('source=http://www.gmodules.com/ig/creator?') > -1;
 
-var fontStyle = S( 'font-family:', pref.fontFamily, '; font-size:', pref.fontSize, pref.fontUnits, '; ' );
+var fontStyle = S( 'font-family:', escape(pref.fontFamily), '; font-size:', pref.fontSize, pref.fontUnits, '; ' );
 
 var baseUrl = opt.baseUrl;
 var dataUrl = opt.dataUrl || baseUrl;
