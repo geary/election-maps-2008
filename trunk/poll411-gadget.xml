@@ -9,7 +9,7 @@
     author_email="elections@google.com"
     thumbnail="http://election-maps-2008.googlecode.com/svn/trunk/poll411-gadget-thumbnail.png"
     screenshot="http://election-maps-2008.googlecode.com/svn/trunk/poll411-gadget-screenshot.png"
-    title_url=""
+    title_url="http://www.google.com/intl/en_us/2008election/"
     width="620"
     height="480">
   <Require feature="analytics"/>
