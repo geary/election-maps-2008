@@ -632,6 +632,20 @@ function makerReady() {
 
 function gadgetReady() {
 	
+	function stateLocator() {
+		var state = home.info.state;
+		if( ! state  ||  state == stateUS ) return '';
+		var url = state.gsx$wheretovote.$t;
+		return url ? S(
+			'<div style="margin:1em 0 .5em 0">',
+				'Check your voting location on your<br />',
+				'<a target="_blank" href="', url, '">',
+					'State voting place locator',
+				'</a>',
+			'</div>'
+		) : '';
+	}
+	
 	function locationWarning() {
 		var registered = home.info.state.abbr == 'ND' ? '' : S(
 			'You must be registered in order to vote. '
@@ -946,6 +960,7 @@ function gadgetReady() {
 					'<div style="padding-top:0.75em">',
 					'</div>',
 					location(),
+					stateLocator(),
 					locationWarning(),
 					'<div style="padding-top:1em">',
 					'</div>',
@@ -978,6 +993,7 @@ function gadgetReady() {
 		function homeAndVote() {
 			return vote.info.latlng ? S(
 				location(),
+				stateLocator(),
 				locationWarning(),
 				'<div style="padding-top:0.75em">',
 				'</div>',
@@ -1484,6 +1500,7 @@ function gadgetReady() {
 					'We are unable to provide voting location information for your address at this time. ',
 					'Please check with your state or local election officials to find your voting location.',
 				'</div>',
+				stateLocator(),
 				home.info ? electionInfo() : '',
 				infoLinks(),
 				attribution,
