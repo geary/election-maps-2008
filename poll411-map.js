@@ -1166,6 +1166,27 @@ function gadgetReady() {
 	function formatLocation( info, icon, title, infowindow, extra ) {
 		var size = infowindow || ! mapplet ? { width:50, height:50 } : { width:20, height:34 };
 		var locality = info.city ? info.city : info.county ? info.county + ' County' : '';
+		var addr = info.rawAddress ? S(
+			'<div>',
+				info.location ? '<strong>' + htmlEscape(info.location) + '</strong><br />' : '',
+				info.description ? '<span style="font-size:90%">' + htmlEscape(info.description) + '</span><br />' : '',
+				'<div style="margin-top:', info.location || info.description ? '0.25' : '0', 'em;">',
+					formatAddress(info.rawAddress).replace( /,/, '<br />' ),
+				'</div>',
+			'</div>'
+		) : S(
+			'<div>',
+				info.location ? '<strong>' + htmlEscape(info.location) + '</strong><br />' : '',
+				info.description ? '<span style="font-size:90%">' + htmlEscape(info.description) + '</span><br />' : '',
+				'<div style="margin-top:', info.location || info.description ? '0.25' : '0', 'em;">',
+					info.street,
+				'</div>',
+			'</div>',
+			'<div>',
+				locality ? locality  + ', ' + info.state.abbr : info.address.length > 2 ? info.address : info.state.name,
+				info.zip ? ' ' + info.zip : '',
+			'</div>'
+		);
 		return S(
 			'<div style="font-weight:bold; font-size:110%;">',
 				title,
@@ -1177,17 +1198,7 @@ function gadgetReady() {
 							'<img src="', cacheUrl( baseUrl + icon ), '" style="width:', size.width, 'px; height:', size.height, 'px;" />',
 						'</td>',
 						'<td>',
-							'<div>',
-								info.location ? '<strong>' + htmlEscape(info.location) + '</strong><br />' : '',
-								info.description ? '<span style="font-size:90%">' + htmlEscape(info.description) + '</span><br />' : '',
-								'<div style="margin-top:', info.location || info.description ? '0.25' : '0', 'em;">',
-									info.street,
-								'</div>',
-							'</div>',
-							'<div>',
-								locality ? locality  + ', ' + info.state.abbr : info.address.length > 2 ? info.address : info.state.name,
-								info.zip ? ' ' + info.zip : '',
-							'</div>',
+							addr,
 							'<div>',
 								info.directions || '',
 							'</div>',
@@ -1445,12 +1456,17 @@ function gadgetReady() {
 				else {
 					interpolated = ( poll.errorcode == 3 );
 					location = poll.locations[0];
-					var address = location.address;
+					var address  = location.address;
+					var rawAddress = address;
 					log( 'Polling address:', address );
 					if( ! address  ||  address.length < 10 ) {
 						log( 'Rejecting short address' );
-						if( location.location ) setNoGeo( location );
-						else sorry();
+						if( location.location ) {
+							setNoGeo( location, rawAddress );
+						}
+						else {
+							sorry();
+						}
 						return;
 					}
 					var ok = address.match( /(,| +)\d\d\d\d\d(-\d\d\d\d)? *$/i );
@@ -1467,13 +1483,13 @@ function gadgetReady() {
 					log( 'Modified address:', address );
 					geocode( address, function( geo ) {
 						var places = geo && geo.Placemark;
-						set( places, location );
+						set( places, location, rawAddress );
 					});
 				}
 			});
 		});
 		
-		function set( places, location ) {
+		function set( places, location, rawAddress ) {
 			if( places && places.length == 1 ) {
 				try {
 					var abbr = places[0].AddressDetails.Country.AdministrativeArea.AdministrativeAreaName;
@@ -1481,7 +1497,7 @@ function gadgetReady() {
 					log( 'Polling state: ' + st.name );
 					if( st != home.info.state ) {
 						log( 'Polling place geocoded to wrong state' );
-						setNoGeo( location );
+						setNoGeo( location, rawAddress );
 						return;
 					}
 				}
@@ -1489,15 +1505,16 @@ function gadgetReady() {
 					log( 'Error getting polling state' );
 				}
 				log( 'Getting polling place map info' );
-				setMap( vote.info = mapInfo( places[0], location ) );
+				setMap( vote.info = mapInfo( places[0], location, rawAddress ) );
 				return;
 			}
-			setNoGeo( location );
+			setNoGeo( location, rawAddress );
 		}
 		
-		function setNoGeo( location ) {
+		function setNoGeo( location, rawAddress ) {
 			vote.info = {
 				address: ( location.address || '' ).replace( / *, */g, '<br />' ),
+				rawAddress: rawAddress,
 				location: location.location,
 				description: location.description,
 				directions: location.directions,
@@ -1614,7 +1631,7 @@ function gadgetReady() {
 	var Kind = [ '', 'Country', 'State', 'County', 'City', 'Neighborhood', 'Neighborhood', 'Neighborhood', 'Home', 'Home' ];
 	var Zoom = [ 4, 5, 6, 10, 11, 12, 13, 14, 15, 15 ];
 	
-	function mapInfo( place, extra ) {
+	function mapInfo( place, extra, rawAddress ) {
 		extra = extra || {};
 		var details = place.AddressDetails;
 		var accuracy = Math.min( details.Accuracy, Accuracy.address );
@@ -1660,6 +1677,7 @@ function gadgetReady() {
 		log( 'Formatted address:', formatted );
 		return {
 			address: formatted,
+			rawAddress: rawAddress,
 			location: extra.location,
 			description: extra.description,
 			directions: extra.directions,
