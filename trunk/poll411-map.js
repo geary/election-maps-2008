@@ -357,7 +357,12 @@ function infoLinks() {
 	return S(
 		'<div style="', fontStyle, '">',
 			'<div style="margin-top:0.5em;">',
-				'<a target="_blank" href="http://services.google.com/events/poll411_location_errors">',
+				'<a href="',
+					"mailto:elections-data@google.com?subject=Voter Info Error Report&body=Thank you for reporting an error in Google's voter information for ",
+					info.street ? info.street.replace( /^\s*\d+ +/, '' ) + ', ' : '',
+					formatInfoLocality(info).replace( /"/g, ' ' ),
+					'. Please describe the error below and send us this email so we can correct the problem. Thanks!',
+				'">',
 					'Report an error',
 				'</a>',
 			'</div>',
