@@ -1457,7 +1457,7 @@ function gadgetReady() {
 					interpolated = ( poll.errorcode == 3 );
 					location = poll.locations[0];
 					var address  = location.address;
-					var rawAddress = address;
+					var rawAddress = address.replace( /&amp;/, '&' );
 					log( 'Polling address:', address );
 					if( ! address  ||  address.length < 10 ) {
 						log( 'Rejecting short address' );
