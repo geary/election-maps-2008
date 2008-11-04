@@ -67,6 +67,14 @@ Array.prototype.mapjoin = function( fun, delim ) {
 	return this.map( fun ).join( delim || '' );
 };
 
+Array.prototype.random = function() {
+	return this[ randomInt(this.length) ];
+};
+
+function randomInt( n ) {
+	return Math.floor( Math.random() * n );
+}
+
 function S() {
 	return Array.prototype.join.call( arguments, '' );
 }
@@ -77,7 +85,7 @@ function fetch( url, callback, cache ) {
 	}
 	else {
 		_IG_FetchContent( url, callback, {
-			refreshInterval: opt.nocache ? 1 : opt.cache || 60
+			refreshInterval: cache != null ? cache : opt.nocache ? 1 : opt.cache || 300
 		});
 	}
 }
@@ -1260,9 +1268,11 @@ function gadgetReady() {
 	}
 	
 	function scooper( lat, lng, callback ) {
+		var slices = [ 'u', 'u', 'v', 'v', 'v', 'v',  'w', 'w', 'x', 'x', 'y' ];
+		var slice = slices.random();
 		if( pref.scoop ) {
-			var url = S( 'http://u.mg.to/elections/scoop.py/find?lat=', lat, '&lng=', lng );
-			getJSON( url, callback );
+			var url = S( 'http://', slice, '.mg.to/elections/scoop.py/find?lat=', lat, '&lng=', lng );
+			getJSON( url, callback, 3600 );
 		}
 		else {
 			callback();
