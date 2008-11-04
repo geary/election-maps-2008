@@ -1066,6 +1066,12 @@ function gadgetReady() {
 					icon.shadowSize = null;
 					icon.iconAnchor = new GPoint( 15, 47 );
 					icon.infoWindowAnchor = new GPoint( 27, 0 );
+					icon.imageMap = [
+						0, 0,
+						0, 48,
+						48, 48,
+						48, 0
+					];
 					setMarker({
 						place: scoop,
 						icon: icon,
