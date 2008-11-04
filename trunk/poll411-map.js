@@ -1108,6 +1108,15 @@ function gadgetReady() {
 				bounds.extend( si.latlng );
 				bounds.extend( hi.latlng );
 				if( vi ) bounds.extend( vi.latlng );
+				var ne = bounds.getNorthEast();
+				var sw = bounds.getSouthWest();
+				var n = ne.lat(), e = ne.lng(), s = sw.lat(), w = sw.lng();
+				var  latpad = ( n - s ) / 8;
+				var lngpad = ( e - w )  / 8;
+				bounds = new GLatLngBounds(
+					new GLatLng( s - latpad, w - lngpad ),
+					new GLatLng( n + latpad*2, e + lngpad )
+				);
 				map.setCenter( bounds.getCenter(), map.getBoundsZoomLevel(bounds) );
 			}
 			else {
