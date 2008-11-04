@@ -85,7 +85,7 @@ function fetch( url, callback, cache ) {
 	}
 	else {
 		_IG_FetchContent( url, callback, {
-			refreshInterval: cache != null ? cache : opt.nocache ? 1 : opt.cache || 300
+			refreshInterval: cache != null ? cache : opt.nocache ? 1 : opt.cache || 600
 		});
 	}
 }
