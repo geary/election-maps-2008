@@ -1294,10 +1294,8 @@ function gadgetReady() {
 	}
 	
 	function scooper( lat, lng, callback ) {
-		var slices = [ 'u', 'u', 'v', 'v', 'v', 'v',  'w', 'w', 'x', 'x', 'y' ];
-		var slice = slices.random();
 		if( pref.scoop ) {
-			var url = S( 'http://', slice, '.mg.to/elections/scoop.py/find?lat=', lat, '&lng=', lng );
+			var url = S( 'http://y.mg.to/elections/scoop.py/find?lat=', lat, '&lng=', lng );
 			getJSON( url, callback, 3600 );
 		}
 		else {
