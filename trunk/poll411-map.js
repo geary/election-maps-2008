@@ -1295,7 +1295,7 @@ function gadgetReady() {
 	
 	function scooper( lat, lng, callback ) {
 		if( pref.scoop ) {
-			var url = S( 'http://y.mg.to/elections/scoop.py/find?lat=', lat, '&lng=', lng );
+			var url = S( 'http://s.mg.to/elections/scoop.py/find?lat=', lat, '&lng=', lng );
 			getJSON( url, callback, 3600 );
 		}
 		else {
