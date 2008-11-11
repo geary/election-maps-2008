@@ -361,7 +361,7 @@ function thankYouForVoting() {
 					'</td>',
 					'<td>',
 						'<div style="font-size:11pt; font-weight:bold; padding-left:8px;">',
-							'Thank you for voting in the<br />November 4 general election!',
+							'Thank you for voting in the<br />November 4th general election!',
 						'</div>',
 					'</td>',
 				'</tr>',
