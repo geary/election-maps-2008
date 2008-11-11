@@ -167,12 +167,12 @@ $.extend( $.fn, {
 });
 
 function analytics( path ) {
-	if( path.indexOf( 'http://maps.gmodules.com/ig/ifr' ) == 0 ) return;
-	if( path.indexOf( 'http://maps.google.com/maps?f=d' ) == 0 ) path = '/directions';
-	path = path.replace( /http:\/\//, 'http/' ).replace( /mailto:/, 'mailto/' );
-	path = ( maker ? '/creator/' : params.home ? '/onebox/' : mapplet ? '/mapplet/' : inline ? '/inline/' : '/gadget/' ) + path;
-	//console.log( 'analytics', path );
-	_IG_Analytics( 'UA-5730550-1', path );
+	//if( path.indexOf( 'http://maps.gmodules.com/ig/ifr' ) == 0 ) return;
+	//if( path.indexOf( 'http://maps.google.com/maps?f=d' ) == 0 ) path = '/directions';
+	//path = path.replace( /http:\/\//, 'http/' ).replace( /mailto:/, 'mailto/' );
+	//path = ( maker ? '/creator/' : params.home ? '/onebox/' : mapplet ? '/mapplet/' : inline ? '/inline/' : '/gadget/' ) + path;
+	////console.log( 'analytics', path );
+	//_IG_Analytics( 'UA-5730550-1', path );
 }
 
 // GAsync v2 by Michael Geary
@@ -351,6 +351,28 @@ var key = {
 
 // HTML snippets
 
+function thankYouForVoting() {
+	return S(
+		'<div style="margin-top:1em;', fontStyle, '">',
+			'<div style="text-align:center;">',
+				'<img src="', cacheUrl( baseUrl + 'ivoted.png' ), '" style="width:151px; height:151px;" />',
+			'</div>',
+			'<div style="text-align:center; margin-top:1em; font-size:120%; font-weight:bold;">',
+				'Thank you for voting in the<br />November 4 general election!',
+			'</div>',
+			'<div style="margin-top:1em; padding-top:1em; border-top:1px solid #DDD;">',
+				'Louisiana voters in US House districts 2 and 4: ',
+				"Don't forget to vote in the general election on December 6. ",
+			'</div>',
+			'<div style="margin-top:1em;">',
+				'<a target="_blank" href="https://pollinglocator.sos.louisiana.gov/">',
+					'Find your Louisiana voting place',
+				'</a>',
+			'</div>',
+		'</div>'
+	);
+};
+
 function infoLinks() {
 	var info = home && home.info;
 	if( ! info ) return '';
@@ -499,33 +521,34 @@ function makerWrite() {
 		});
 	}
 	
-	T( 'poll411-maker:style', variables, function( head ) {
-		$('head').append( $(head) );
-		var body =
-			T( 'poll411-maker:html', variables ) + '\n\n' +
-			T( 'poll411-maker:script', variables );
-		$('#outerlimits').html( body ).height( height );
-		$getcode.show();
-		$('#btnGetCode').click( function() {
-			$codearea.val( head + '\n\n' + body + '\n' );
-			$havecode.show();
-			document.codeform.codearea.focus()
-			document.codeform.codearea.select()
-		});
-	});
+	$('#outerlimits').html( thankYouForVoting() );
+	//T( 'poll411-maker:style', variables, function( head ) {
+	//	$('head').append( $(head) );
+	//	var body =
+	//		T( 'poll411-maker:html', variables ) + '\n\n' +
+	//		T( 'poll411-maker:script', variables );
+	//	$('#outerlimits').html( body ).height( height );
+	//	$getcode.show();
+	//	$('#btnGetCode').click( function() {
+	//		$codearea.val( head + '\n\n' + body + '\n' );
+	//		$havecode.show();
+	//		document.codeform.codearea.focus()
+	//		document.codeform.codearea.select()
+	//	});
+	//});
 }
 
 // Gadget inline initialization
 
 function gadgetWrite() {
 	
-	backLink = params.cnn || params.state ? S(
-		'<div style="margin:0.5em 0 0 6px; ', fontStyle, '">',
-			'<a target="_blank" alt="Return to CNN&#146;s Election Center 2008" href="http://www.cnn.com/ELECTION/2008/">',
-				'Return to CNN&#146;s Election Center 2008',
-			'</a>',
-		'</div>'
-	) : '';
+	//backLink = params.cnn || params.state ? S(
+	//	'<div style="margin:0.5em 0 0 6px; ', fontStyle, '">',
+	//		'<a target="_blank" alt="Return to CNN&#146;s Election Center 2008" href="http://www.cnn.com/ELECTION/2008/">',
+	//			'Return to CNN&#146;s Election Center 2008',
+	//		'</a>',
+	//	'</div>'
+	//) : '';
 	
 	document.write(
 		'<style type="text/css">',
@@ -538,98 +561,100 @@ function gadgetWrite() {
 		'</style>'
 	);
 	
-	if( mapplet ) {
-		document.write(
-			'<style type="text/css">',
-				'#PollingPlaceSearch, #PollingPlaceSearch td { font-size:10pt; margin:0; padding:0; }',
-				'#PollingPlaceSearch { background-color:#E8ECF9; margin:0; padding:6px; width:95%; }',
-				'.PollingPlaceSearchForm { margin:0; padding:0; }',
-				'.PollingPlaceSearchTitle { /*font-weight:bold;*/ /*font-size:110%;*/ /*padding-bottom:4px;*/ }',
-				//'.PollingPlaceSearchLabelBox { position:relative; float:left; margin-right:6px; }',
-				'.PollingPlaceSearchInput { width:100%; }',
-				'#title { margin-top:12px; }',
-			'</style>'
-		);
-	}
-	else {
-		document.write(
-			'<style type="text/css">',
-				'body { height:', height, 'px; }',
-				'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(', cacheUrl( baseUrl + 'spinner.gif' ), '); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30;', pref.ready ? '' : 'display:none;', '}',
-				'#spinner { filter:alpha(opacity=30); }',
-				'#title { width:100%; }',
-				'#mapbox { width:100%; }',
-			'</style>'
-		);
-	}
+	document.write( thankYouForVoting() );
 	
-	if( mapplet ) {
-		document.write(
-			'<div id="outerlimits" style="margin-right:8px;">',
-				'<div id="PollingPlaceSearch">',
-					'<div class="PollingPlaceSearchTitle removehelp">',
-						'<div style="margin-bottom:4px;">',
-							'Find your voting location and more.<br />',
-							'Enter the <strong>home</strong> address where you are registered to vote:',
-						'</div>',
-					'</div>',
-					'<!--<div id="PollingPlaceSearchSpinner" class="PollingPlaceSearchSpinner">-->',
-					'<!--</div>-->',
-					'<div>',
-						'<form id="PollingPlaceSearchForm" class="PollingPlaceSearchForm" onsubmit="return PollingPlaceSearch.submit()">',
-							'<table style="width:100%;">',
-								'<tr>',
-									'<td style="width:99%;">',
-										'<div>',
-											'<input id="PollingPlaceSearchInput" class="PollingPlaceSearchInput" type="text" value="',
-												htmlEscape( ( params.home || '' ).replace( /!/g, ' ' ) ),
-											'" />',
-										'</div>',
-									'</td>',
-									'<td style="width:1%;">',
-										'<div>',
-											'<button type="submit" id="PollingPlaceSearchButton" class="PollingPlaceSearchButton"> Search</button>',
-										'</div>',
-									'</td>',
-								'</tr>',
-							'</table>',
-						'</form>',
-					'</div>',
-					'<div class="removehelp">',
-						'<div style="margin-top:0.25em; font-size:80%;">',
-							'Ex: ',
-							'<a style="" href="#" onclick="return PollingPlaceSearch.sample();">',
-								htmlEscape( pref.example ),
-							'</a>',
-						'</div>',
-					'</div>',
-				'</div>',
-				backLink,
-				'<div id="spinner">',
-				'</div>',
-				'<div id="wrapper">',
-					'<div id="title">',
-						attribution,
-					'</div>',
-					'<div id="mapbox">',
-					'</div>',
-				'</div>',
-			'</div>'
-		);
-	}
-	else {
-		writeScript( 'http://maps.google.com/maps?file=api&amp;v=2&amp;key=' + key );
-		document.write(
-			'<div id="spinner">',
-			'</div>',
-			'<div id="wrapper">',
-				'<div id="title" style="display:none;">',
-				'</div>',
-				'<div id="mapbox">',
-				'</div>',
-			'</div>'
-		);
-	}
+	//if( mapplet ) {
+	//	document.write(
+	//		'<style type="text/css">',
+	//			'#PollingPlaceSearch, #PollingPlaceSearch td { font-size:10pt; margin:0; padding:0; }',
+	//			'#PollingPlaceSearch { background-color:#E8ECF9; margin:0; padding:6px; width:95%; }',
+	//			'.PollingPlaceSearchForm { margin:0; padding:0; }',
+	//			'.PollingPlaceSearchTitle { /*font-weight:bold;*/ /*font-size:110%;*/ /*padding-bottom:4px;*/ }',
+	//			//'.PollingPlaceSearchLabelBox { position:relative; float:left; margin-right:6px; }',
+	//			'.PollingPlaceSearchInput { width:100%; }',
+	//			'#title { margin-top:12px; }',
+	//		'</style>'
+	//	);
+	//}
+	//else {
+	//	document.write(
+	//		'<style type="text/css">',
+	//			'body { height:', height, 'px; }',
+	//			'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(', cacheUrl( baseUrl + 'spinner.gif' ), '); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30;', pref.ready ? '' : 'display:none;', '}',
+	//			'#spinner { filter:alpha(opacity=30); }',
+	//			'#title { width:100%; }',
+	//			'#mapbox { width:100%; }',
+	//		'</style>'
+	//	);
+	//}
+	//
+	//if( mapplet ) {
+	//	document.write(
+	//		'<div id="outerlimits" style="margin-right:8px;">',
+	//			'<div id="PollingPlaceSearch">',
+	//				'<div class="PollingPlaceSearchTitle removehelp">',
+	//					'<div style="margin-bottom:4px;">',
+	//						'Find your voting location and more.<br />',
+	//						'Enter the <strong>home</strong> address where you are registered to vote:',
+	//					'</div>',
+	//				'</div>',
+	//				'<!--<div id="PollingPlaceSearchSpinner" class="PollingPlaceSearchSpinner">-->',
+	//				'<!--</div>-->',
+	//				'<div>',
+	//					'<form id="PollingPlaceSearchForm" class="PollingPlaceSearchForm" onsubmit="return PollingPlaceSearch.submit()">',
+	//						'<table style="width:100%;">',
+	//							'<tr>',
+	//								'<td style="width:99%;">',
+	//									'<div>',
+	//										'<input id="PollingPlaceSearchInput" class="PollingPlaceSearchInput" type="text" value="',
+	//											htmlEscape( ( params.home || '' ).replace( /!/g, ' ' ) ),
+	//										'" />',
+	//									'</div>',
+	//								'</td>',
+	//								'<td style="width:1%;">',
+	//									'<div>',
+	//										'<button type="submit" id="PollingPlaceSearchButton" class="PollingPlaceSearchButton"> Search</button>',
+	//									'</div>',
+	//								'</td>',
+	//							'</tr>',
+	//						'</table>',
+	//					'</form>',
+	//				'</div>',
+	//				'<div class="removehelp">',
+	//					'<div style="margin-top:0.25em; font-size:80%;">',
+	//						'Ex: ',
+	//						'<a style="" href="#" onclick="return PollingPlaceSearch.sample();">',
+	//							htmlEscape( pref.example ),
+	//						'</a>',
+	//					'</div>',
+	//				'</div>',
+	//			'</div>',
+	//			backLink,
+	//			'<div id="spinner">',
+	//			'</div>',
+	//			'<div id="wrapper">',
+	//				'<div id="title">',
+	//					attribution,
+	//				'</div>',
+	//				'<div id="mapbox">',
+	//				'</div>',
+	//			'</div>',
+	//		'</div>'
+	//	);
+	//}
+	//else {
+	//	writeScript( 'http://maps.google.com/maps?file=api&amp;v=2&amp;key=' + key );
+	//	document.write(
+	//		'<div id="spinner">',
+	//		'</div>',
+	//		'<div id="wrapper">',
+	//			'<div id="title" style="display:none;">',
+	//			'</div>',
+	//			'<div id="mapbox">',
+	//			'</div>',
+	//		'</div>'
+	//	);
+	//}
 }
 
 // Document ready code
@@ -1349,78 +1374,78 @@ function gadgetReady() {
 			},
 			
 			submit: function() {
-				$spinner.show();
-				submit( input.value );
+				//$spinner.show();
+				//submit( input.value );
 				return false;
 			}
 		};
 	}
 	
 	function submit( addr ) {
-		analytics( 'lookup' );
-		addr = $.trim( addr );
-		log();
-		log.yes = /^!!/.test( addr );
-		if( log.yes ) addr = $.trim( addr.replace( /^!!/, '' ) );
-		log( 'Input address:', addr );
-		var state = statesByAbbr[ addr.toUpperCase() ];
-		if( state ) addr = state.name;
-        if( addr == pref.example ) addr = addr.replace( /^.*: /, '' );
-		home = {};
-		vote = {};
-		map && map.clearOverlays();
-		currentAddress = addr;
-		$title.empty().show();
-		$map.empty();
-		closehelp( function() {
-			geocode( addr, function( geo ) {
-				var places = geo && geo.Placemark;
-				var n = places && places.length;
-				log( 'Number of matches: ' + n );
-				if( ! n ) {
-					spin( false );
-					$title.html( S(
-						log.print(),
-						'We did not find that address. Please check the spelling and try again. Be sure to include your zip code or city and state.'
-					)).show();
-				}
-				else if( n == 1 ) {
-					findPrecinct( places[0] );
-				}
-				else {
-					if( places ) {
-						$title.append( S(
-							'<div id="radios">',
-								'<div id="radios" style="padding-top:0.5em;">',
-									'<strong>Select your address:</strong>',
-								'</div>',
-							'</div>'
-						)).show();
-						var $radios = $('#radios');
-						$radios.append( formatPlaces(places) );
-						$('input:radio',$title).click( function() {
-							var radio = this;
-							spin( true );
-							setTimeout( function() {
-								function ready() {
-									findPrecinct( places[ radio.id.split('-')[1] ] );
-								}
-								if( $.browser.msie ) {
-									$radios.hide();
-									ready();
-								}
-								else {
-									$radios.slideUp( 350, ready );
-								}
-							}, 250 );
-						});
-					}
-					else {
-						sorry();
-					}
-				}
-			});
-		});
+//		analytics( 'lookup' );
+//		addr = $.trim( addr );
+//		log();
+//		log.yes = /^!!/.test( addr );
+//		if( log.yes ) addr = $.trim( addr.replace( /^!!/, '' ) );
+//		log( 'Input address:', addr );
+//		var state = statesByAbbr[ addr.toUpperCase() ];
+//		if( state ) addr = state.name;
+//        if( addr == pref.example ) addr = addr.replace( /^.*: /, '' );
+//		home = {};
+//		vote = {};
+//		map && map.clearOverlays();
+//		currentAddress = addr;
+//		$title.empty().show();
+//		$map.empty();
+//		closehelp( function() {
+//			geocode( addr, function( geo ) {
+//				var places = geo && geo.Placemark;
+//				var n = places && places.length;
+//				log( 'Number of matches: ' + n );
+//				if( ! n ) {
+//					spin( false );
+//					$title.html( S(
+//						log.print(),
+//						'We did not find that address. Please check the spelling and try again. Be sure to include your zip code or city and state.'
+//					)).show();
+//				}
+//				else if( n == 1 ) {
+//					findPrecinct( places[0] );
+//				}
+//				else {
+//					if( places ) {
+//						$title.append( S(
+//							'<div id="radios">',
+//								'<div id="radios" style="padding-top:0.5em;">',
+//									'<strong>Select your address:</strong>',
+//								'</div>',
+//							'</div>'
+//						)).show();
+//						var $radios = $('#radios');
+//						$radios.append( formatPlaces(places) );
+//						$('input:radio',$title).click( function() {
+//							var radio = this;
+//							spin( true );
+//							setTimeout( function() {
+//								function ready() {
+//									findPrecinct( places[ radio.id.split('-')[1] ] );
+//								}
+//								if( $.browser.msie ) {
+//									$radios.hide();
+//									ready();
+//								}
+//								else {
+//									$radios.slideUp( 350, ready );
+//								}
+//							}, 250 );
+//						});
+//					}
+//					else {
+//						sorry();
+//					}
+//				}
+//			});
+//		});
 	}
 	
 	function formatHome( infowindow ) {
@@ -1702,101 +1727,101 @@ function gadgetReady() {
 		);
 	}
 	
-	function setFiller() {
-		var filler = '';
-		if( iframe ) {
-			var w = $map.width(), h = $window.height() - $map.offset().top;
-			filler = pref.scoop && ! pref.scoop1 ? S(
-				'<img style="width:395px; height:410px; border:none;" src="', cacheUrl( baseUrl + 'BenAndJerry.png' ), '" />' ) : S(
-				'<img style="width:', w, 'px; height:', h, 'px; border:none;" src="http://maps.google.com/staticmap?center=38,-95.9&span=26.9,52.7&size=', w, 'x', h, '&key=', key, '" />'
-			);
-			$map.html( filler );
-		}
-	}
+	//function setFiller() {
+	//	var filler = '';
+	//	if( iframe ) {
+	//		var w = $map.width(), h = $window.height() - $map.offset().top;
+	//		filler = pref.scoop && ! pref.scoop1 ? S(
+	//			'<img style="width:395px; height:410px; border:none;" src="', cacheUrl( baseUrl + 'BenAndJerry.png' ), '" />' ) : S(
+	//			'<img style="width:', w, 'px; height:', h, 'px; border:none;" src="http://maps.google.com/staticmap?center=38,-95.9&span=26.9,52.7&size=', w, 'x', h, '&key=', key, '" />'
+	//		);
+	//		$map.html( filler );
+	//	}
+	//}
 	
 	var $title = $('#title'), $map = $('#mapbox'), $spinner = $('#spinner');
 	
-	T( 'poll411-maker:style', variables, function( head ) {
-		if( ! mapplet  &&  ! pref.ready ) {
-			$('head').append( $(head) );
-			var part = pref.scoop1 ? 'scoop1' : pref.scoop ? 'scoop' : 'html';
-			$('body').prepend( T( 'poll411-maker:' + part, variables ) );
-			setFiller();
-			setGadgetPoll411();
-		}
-		
-		// http://spreadsheets.google.com/feeds/list/p9CuB_zeAq5X-twnx_mdbKg/2/public/values?alt=json
-		var stateSheet = dataUrl + 'states.json';
-		
-		getJSON( stateSheet, function( json ) {
-			json.feed.entry.forEach( function( state ) {
-				statesByAbbr[ state.abbr = state.gsx$abbr.$t ] = state;
-				statesByName[ state.name = state.gsx$name.$t ] = state;
-				states.push( state );
-			});
-			
-			indexSpecialStates();
-			
-			zoom = function( state ) {
-				function latlng( lat, lng ) { return new GLatLng( +lat.$t, +lng.$t ) }
-				var bounds = new GLatLngBounds(
-					latlng( state.gsx$south, state.gsx$west ),
-					latlng( state.gsx$north, state.gsx$east )
-				);
-				GAsync( map, 'getBoundsZoomLevel', [ bounds ], function( zoom ) {
-					map.setCenter( bounds.getCenter(), zoom );
-				});
-			}
-			
-			if( mapplet ) {
-				map = new GMap2;
-				if( params.state )
-					zoom( statesByAbbr[ params.state.toUpperCase() ] );
-				
-				(function() {
-					function e( id ) { return document.getElementById('PollingPlaceSearch'+id); }
-					var /*spinner = e('Spinner'),*/ /*label = e('Label'),*/ input = e('Input'), button = e('Button');
-					button.disabled = false;
-					
-					window.PollingPlaceSearch = {
-						
-						focus: function() {
-							//label.style.textIndent = '-1000px';
-						},
-						
-						blur: function() {
-							//if( input.value === '' )
-							//	label.style.textIndent = '0px';
-						},
-						
-						sample: function() {
-							input.value = pref.example;
-							this.submit();
-							return false;
-						},
-						
-						submit: function() {
-							//spinner.style.backgroundPosition = '0px 0px';
-							if( ! input.value ) input.value = pref.example;
-							submit( input.value );
-							return false;
-						}
-					};
-					
-					PollingPlaceSearch.focus();
-					PollingPlaceSearch.blur();
-					if( params.home )
-						PollingPlaceSearch.submit();
-					else
-						input.focus();
-				})();
-			}
-			else {
-				if( pref.ready )
-					submit( pref.address || pref.example );
-			}
-		});
-	});
+	//T( 'poll411-maker:style', variables, function( head ) {
+	//	if( ! mapplet  &&  ! pref.ready ) {
+	//		$('head').append( $(head) );
+	//		var part = pref.scoop1 ? 'scoop1' : pref.scoop ? 'scoop' : 'html';
+	//		$('body').prepend( T( 'poll411-maker:' + part, variables ) );
+	//		setFiller();
+	//		setGadgetPoll411();
+	//	}
+	//	
+	//	// http://spreadsheets.google.com/feeds/list/p9CuB_zeAq5X-twnx_mdbKg/2/public/values?alt=json
+	//	var stateSheet = dataUrl + 'states.json';
+	//	
+	//	getJSON( stateSheet, function( json ) {
+	//		json.feed.entry.forEach( function( state ) {
+	//			statesByAbbr[ state.abbr = state.gsx$abbr.$t ] = state;
+	//			statesByName[ state.name = state.gsx$name.$t ] = state;
+	//			states.push( state );
+	//		});
+	//		
+	//		indexSpecialStates();
+	//		
+	//		zoom = function( state ) {
+	//			function latlng( lat, lng ) { return new GLatLng( +lat.$t, +lng.$t ) }
+	//			var bounds = new GLatLngBounds(
+	//				latlng( state.gsx$south, state.gsx$west ),
+	//				latlng( state.gsx$north, state.gsx$east )
+	//			);
+	//			GAsync( map, 'getBoundsZoomLevel', [ bounds ], function( zoom ) {
+	//				map.setCenter( bounds.getCenter(), zoom );
+	//			});
+	//		}
+	//		
+	//		//if( mapplet ) {
+	//		//	map = new GMap2;
+	//		//	if( params.state )
+	//		//		zoom( statesByAbbr[ params.state.toUpperCase() ] );
+	//		//	
+	//		//	(function() {
+	//		//		function e( id ) { return document.getElementById('PollingPlaceSearch'+id); }
+	//		//		var /*spinner = e('Spinner'),*/ /*label = e('Label'),*/ input = e('Input'), button = e('Button');
+	//		//		button.disabled = false;
+	//		//		
+	//		//		window.PollingPlaceSearch = {
+	//		//			
+	//		//			focus: function() {
+	//		//				//label.style.textIndent = '-1000px';
+	//		//			},
+	//		//			
+	//		//			blur: function() {
+	//		//				//if( input.value === '' )
+	//		//				//	label.style.textIndent = '0px';
+	//		//			},
+	//		//			
+	//		//			sample: function() {
+	//		//				input.value = pref.example;
+	//		//				this.submit();
+	//		//				return false;
+	//		//			},
+	//		//			
+	//		//			submit: function() {
+	//		//				//spinner.style.backgroundPosition = '0px 0px';
+	//		//				if( ! input.value ) input.value = pref.example;
+	//		//				submit( input.value );
+	//		//				return false;
+	//		//			}
+	//		//		};
+	//		//		
+	//		//		PollingPlaceSearch.focus();
+	//		//		PollingPlaceSearch.blur();
+	//		//		if( params.home )
+	//		//			PollingPlaceSearch.submit();
+	//		//		else
+	//		//			input.focus();
+	//		//	})();
+	//		//}
+	//		//else {
+	//		//	if( pref.ready )
+	//		//		submit( pref.address || pref.example );
+	//		//}
+	//	});
+	//});
 	
 	analytics( 'view' );
 }
