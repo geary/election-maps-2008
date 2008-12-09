@@ -19,14 +19,5 @@ document.write(
 				'</td>',
 			'</tr>',
 		'</table>',
-		'<div style="margin-top:1em; padding-top:1em; border-top:1px solid #DDD;">',
-			'Louisiana voters in US House districts 2 and 4: ',
-			"Don't forget to vote in the general election on December 6. ",
-		'</div>',
-		'<div style="margin-top:1em;">',
-			'<a target="_blank" href="https://pollinglocator.sos.louisiana.gov/">',
-				'Find your Louisiana voting place',
-			'</a>',
-		'</div>',
 	'</div>'
 );
