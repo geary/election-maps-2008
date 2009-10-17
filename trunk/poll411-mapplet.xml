@@ -19,14 +19,13 @@
 <Content type="html">
 <![CDATA[
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js">
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js">
 </script>
 
 <script type="text/javascript">
 
 	var mapplet = {
 		moduleId: __MODULE_ID__,
-		year: 2009,
 		baseUrl: 'http://election-maps-2008.googlecode.com/svn/trunk/'
 	};
 	
