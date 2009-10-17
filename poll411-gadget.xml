@@ -2,25 +2,25 @@
 <Module>
 
 <ModulePrefs
-    title="2008 US Voter Info"
+    title="2009 Virginia Voter Info"
     description="Enter your home address to find your voter registration information, voting location and more. Embed this gadget on your website or blog to help others find this important information."
     author="Google, Inc."
     author_affiliation="Google, Inc."
     author_email="elections@google.com"
     thumbnail="http://election-maps-2008.googlecode.com/svn/trunk/poll411-gadget-thumbnail.png"
     screenshot="http://election-maps-2008.googlecode.com/svn/trunk/poll411-gadget-screenshot.png"
-    title_url="http://www.google.com/intl/en_us/2008election/"
+    title_url="http://maps.google.com/vote"
     width="620"
     height="480">
   <Require feature="analytics"/>
 </ModulePrefs>
 
-<UserPref name="gadgetType" datatype="enum" display_name="Gadget&#160;Type" default_value="iframe">
-	<EnumValue value="iframe" display_value="Standard Gadget"/>
+<UserPref name="gadgetType" datatype="enum" display_name="Gadget&#160;Type" default_value="inline">
 	<EnumValue value="inline" display_value="Inline Gadget"/>
+	<EnumValue value="iframe" display_value="Standard Gadget"/>
 </UserPref>
 
-<UserPref name="example" datatype="string" display_name="Example&#160;Addr." default_value="Ex: 1600 Pennsylvania Ave, Washington DC 20006"/>
+<UserPref name="example" datatype="string" display_name="Example&#160;Addr." default_value="Ex: 703 E Grace St, Richmond, VA 23219"/>
 
 <UserPref name="fontFamily" datatype="string" display_name="Font&#160;Family" default_value="Arial,sans-serif"/>
 
@@ -60,6 +60,7 @@
 <script type="text/javascript">
 	var gadget = {
 		moduleId: __MODULE_ID__,
+		year: 2009,
 		baseUrl: 'http://election-maps-2008.googlecode.com/svn/trunk/',
 		gadgetUrl: 'http://election-maps-2008.googlecode.com/svn/trunk/poll411-frame.xml'
 	};
