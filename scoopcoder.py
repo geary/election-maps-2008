@@ -29,11 +29,11 @@ def main():
 			try:
 				place, ( lat, lng ) = g.geocode( addr )
 				good += 1
-				print 'Good %d: %.5f, %.5f: %s' % ( n, lat, lng, place )
+				print 'Good %d: %.5f, %.5f: %s (from %s)' % ( n, lat, lng, place, addr )
 			except ValueError:
 				lat = lng = place = '***FAIL***'
 				bad += 1
-				print 'Bad  %d: %s' % ( n, addr )
+				print 'Bad  %d: (from %s)' % ( n, addr )
 			time.sleep( 2 )
 		row.append( addr )
 		row.append( place )
