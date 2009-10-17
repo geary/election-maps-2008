@@ -2,8 +2,8 @@
 <Module>
 
 <ModulePrefs
-    title="2008 US Voter Info"
-    description="2008 US Voter Info"
+    title="2009 Virginia Voter Info"
+    description="2009 Virginia Voter Info"
     author="Michael Geary"
     author_affiliation="Google, Inc."
     author_email="elections@google.com"
@@ -26,6 +26,7 @@
 
 	var mapplet = {
 		moduleId: __MODULE_ID__,
+		year: 2009,
 		baseUrl: 'http://election-maps-2008.googlecode.com/svn/trunk/'
 	};
 	

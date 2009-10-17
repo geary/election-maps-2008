@@ -2,8 +2,8 @@
 <Module>
 
 <ModulePrefs
-    title="2008 US Voter Info IFRAME"
-    description="2008 US Voter Info IFRAME"
+    title="2009 Virginia Voter Info IFRAME"
+    description="2009 Virginia Voter Info IFRAME"
     author="Michael Geary"
     author_affiliation="Google, Inc."
     author_email="elections@google.com"
@@ -15,7 +15,7 @@
   <Require feature="analytics"/>
 </ModulePrefs>
 
-<UserPref name="address" datatype="string" display_name="Address" default_value="1600 Pennsylvania Ave 20006"/>
+<UserPref name="address" datatype="string" display_name="Address" default_value="Ex: 703 E Grace St, Richmond, VA 23219"/>
 
 <Content type="html">
 <![CDATA[
@@ -27,6 +27,7 @@
 
 	var gadget = {
 		moduleId: __MODULE_ID__,
+		year: 2009,
 		baseUrl: 'http://election-maps-2008.googlecode.com/svn/trunk/'
 	};
 	
