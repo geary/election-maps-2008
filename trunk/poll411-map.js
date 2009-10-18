@@ -188,6 +188,12 @@ function linkto( addr ) {
 	return S( '<a target="_blank" href="', u, '">', a, '</a>' );
 }
 
+function minimarkdown( text ) {
+	return text
+		.replace( /\*([^*]+)\*/g, '<b>$1</b>' )
+		.replace( /_([^_]+)_/g, '<i>$1</i>' );
+}
+
 $.extend( $.fn, {
 	
 	setClass: function( cls, add ) {
@@ -263,6 +269,8 @@ var userAgent = navigator.userAgent.toLowerCase(),
 var prefs = new _IG_Prefs();
 var pref = {
 	gadgetType: 'iframe',
+	details: 'tab',
+	prompt: 'Find your 2009 voter information. Enter the *home* address where you are registered to vote:',
 	//example: '1600 Pennsylvania Ave, Washington DC 20006',
 	example: '703 E Grace St, Richmond, VA 23219',
 	address: '',
@@ -288,6 +296,7 @@ var width = $(window).width(), height = $(window).height();
 var variables = {
 	width: width - 14,
 	height: height - 80,
+	prompt: minimarkdown(pref.prompt),
 	example: pref.example,
 	fontFamily: pref.fontFamily.replace( "'", '"' ),
 	fontSize: pref.fontSize,
