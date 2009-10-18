@@ -1211,7 +1211,7 @@ function gadgetReady() {
 				info.location ? '<strong>' + htmlEscape(info.location) + '</strong><br />' : '',
 				info.description ? '<span style="font-size:90%">' + htmlEscape(info.description) + '</span><br />' : '',
 				'<div style="margin-top:', info.location || info.description ? '0.25' : '0', 'em;">',
-					formatAddress(info.rawAddress).replace( /,/, '<br />' ),
+					formatAddress(info.rawAddress).replace( /  |, /, '<br />' ),
 				'</div>',
 			'</div>'
 		) : S(
