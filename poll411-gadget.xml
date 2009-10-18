@@ -15,12 +15,20 @@
   <Require feature="analytics"/>
 </ModulePrefs>
 
-<UserPref name="gadgetType" datatype="enum" display_name="Gadget&#160;Type" default_value="inline">
-	<EnumValue value="inline" display_value="Inline Gadget"/>
+<UserPref name="gadgetType" datatype="enum" display_name="Gadget&#160;Type" default_value="iframe">
 	<EnumValue value="iframe" display_value="Standard Gadget"/>
+	<EnumValue value="inline" display_value="Inline Gadget"/>
 </UserPref>
 
-<UserPref name="example" datatype="string" display_name="Example&#160;Addr." default_value="Ex: 703 E Grace St, Richmond, VA 23219"/>
+<UserPref name="details" datatype="enum" display_name="Details&#160;In" default_value="tab">
+	<EnumValue value="tab" display_value="Tab (Small Gadget)"/>
+	<EnumValue value="balloon" display_value="Balloon (Large Gadget)"/>
+</UserPref>
+
+<UserPref name="prompt" datatype="string" display_name="Prompt" default_value="Find your 2009 voter information. Enter the *home* address where you are registered to vote:"/>
+
+<!--<UserPref name="example" datatype="string" display_name="Example&#160;Addr" default_value="Ex: 1600 Pennsylvania Ave, Washington DC 20006"/>-->
+<UserPref name="example" datatype="string" display_name="Example&#160;Addr" default_value="Ex: 703 E Grace St, Richmond, VA 23219"/>
 
 <UserPref name="fontFamily" datatype="string" display_name="Font&#160;Family" default_value="Arial,sans-serif"/>
 
