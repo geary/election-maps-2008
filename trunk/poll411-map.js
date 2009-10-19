@@ -1380,8 +1380,9 @@ function gadgetReady() {
 			return;
 		}
 		var url = S(
-			'http://pollinglocation.apis.google.com/?q=',
-			encodeURIComponent(address)
+			'http://pollinglocation.apis.google.com/?',
+			pref.normalize ? 'normalize=1&' : '',
+			'q=', encodeURIComponent(address)
 		);
 		getJSON( url, callback );
 		//callback({ errorcode: -1 });  // temp disable
@@ -1458,8 +1459,14 @@ function gadgetReady() {
 			analytics( 'lookup' );
 			addr = $.trim( addr );
 			log();
-			log.yes = /^!!/.test( addr );
-			if( log.yes ) addr = $.trim( addr.replace( /^!!/, '' ) );
+			log.yes = /^!!?/.test( addr );
+			if( log.yes ) addr = $.trim( addr.replace( /^!!?/, '' ) );
+			pref.normalize = /^\*/.test( addr );
+			if( pref.normalize ) {
+				log.yes = true;
+				log( 'Setting normalize=1' );
+				addr = $.trim( addr.replace( /^\*/, '' ) );
+			}
 			log( 'Input address:', addr );
 			var state = statesByAbbr[ addr.toUpperCase() ];
 			if( state ) addr = state.name;
