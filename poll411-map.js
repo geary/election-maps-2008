@@ -378,6 +378,7 @@ function indexSpecialStates() {
 var mapplet = window.mapplet;
 var inline = ! mapplet  &&  pref.gadgetType == 'inline';
 var iframe = ! mapplet  &&  ! inline;
+var balloon = mapplet  ||  pref.details == 'balloon';
 
 var map, $jsmap, currentAddress;
 var home, vote, scoop, interpolated;
@@ -567,7 +568,7 @@ function gadgetWrite() {
 			'body.gadget { margin:0; padding:0; }',
 			'#wrapper, #wrapper * { ', fontStyle, ' }',
 			'#title { margin-bottom:4px; }',
-			'#title, #mapbox { overflow: auto; }',
+			'#title, #previewmap, #mapbox { overflow: auto; }',
 			'.heading { font-weight:bold; font-size:110%; }',
 			params.home ? '.removehelp { display:none; }' : '',
 		'</style>'
@@ -592,8 +593,11 @@ function gadgetWrite() {
 				'body { height:', height, 'px; }',
 				'#spinner { z-index: 1; position:absolute; width:100%; height:100%; background-image:url(', cacheUrl( baseUrl + 'spinner.gif' ), '); background-position:center; background-repeat:no-repeat; opacity:0.30; -moz-opacity:0.30;', pref.ready ? '' : 'display:none;', '}',
 				'#spinner { filter:alpha(opacity=30); }',
+				'#tabs { width:100%; background-color:#E8ECF9; }',
+				'#tablinks { padding:4px; }',
+				'#tablinks a { color:#0000CC; margin-right:1em; }',
 				'#title { width:100%; }',
-				'#mapbox { width:100%; }',
+				'#previewmap, #mapbox { width:100%; }',
 			'</style>'
 		);
 	}
@@ -653,12 +657,20 @@ function gadgetWrite() {
 		);
 	}
 	else {
-		writeScript( 'http://maps.google.com/maps?file=api&amp;v=2&amp;key=' + key );
 		document.write(
 			'<div id="spinner">',
 			'</div>',
 			'<div id="wrapper">',
+				'<div id="tabs" style="display:none;">',
+					'<div id="tablinks">',
+						'<a href="#">Map</a>',
+						'<a href="#">Details</a>',
+						'<a href="#">Search again</a>',
+					'</div>',
+				'</div>',
 				'<div id="title" style="display:none;">',
+				'</div>',
+				'<div id="previewmap">',
 				'</div>',
 				'<div id="mapbox">',
 				'</div>',
@@ -1021,6 +1033,7 @@ function gadgetReady() {
 			_IG_AdjustIFrameHeight();
 		}
 		else {
+			$tabs.show();
 			$title.empty().show();
 			vote.html = infoWrap( S(
 				log.print(),
@@ -1127,8 +1140,10 @@ function gadgetReady() {
 				maxWidth: mapplet ? 350 : Math.min( $jsmap.width() - 100, 350 )
 				/*, disableGoogleLinks:true*/
 			};
-			marker.bindInfoWindow( $(a.html)[0], options );
-			if( a.open ) marker.openInfoWindowHtml( a.html, options );
+			if( balloon ) {
+				marker.bindInfoWindow( $(a.html)[0], options );
+				if( a.open ) marker.openInfoWindowHtml( a.html, options );
+			}
 		}
 		
 		function go() {
@@ -1143,10 +1158,11 @@ function gadgetReady() {
 			
 			var hi = home.info, vi = vote.info;
 			if( ! hi ) return;
-			if( scoop ) {
-				si = scoop.info;
+			//if( scoop ) {
+			if( vi  &&  ! mapplet ) {
+				//si = scoop.info;
 				var bounds = new GLatLngBounds();
-				bounds.extend( si.latlng );
+				//bounds.extend( si.latlng );
 				bounds.extend( hi.latlng );
 				if( vi ) bounds.extend( vi.latlng );
 				var ne = bounds.getNorthEast();
@@ -1192,6 +1208,25 @@ function gadgetReady() {
 				map.addControl( new GMapTypeControl );
 				//map.enableGoogleBar();
 			}
+			
+			if( vi ) {
+				var directions = new GDirections( null/*, $directions[0]*/ );
+				GEvent.addListener( directions, 'load', function() {
+					GAsync( directions, 'getPolyline', function( polyline ) {
+						map.addOverlay( polyline );
+					});
+				});
+				directions.loadFromWaypoints(
+					[
+						S( 'Home (', hi.address, ')@', hi.lat.toFixed(6), ',', hi.lng.toFixed(6) ),
+						S( 'Voting Location (', vi.address, ')@', vi.lat.toFixed(6), ',', vi.lng.toFixed(6) )
+					],
+					{
+						getPolyline: true
+					}
+				);
+			}
+			
 			if( mapplet )
 				ready();
 			spin( false );
@@ -1384,6 +1419,8 @@ function gadgetReady() {
 			},
 			
 			submit: function() {
+				$search.hide();
+				$previewmap.hide();
 				$spinner.show();
 				submit( input.value );
 				return false;
@@ -1392,70 +1429,77 @@ function gadgetReady() {
 	}
 	
 	function submit( addr ) {
-		analytics( 'lookup' );
-		addr = $.trim( addr );
-		log();
-		log.yes = /^!!/.test( addr );
-		if( log.yes ) addr = $.trim( addr.replace( /^!!/, '' ) );
-		log( 'Input address:', addr );
-		var state = statesByAbbr[ addr.toUpperCase() ];
-		if( state ) addr = state.name;
-        if( addr == pref.example ) addr = addr.replace( /^.*: /, '' );
-		home = {};
-		vote = {};
-		map && map.clearOverlays();
-		currentAddress = addr;
-		$title.empty().show();
-		$map.empty();
-		closehelp( function() {
-			geocode( addr, function( geo ) {
-				var places = geo && geo.Placemark;
-				var n = places && places.length;
-				log( 'Number of matches: ' + n );
-				if( ! n ) {
-					spin( false );
-					$title.html( S(
-						log.print(),
-						'We did not find that address. Please check the spelling and try again. Be sure to include your zip code or city and state.'
-					)).show();
-				}
-				else if( n == 1 ) {
-					findPrecinct( places[0] );
-				}
-				else {
-					if( places ) {
-						$title.append( S(
-							'<div id="radios">',
-								'<div id="radios" style="padding-top:0.5em;">',
-									'<strong>Select your address:</strong>',
-								'</div>',
-							'</div>'
+		submitReady = function() {
+			analytics( 'lookup' );
+			addr = $.trim( addr );
+			log();
+			log.yes = /^!!/.test( addr );
+			if( log.yes ) addr = $.trim( addr.replace( /^!!/, '' ) );
+			log( 'Input address:', addr );
+			var state = statesByAbbr[ addr.toUpperCase() ];
+			if( state ) addr = state.name;
+			if( addr == pref.example ) addr = addr.replace( /^.*: /, '' );
+			home = {};
+			vote = {};
+			map && map.clearOverlays();
+			currentAddress = addr;
+			$title.empty().show();
+			$map.empty();
+			closehelp( function() {
+				geocode( addr, function( geo ) {
+					var places = geo && geo.Placemark;
+					var n = places && places.length;
+					log( 'Number of matches: ' + n );
+					if( ! n ) {
+						spin( false );
+						$title.html( S(
+							log.print(),
+							'We did not find that address. Please check the spelling and try again. Be sure to include your zip code or city and state.'
 						)).show();
-						var $radios = $('#radios');
-						$radios.append( formatPlaces(places) );
-						$('input:radio',$title).click( function() {
-							var radio = this;
-							spin( true );
-							setTimeout( function() {
-								function ready() {
-									findPrecinct( places[ radio.id.split('-')[1] ] );
-								}
-								if( $.browser.msie ) {
-									$radios.hide();
-									ready();
-								}
-								else {
-									$radios.slideUp( 350, ready );
-								}
-							}, 250 );
-						});
+					}
+					else if( n == 1 ) {
+						findPrecinct( places[0] );
 					}
 					else {
-						sorry();
+						if( places ) {
+							$title.append( S(
+								'<div id="radios">',
+									'<div id="radios" style="padding-top:0.5em;">',
+										'<strong>Select your address:</strong>',
+									'</div>',
+								'</div>'
+							)).show();
+							var $radios = $('#radios');
+							$radios.append( formatPlaces(places) );
+							$('input:radio',$title).click( function() {
+								var radio = this;
+								spin( true );
+								setTimeout( function() {
+									function ready() {
+										findPrecinct( places[ radio.id.split('-')[1] ] );
+									}
+									if( $.browser.msie ) {
+										$radios.hide();
+										ready();
+									}
+									else {
+										$radios.slideUp( 350, ready );
+									}
+								}, 250 );
+							});
+						}
+						else {
+							sorry();
+						}
 					}
-				}
+				});
 			});
-		});
+		}
+		
+		if( window.GMap2 )
+			submitReady();
+		else
+			$.getScript( 'http://maps.google.com/maps?file=api&v=2&async=2&callback=submitReady&key=' + key );
 	}
 	
 	function formatHome( infowindow ) {
@@ -1764,11 +1808,11 @@ function gadgetReady() {
 				// VA:
 				'<img style="width:', w, 'px; height:', h, 'px; border:none;" src="http://maps.google.com/staticmap?center=38.01,-79.46&span=2.91,8.43&size=', w, 'x', h, '&key=', key, '" />'
 			);
-			$map.html( filler );
+			$previewmap.html( filler );
 		}
 	}
 	
-	var $title = $('#title'), $map = $('#mapbox'), $spinner = $('#spinner');
+	var $search, $tabs = $('#tabs'), $title = $('#title'), $previewmap = $('#previewmap'), $map = $('#mapbox'), $spinner = $('#spinner'), $directions = $('#directions');
 	
 	T( 'poll411-maker:style', variables, function( head ) {
 		if( ! mapplet  &&  ! pref.ready ) {
@@ -1777,6 +1821,7 @@ function gadgetReady() {
 			$('body').prepend( T( 'poll411-maker:' + part, variables ) );
 			setFiller();
 			setGadgetPoll411();
+			$search = $('#Poll411Gadget');
 		}
 		
 		// http://spreadsheets.google.com/feeds/list/p9CuB_zeAq5X-twnx_mdbKg/2/public/values?alt=json
