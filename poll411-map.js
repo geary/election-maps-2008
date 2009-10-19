@@ -327,7 +327,7 @@ function formatDate( date ) {
 	);
 }
 
-var electionDay = new Date( 2008, 10, 4 );
+var electionDay = new Date( 2009, 10, 3 );  // year, month-1, day
 
 var today = new Date;
 today.setHours( 0, 0, 0, 0 );
@@ -387,6 +387,12 @@ var key = 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRTZqGWfQErE9pT-IucjscazSdFnjBSzjqfxm1CQj
 
 // HTML snippets
 
+var electionHeader = S(
+	'<div>',
+		'<strong>November 3, 2009 Virginia general election</strong>',
+	'</div>'
+);
+
 function tabLinks( active ) {
 	function tab( id, label ) {
 		return id == active ? S(
@@ -419,27 +425,27 @@ function infoLinks() {
 					'Report an error',
 				'</a>',
 			'</div>',
-			'<div style="margin-top:1em; border-top:1px solid #BBB; padding-top:1em;">',
-				'Full election coverage:<br />',
-				'<a target="_blank" href="http://www.google.com/2008election">',
-					'Google 2008 Election Site',
-				'</a>',
-			'</div>',
-			'<div style="margin-top:1em;">',
-				'More election maps:<br />',
-				'<a target="_blank" href="http://maps.google.com/elections">',
-					'Google Elections Map Gallery',
-				'</a>',
-			'</div>',
-			'<div style="margin-top:1em;">',
-				'Get election info on your phone:<br />',
-				'<a target="_blank" href="http://m.google.com/elections">',
-					'http://m.google.com/elections',
-				'</a>',
-			'</div>',
+			//'<div style="margin-top:1em; border-top:1px solid #BBB; padding-top:1em;">',
+			//	'Full election coverage:<br />',
+			//	'<a target="_blank" href="http://www.google.com/2008election">',
+			//		'Google 2008 Election Site',
+			//	'</a>',
+			//'</div>',
+			//'<div style="margin-top:1em;">',
+			//	'More election maps:<br />',
+			//	'<a target="_blank" href="http://maps.google.com/elections">',
+			//		'Google Elections Map Gallery',
+			//	'</a>',
+			//'</div>',
+			//'<div style="margin-top:1em;">',
+			//	'Get election info on your phone:<br />',
+			//	'<a target="_blank" href="http://m.google.com/elections">',
+			//		'http://m.google.com/elections',
+			//	'</a>',
+			//'</div>',
 			'<div style="margin:1em 0 1em 0;">',
 				'Help others find their voter information:<br />',
-				'<a target="_blank" href="http://gmodules.com/ig/creator?synd=open&url=http://election-maps-2008.googlecode.com/svn/trunk/2009/poll411-gadget.xml">',
+				'<a target="_blank" href="http://gmodules.com/ig/creator?synd=open&url=http://election-maps-2008.googlecode.com/svn/trunk/poll411-gadget.xml">',
 					'Get this gadget for your website',
 				'</a>',
 			'</div>',
@@ -450,28 +456,28 @@ function infoLinks() {
 var fullvips = 'state and local election officials from Iowa, Kansas, Maryland, Minnesota, Missouri, Montana, North Carolina, North Dakota, Ohio, Virginia, and Los Angeles County,';
 
 var attribution = S(
-	'<div style="', fontStyle, ' color:#333;">',
-		'<div style="font-size:85%; margin-top:0.5em; border-top:1px solid #BBB; padding-top:1em;">',
-			'Developed with ',
-			'<span id="vips" style="font-size:100%;">',
-				'<a style="font-size:100%;" href="#" onclick="$(\'#vips\').html(fullvips); return false;">',
-					'state and local election officials',
-				'</a>',
-			'</span>',
-			' and the ',
-			'<a style="font-size:100%;" target="_blank" href="http://votinginfoproject.org/">',
-				'Voting Information Project',
-			'</a>',
-			'.',
-		'</div>',
-		'<div style="font-size:85%; margin-top:0.75em;">',
-			'In conjunction with the ',
-			'<a style="font-size:100%;" target="_blank" href="http://www.lwv.org/">',
-				'League of Women Voters',
-			'</a>',
-			'.',
-		'</div>',
-	'</div>'
+	//'<div style="', fontStyle, ' color:#333;">',
+	//	'<div style="font-size:85%; margin-top:0.5em; border-top:1px solid #BBB; padding-top:1em;">',
+	//		'Developed with ',
+	//		'<span id="vips" style="font-size:100%;">',
+	//			'<a style="font-size:100%;" href="#" onclick="$(\'#vips\').html(fullvips); return false;">',
+	//				'state and local election officials',
+	//			'</a>',
+	//		'</span>',
+	//		' and the ',
+	//		'<a style="font-size:100%;" target="_blank" href="http://votinginfoproject.org/">',
+	//			'Voting Information Project',
+	//		'</a>',
+	//		'.',
+	//	'</div>',
+	//	'<div style="font-size:85%; margin-top:0.75em;">',
+	//		'In conjunction with the ',
+	//		'<a style="font-size:100%;" target="_blank" href="http://www.lwv.org/">',
+	//			'League of Women Voters',
+	//		'</a>',
+	//		'.',
+	//	'</div>',
+	//'</div>'
 );
 
 function formatInfoLocality( info ) {
@@ -572,13 +578,13 @@ function makerWrite() {
 
 function gadgetWrite() {
 	
-	backLink = params.cnn || params.state ? S(
-		'<div style="margin:0.5em 0 0 6px; ', fontStyle, '">',
-			'<a target="_blank" alt="Return to CNN&#146;s Election Center 2008" href="http://www.cnn.com/ELECTION/2008/">',
-				'Return to CNN&#146;s Election Center 2008',
-			'</a>',
-		'</div>'
-	) : '';
+	//backLink = params.cnn || params.state ? S(
+	//	'<div style="margin:0.5em 0 0 6px; ', fontStyle, '">',
+	//		'<a target="_blank" alt="Return to CNN&#146;s Election Center 2008" href="http://www.cnn.com/ELECTION/2008/">',
+	//			'Return to CNN&#146;s Election Center 2008',
+	//		'</a>',
+	//	'</div>'
+	//) : '';
 	
 	document.write(
 		'<style type="text/css">',
@@ -662,7 +668,7 @@ function gadgetWrite() {
 						'</div>',
 					'</div>',
 				'</div>',
-				backLink,
+				//backLink,
 				'<div id="spinner">',
 				'</div>',
 				'<div id="wrapper">',
@@ -723,11 +729,11 @@ function gadgetReady() {
 		var warning = interpolated ? S(
 			registered,
 			'Verify your voting location with your local election officials. ',
-			'This voting location is for the November 4 election only (not for early voting), and it is an estimate based on nearby addresses. ',
+			'This voting location is for the November 3 election only (not for early voting), and it is an estimate based on nearby addresses. ',
 			'It may be incorrect and may change before election day.'
 		) : S(
 			registered,
-			'This voting location is for the November 4 election only (not for early voting), and it is only for voters registered at the home address entered. ',
+			'This voting location is for the November 3 election only (not for early voting), and it is only for voters registered at the home address entered. ',
 			'Please verify this voting location with your local election officials to ensure that it is correct.'
 		);
 		return S(
@@ -768,7 +774,7 @@ function gadgetReady() {
 		var sameDay = state.gsx$sameday.$t != 'TRUE' ? '' : S(
 			'<div style="margin-bottom:0.5em;">',
 				state.name, ' residents may register to vote at their polling place on Election Day:<br />',
-				'Tuesday, November 4',
+				'Tuesday, November 3',
 			'</div>'
 		);
 		
@@ -854,7 +860,7 @@ function gadgetReady() {
 		//if( ! deadlines  &&  state.abbr != 'ND'  &&  state.gsx$sameday.$t != 'TRUE' )
 		//	deadlines = S(
 		//		'<div style="margin-bottom:0.75em;">',
-		//			'The deadline to mail your registration for the November 4, 2008 general election has passed. ',
+		//			'The deadline to mail your registration for the November 3, 2009 general election has passed. ',
 		//			//state.gsx$regcomments.$t || '',
 		//		'</div>'
 		//	);
@@ -1020,12 +1026,15 @@ function gadgetReady() {
 		//);
 		var extra = home.info.latlng && vote.info.latlng ? directionsLink( home, vote ) : '';
 		function location( infowindow ) {
-			return formatLocation( vote.info, infowindow || ! mapplet ? 'vote-icon-50.png' : 'marker-red.png', 'Voting Location', infowindow, extra );
+			return formatLocation( vote.info, infowindow || ! mapplet ? 'vote-icon-50.png' : 'marker-red.png', 'Your Voting Location', infowindow, extra );
 		}
 		if( mapplet ) {
 			$title.append( S(
 				log.print(),
 				'<div>',
+					electionHeader,
+					'<div style="padding-top:0.75em">',
+					'</div>',
 					formatHome(),
 					'<div style="padding-top:0.75em">',
 					'</div>',
@@ -1052,6 +1061,7 @@ function gadgetReady() {
 			$title.empty().show();
 			vote.html = infoWrap( S(
 				log.print(),
+				electionHeader,
 				homeAndVote(),
 				'<div style="padding-top:1em">',
 				'</div>',
@@ -1233,8 +1243,8 @@ function gadgetReady() {
 				});
 				directions.loadFromWaypoints(
 					[
-						S( 'Home (', hi.address, ')@', hi.lat.toFixed(6), ',', hi.lng.toFixed(6) ),
-						S( 'Voting Location (', vi.address, ')@', vi.lat.toFixed(6), ',', vi.lng.toFixed(6) )
+						S( 'Your Home (', hi.address, ')@', hi.lat.toFixed(6), ',', hi.lng.toFixed(6) ),
+						S( 'Your Voting Location (', vi.address, ')@', vi.lat.toFixed(6), ',', vi.lng.toFixed(6) )
 					],
 					{
 						getPolyline: true
@@ -1829,7 +1839,7 @@ function gadgetReady() {
 	
 	function setupTabs() {
 		$('#tabs').click( function( event ) {
-			var target = event.target, $target = $(target);
+			var $target = $(event.target);
 			if( $target.is('a') ) {
 				alert( $target.attr('href') );
 				switch( target.href ) {
