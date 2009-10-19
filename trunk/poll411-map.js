@@ -1259,6 +1259,9 @@ function gadgetReady() {
 	}
 	
 	function formatLocation( info, icon, title, infowindow, extra ) {
+		var special =
+			info.address != '703 E Grace St, Richmond, VA 23219' ? '' :
+			"Governor's Mansion<br />";
 		var size = infowindow || ! mapplet ? { width:50, height:50 } : { width:20, height:34 };
 		var locality = info.city ? info.city : info.county ? info.county + ' County' : '';
 		var addr = info.rawAddress ? S(
@@ -1271,6 +1274,7 @@ function gadgetReady() {
 			'</div>'
 		) : S(
 			'<div>',
+				special,
 				info.location ? '<strong>' + htmlEscape(info.location) + '</strong><br />' : '',
 				info.description ? '<span style="font-size:90%">' + htmlEscape(info.description) + '</span><br />' : '',
 				'<div style="margin-top:', info.location || info.description ? '0.25' : '0', 'em;">',
