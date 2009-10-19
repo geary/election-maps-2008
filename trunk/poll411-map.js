@@ -382,12 +382,7 @@ var iframe = ! mapplet  &&  ! inline;
 var map, $jsmap, currentAddress;
 var home, vote, scoop, interpolated;
 
-var key = {
-	'gmodules.com': 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRTZqGWfQErE9pT-IucjscazSdFnjBSzjqfxm1CQj7RDgG-OoyNfebJK0w',
-	'maps.gmodules.com': 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRTqV_PyyxRizIwUkTfU6T-V7M7btRRpOM29SpcTDh2dojFpfRwpoTTMWw',
-	'www.gmodules.com': 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRSf0RMTBV-KKR6hvCL9Kx2eVMqFbxQJkQOf-iqm2g6XkyYWJQsN9S97qg',
-	'': ''
-}[location.host];
+var key = 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRTZqGWfQErE9pT-IucjscazSdFnjBSzjqfxm1CQj7RDgG-OoyNfebJK0w';
 
 // HTML snippets
 
@@ -1764,7 +1759,10 @@ function gadgetReady() {
 			var w = $map.width(), h = $window.height() - $map.offset().top;
 			filler = pref.scoop && ! pref.scoop1 ? S(
 				'<img style="width:395px; height:410px; border:none;" src="', cacheUrl( baseUrl + 'BenAndJerry.png' ), '" />' ) : S(
-				'<img style="width:', w, 'px; height:', h, 'px; border:none;" src="http://maps.google.com/staticmap?center=38,-95.9&span=26.9,52.7&size=', w, 'x', h, '&key=', key, '" />'
+				// US:
+				//'<img style="width:', w, 'px; height:', h, 'px; border:none;" src="http://maps.google.com/staticmap?center=38,-95.9&span=26.9,52.7&size=', w, 'x', h, '&key=', key, '" />'
+				// VA:
+				'<img style="width:', w, 'px; height:', h, 'px; border:none;" src="http://maps.google.com/staticmap?center=38.01,-79.46&span=2.91,8.43&size=', w, 'x', h, '&key=', key, '" />'
 			);
 			$map.html( filler );
 		}
