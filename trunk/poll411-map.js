@@ -387,6 +387,23 @@ var key = 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRTZqGWfQErE9pT-IucjscazSdFnjBSzjqfxm1CQj
 
 // HTML snippets
 
+function tabLinks( active ) {
+	function tab( id, label ) {
+		return id == active ? S(
+			'<span>', label, '</span>'
+		) : S(
+			'<a href="#', id, '">', label, '</a>'
+		);
+	}
+	return S(
+		'<div id="tablinks">',
+			tab( 'map', 'Map' ),
+			tab( 'details', 'Details' ),
+			tab( 'search', 'Search ' ),
+		'</div>'
+	);
+}
+
 function infoLinks() {
 	var info = home && home.info;
 	if( ! info ) return '';
@@ -595,7 +612,9 @@ function gadgetWrite() {
 				'#spinner { filter:alpha(opacity=30); }',
 				'#tabs { width:100%; background-color:#E8ECF9; }',
 				'#tablinks { padding:4px; }',
-				'#tablinks a { color:#0000CC; margin-right:1em; }',
+				'#tablinks span, #tablinks a { margin-right:1em; }',
+				'#tablinks span { font-weight:bold; }',
+				'#tablinks a { color:#0000CC; }',
 				'#title { width:100%; }',
 				'#previewmap, #mapbox { width:100%; }',
 			'</style>'
@@ -662,11 +681,7 @@ function gadgetWrite() {
 			'</div>',
 			'<div id="wrapper">',
 				'<div id="tabs" style="display:none;">',
-					'<div id="tablinks">',
-						'<a href="#">Map</a>',
-						'<a href="#">Details</a>',
-						'<a href="#">Search again</a>',
-					'</div>',
+					tabLinks( 'map' ),
 				'</div>',
 				'<div id="title" style="display:none;">',
 				'</div>',
@@ -1812,6 +1827,17 @@ function gadgetReady() {
 		}
 	}
 	
+	function setupTabs() {
+		$('#tabs').click( function( event ) {
+			var target = event.target, $target = $(target);
+			if( $target.is('a') ) {
+				alert( $target.attr('href') );
+				switch( target.href ) {
+				}
+			}
+		});
+	}
+	
 	var $search, $tabs = $('#tabs'), $title = $('#title'), $previewmap = $('#previewmap'), $map = $('#mapbox'), $spinner = $('#spinner'), $directions = $('#directions');
 	
 	T( 'poll411-maker:style', variables, function( head ) {
@@ -1891,6 +1917,7 @@ function gadgetReady() {
 				})();
 			}
 			else {
+				setupTabs();
 				if( pref.ready )
 					submit( pref.address || pref.example );
 			}
