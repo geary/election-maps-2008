@@ -396,16 +396,16 @@ var electionHeader = S(
 function tabLinks( active ) {
 	function tab( id, label ) {
 		return id == active ? S(
-			'<span>', label, '</span>'
+			'<span class="', id, '">', label, '</span>'
 		) : S(
-			'<a href="#', id, '">', label, '</a>'
+			'<a href="', id, '">', label, '</a>'
 		);
 	}
 	return S(
 		'<div id="tablinks">',
-			tab( 'map', 'Map' ),
-			tab( 'details', 'Details' ),
-			tab( 'search', 'Search ' ),
+			tab( '#mapbox', 'Map' ),
+			tab( '#detailsbox', 'Details' ),
+			tab( '#Poll411Gadget', 'Search' ),
 		'</div>'
 	);
 }
@@ -623,6 +623,7 @@ function gadgetWrite() {
 				'#tablinks a { color:#0000CC; }',
 				'#title { width:100%; }',
 				'#previewmap, #mapbox { width:100%; }',
+				'#detailsbox { overflow:scroll; overflow-x:auto; overflow-y:scroll; }',
 			'</style>'
 		);
 	}
@@ -687,13 +688,15 @@ function gadgetWrite() {
 			'</div>',
 			'<div id="wrapper">',
 				'<div id="tabs" style="display:none;">',
-					tabLinks( 'map' ),
+					tabLinks( '#mapbox' ),
 				'</div>',
 				'<div id="title" style="display:none;">',
 				'</div>',
 				'<div id="previewmap">',
 				'</div>',
 				'<div id="mapbox">',
+				'</div>',
+				'<div id="detailsbox" style="display:none;">',
 				'</div>',
 			'</div>'
 		);
@@ -1029,25 +1032,7 @@ function gadgetReady() {
 			return formatLocation( vote.info, infowindow || ! mapplet ? 'vote-icon-50.png' : 'marker-red.png', 'Your Voting Location', infowindow, extra );
 		}
 		if( mapplet ) {
-			$title.append( S(
-				log.print(),
-				'<div>',
-					electionHeader,
-					'<div style="padding-top:0.75em">',
-					'</div>',
-					formatHome(),
-					'<div style="padding-top:0.75em">',
-					'</div>',
-					location(),
-					stateLocator(),
-					locationWarning(),
-					'<div style="padding-top:1em">',
-					'</div>',
-					electionInfo(),
-					infoLinks(),
-					attribution,
-				'</div>'
-			) );
+			$title.append( longInfo() );
 			vote.html = S(
 				'<div style="', fontStyle, '">',
 					location( true ),
@@ -1059,6 +1044,7 @@ function gadgetReady() {
 		else {
 			$tabs.show();
 			$title.empty().show();
+			if( ! balloon ) $details.html( longInfo() );
 			vote.html = infoWrap( S(
 				log.print(),
 				electionHeader,
@@ -1085,6 +1071,28 @@ function gadgetReady() {
 				'</div>',
 				location(),
 				locationWarning()
+			);
+		}
+		
+		function longInfo() {
+			return S(
+				log.print(),
+				'<div>',
+					electionHeader,
+					'<div style="padding-top:0.75em">',
+					'</div>',
+					formatHome(),
+					'<div style="padding-top:0.75em">',
+					'</div>',
+					location(),
+					stateLocator(),
+					locationWarning(),
+					'<div style="padding-top:1em">',
+					'</div>',
+					electionInfo(),
+					infoLinks(),
+					attribution,
+				'</div>'
 			);
 		}
 	}
@@ -1179,6 +1187,7 @@ function gadgetReady() {
 				var height = $window.height() - $map.offset().top;
 				$map.height( height );
 				$jsmap.height( height );
+				$details.height( height );
 			}
 			
 			var hi = home.info, vi = vote.info;
@@ -1479,8 +1488,9 @@ function gadgetReady() {
 			vote = {};
 			map && map.clearOverlays();
 			currentAddress = addr;
+			$spinner.show();
 			$title.empty().show();
-			$map.empty();
+			$map.empty().show();
 			closehelp( function() {
 				geocode( addr, function( geo ) {
 					var places = geo && geo.Placemark;
@@ -1849,17 +1859,40 @@ function gadgetReady() {
 	}
 	
 	function setupTabs() {
-		$('#tabs').click( function( event ) {
+		var $tabs = $('#tabs');
+		$tabs.click( function( event ) {
 			var $target = $(event.target);
 			if( $target.is('a') ) {
-				alert( $target.attr('href') );
-				switch( target.href ) {
+				var tab = $target.attr('href');
+				$( $tabs.find('span')[0].className ).hide();
+				$(tab).show();
+				if( tab == '#Poll411Gadget' ) {
+					$tabs.html( tabLinks('#mapbox') );
+					$tabs.hide();
+					$search.show();
+					$title.hide();
+					$spinner.css({ display:'none' });
+					$map.empty();
+					setTimeout( function() {
+						$previewmap.show();
+					}, 20 );
+				}
+				else {
+					$tabs.html( tabLinks(tab) );
 				}
 			}
+			return false;
 		});
 	}
 	
-	var $search, $tabs = $('#tabs'), $title = $('#title'), $previewmap = $('#previewmap'), $map = $('#mapbox'), $spinner = $('#spinner'), $directions = $('#directions');
+	var $search,
+		$tabs = $('#tabs'),
+		$title = $('#title'),
+		$previewmap = $('#previewmap'),
+		$map = $('#mapbox'),
+		$details = $('#detailsbox'),
+		$spinner = $('#spinner'),
+		$directions = $('#directions');
 	
 	T( 'poll411-maker:style', variables, function( head ) {
 		if( ! mapplet  &&  ! pref.ready ) {
