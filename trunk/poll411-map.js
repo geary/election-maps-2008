@@ -1177,6 +1177,11 @@ function gadgetReady() {
 				marker.bindInfoWindow( $(a.html)[0], options );
 				if( a.open ) marker.openInfoWindowHtml( a.html, options );
 			}
+			else {
+				GEvent.addListener( marker, 'click', function() {
+					selectTab( '#detailsbox' );
+				});
+			}
 		}
 		
 		function go() {
@@ -1864,25 +1869,29 @@ function gadgetReady() {
 			var $target = $(event.target);
 			if( $target.is('a') ) {
 				var tab = $target.attr('href');
-				$( $tabs.find('span')[0].className ).hide();
-				$(tab).show();
-				if( tab == '#Poll411Gadget' ) {
-					$tabs.html( tabLinks('#mapbox') );
-					$tabs.hide();
-					$search.show();
-					$title.hide();
-					$spinner.css({ display:'none' });
-					$map.empty();
-					setTimeout( function() {
-						$previewmap.show();
-					}, 20 );
-				}
-				else {
-					$tabs.html( tabLinks(tab) );
-				}
+				selectTab( tab );
 			}
 			return false;
 		});
+	}
+	
+	function selectTab( tab ) {
+		$( $tabs.find('span')[0].className ).hide();
+		$(tab).show();
+		if( tab == '#Poll411Gadget' ) {
+			$tabs.html( tabLinks('#mapbox') );
+			$tabs.hide();
+			$search.show();
+			$title.hide();
+			$spinner.css({ display:'none' });
+			$map.empty();
+			setTimeout( function() {
+				$previewmap.show();
+			}, 20 );
+		}
+		else {
+			$tabs.html( tabLinks(tab) );
+		}
 	}
 	
 	var $search,
