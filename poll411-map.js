@@ -404,7 +404,7 @@ function tabLinks( active ) {
 	return S(
 		'<div id="tablinks">',
 			tab( '#mapbox', 'Map' ),
-			tab( '#detailsbox', 'Details' ),
+			balloon ? '' : tab( '#detailsbox', 'Details' ),
 			tab( '#Poll411Gadget', 'Search' ),
 		'</div>'
 	);
@@ -1463,10 +1463,11 @@ function gadgetReady() {
 			},
 			
 			submit: function() {
-				$search.hide();
 				$previewmap.hide();
-				$spinner.show();
-				submit( input.value );
+				$search.slideUp( 250, function() {
+					$spinner.show();
+					submit( input.value );
+				});
 				return false;
 			}
 		};
@@ -1877,19 +1878,18 @@ function gadgetReady() {
 	
 	function selectTab( tab ) {
 		$( $tabs.find('span')[0].className ).hide();
-		$(tab).show();
 		if( tab == '#Poll411Gadget' ) {
 			$tabs.html( tabLinks('#mapbox') );
 			$tabs.hide();
-			$search.show();
 			$title.hide();
 			$spinner.css({ display:'none' });
 			$map.empty();
-			setTimeout( function() {
+			$search.slideDown( 250, function() {
 				$previewmap.show();
-			}, 20 );
+			});
 		}
 		else {
+			$(tab).show();
 			$tabs.html( tabLinks(tab) );
 		}
 	}
@@ -2003,9 +2003,9 @@ log.print = function() {
 
 // Final initialization
 
-maker ? makerWrite() : gadgetWrite();
+maker && inline ? makerWrite() : gadgetWrite();
 $(function() {
-	maker ? makerReady() : gadgetReady();
+	maker && inline ? makerReady() : gadgetReady();
 	$('body').click( function( event ) {
 		var target = event.target;
 		if( $(target).is('a')  &&  target.href != '#' )
