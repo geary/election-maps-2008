@@ -15,7 +15,7 @@
   <Require feature="analytics"/>
 </ModulePrefs>
 
-<UserPref name="address" datatype="string" display_name="Address" default_value="Ex: 703 E Grace St, Richmond, VA 23219"/>
+<UserPref name="address" datatype="string" display_name="Address" default_value="Ex: 703 E Grace St 23219"/>
 
 <Content type="html">
 <![CDATA[
