@@ -405,7 +405,7 @@ function tabLinks( active ) {
 	return S(
 		'<div id="tablinks">',
 			tab( '#mapbox', 'Map' ),
-			balloon ? '' : tab( '#detailsbox', 'Details' ),
+			tab( '#detailsbox', 'Details' ),
 			tab( '#Poll411Gadget', 'Search' ),
 		'</div>'
 	);
@@ -689,7 +689,7 @@ function gadgetWrite() {
 			'</div>',
 			'<div id="wrapper">',
 				'<div id="tabs" style="display:none;">',
-					tabLinks( '#mapbox' ),
+					tabLinks( balloon ? '#mapbox' : '#detailsbox' ),
 				'</div>',
 				'<div id="title" style="display:none;">',
 				'</div>',
@@ -1045,33 +1045,36 @@ function gadgetReady() {
 		else {
 			$tabs.show();
 			$title.empty().show();
-			if( ! balloon ) $details.html( longInfo() );
+			$details.html( longInfo() );
 			vote.html = infoWrap( S(
 				log.print(),
 				electionHeader,
-				homeAndVote(),
+				homeAndVote()/*,
 				'<div style="padding-top:1em">',
 				'</div>',
 				electionInfo(),
 				infoLinks(),
-				attribution
+				attribution*/
 			) );
 		}
 		
 		function homeAndVote() {
 			return vote.info.latlng ? S(
 				location(),
-				stateLocator(),
-				locationWarning(),
-				'<div style="padding-top:0.75em">',
-				'</div>',
-				formatHome()
+				'<div style="padding-top:0.75em;">',
+					'<a href="#detailsbox" onclick="return selectTab(\'#detailsbox\');">View Full Details</a>',
+				'</div>'
+				//stateLocator(),
+				//locationWarning(),
+				//'<div style="padding-top:0.75em">',
+				//'</div>',
+				//formatHome()
 			) : S(
 				formatHome(),
 				'<div style="padding-top:0.75em">',
 				'</div>',
-				location(),
-				locationWarning()
+				location()/*,
+				locationWarning()*/
 			);
 		}
 		
@@ -1100,7 +1103,7 @@ function gadgetReady() {
 	
 	function infoWrap( html ) {
 		return S(
-			'<div style="', fontStyle, ' margin-top:12px; padding-right:4px; height:', $map.height() - 200, 'px; overflow:auto;">',
+			'<div style="', fontStyle, ' margin-top:12px; padding-right:4px; overflow:auto;">',
 				html,
 			'</div>'
 		)
@@ -1194,6 +1197,10 @@ function gadgetReady() {
 				$map.height( height );
 				$jsmap.height( height );
 				$details.height( height );
+				if( ! balloon ) {
+					$map.hide();
+					$details.show();
+				}
 			}
 			
 			var hi = home.info, vi = vote.info;
@@ -1302,33 +1309,35 @@ function gadgetReady() {
 			'</div>'
 		);
 		return S(
-			'<div style="font-weight:bold; font-size:110%;">',
-				title,
-			'</div>',
-			'<div style="padding-top:0.5em;">',
-				'<table cellpadding="0" cellspacing="0">',
-					'<tr valign="top">',
-						'<td style="width:20px; padding-right:.75em;">',
-							'<img src="', cacheUrl( baseUrl + icon ), '" style="width:', size.width, 'px; height:', size.height, 'px;" />',
-						'</td>',
-						'<td>',
-							addr,
-							'<div>',
-								info.directions || '',
-							'</div>',
-							'<div>',
-								info.hours ? 'Hours: ' + info.hours : '',
-							'</div>',
-							extra,
-						'</td>',
-					'</tr>',
-				'</table>',
-				info.latlng ? '' : S(
-					'<div style="padding-top: 0.5em">',
-						'We were unable to locate this voting place on the map. ',
-						'Please check with your election officals for the exact address.',
-					'</div>'
-				),
+			'<div onclick="return maybeSelectTab(\'#mapbox\',event);" style="cursor:pointer;">',
+				'<div style="font-weight:bold; font-size:110%;">',
+					title,
+				'</div>',
+				'<div style="padding-top:0.5em;">',
+					'<table cellpadding="0" cellspacing="0">',
+						'<tr valign="top">',
+							'<td style="width:20px; padding-right:.75em;">',
+								'<img src="', cacheUrl( baseUrl + icon ), '" style="width:', size.width, 'px; height:', size.height, 'px;" />',
+							'</td>',
+							'<td>',
+								addr,
+								'<div>',
+									info.directions || '',
+								'</div>',
+								'<div>',
+									info.hours ? 'Hours: ' + info.hours : '',
+								'</div>',
+								extra,
+							'</td>',
+						'</tr>',
+					'</table>',
+					info.latlng ? '' : S(
+						'<div style="padding-top: 0.5em">',
+							'We were unable to locate this voting place on the map. ',
+							'Please check with your election officals for the exact address.',
+						'</div>'
+					),
+				'</div>',
 			'</div>'
 		);
 	}
@@ -1878,7 +1887,8 @@ function gadgetReady() {
 		});
 	}
 	
-	function selectTab( tab ) {
+	selectTab = function( tab ) {
+		if( mapplet ) return false;
 		$( $tabs.find('span')[0].className ).hide();
 		if( tab == '#Poll411Gadget' ) {
 			$tabs.html( tabLinks('#mapbox') );
@@ -1894,7 +1904,15 @@ function gadgetReady() {
 			$(tab).show();
 			$tabs.html( tabLinks(tab) );
 		}
-	}
+		return false;
+	};
+	
+	maybeSelectTab = function( tab, event ) {
+		event = event || window.event;
+		var target = event.target || event.srcElement;
+		if( target.tagName.toLowerCase() != 'a' ) return selectTab( tab );
+		return true;
+	};
 	
 	var $search,
 		$tabs = $('#tabs'),
