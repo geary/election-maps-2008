@@ -20,10 +20,10 @@
 	<EnumValue value="inline" display_value="Inline Gadget"/>
 </UserPref>
 
-<UserPref name="details" datatype="enum" display_name="Details&#160;In" default_value="tab">
-	<EnumValue value="tab" display_value="Tab (Small Gadget)"/>
-	<EnumValue value="balloon" display_value="Balloon (Large Gadget)"/>
-</UserPref>
+<!--<UserPref name="details" datatype="enum" display_name="Details&#160;In" default_value="tab">-->
+<!--	<EnumValue value="tab" display_value="Tab (Small Gadget)"/>-->
+<!--	<EnumValue value="balloon" display_value="Balloon (Large Gadget)"/>-->
+<!--</UserPref>-->
 
 <!--<UserPref name="prompt" datatype="string" display_name="Prompt" default_value="Find your 2009 voter information. Enter the *home* address where you are registered to vote:"/>-->
 
