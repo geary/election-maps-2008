@@ -297,6 +297,7 @@ var variables = {
 	width: width - 14,
 	height: height - 80,
 	prompt: minimarkdown(pref.prompt),
+	details: pref.details,
 	example: pref.example,
 	fontFamily: pref.fontFamily.replace( "'", '"' ),
 	fontSize: pref.fontSize,
