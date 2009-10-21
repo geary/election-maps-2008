@@ -9,7 +9,7 @@
 
 var opt = window.gadget ? gadget : window.mapplet ? mapplet : {};
 
-if( opt.year != 2009 ) {
+if( 0 ) {
 
 (function() {
 
