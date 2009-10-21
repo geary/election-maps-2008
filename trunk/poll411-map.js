@@ -930,6 +930,7 @@ function gadgetReady() {
 		function deadline( state, key, type ) {
 			var before = +state[key].$t;
 			if( before == '' ) return '';
+			if( before == -999 ) before = 0;
 			var dt = deadlineText[type];
 			var date = electionDay - before*days;
 			var remain = Math.floor( ( date - today ) / days );
