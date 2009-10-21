@@ -98,7 +98,7 @@
 
 <script type="text/javascript">
   (function() {
-    var details = '{{details}}', fontFamily = '{{fontFamily}}', fontSize = '{{fontSize}}', fontUnits = '{{fontUnits}}';
+    var fontFamily = '{{fontFamily}}', fontSize = '{{fontSize}}', fontUnits = '{{fontUnits}}';
     function e( id ) { return document.getElementById('Poll411'+id); }
     var label = e('Label'), input = e('Input'), button = e('Button'), frame = e('Frame');
     
@@ -127,7 +127,7 @@
         frame.style.display = 'block';
         frame.innerHTML = [
           '<iframe ',
-            'src="http://www.gmodules.com/ig/ifr?url={{gadget}}&amp;synd=open&amp;up_gadgetType=iframe&amp;up_address=', encodeURIComponent(addr), '&amp;up_fontFamily=', encodeURIComponent(fontFamily), '&amp;up_fontSize=', fontSize, '&amp;up_fontUnits=', fontUnits, '&amp;up_details=', details, '&amp;up_submit=1" ',
+            'src="http://www.gmodules.com/ig/ifr?url={{gadget}}&amp;synd=open&amp;up_gadgetType=iframe&amp;up_address=', encodeURIComponent(addr), '&amp;up_fontFamily=', encodeURIComponent(fontFamily), '&amp;up_fontSize=', fontSize, '&amp;up_fontUnits=', fontUnits, '&amp;up_submit=1" ',
             'style="width:100%; height:100%;" ',
             'frameborder="0" ',
             'scrolling="no" ',

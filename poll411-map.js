@@ -297,7 +297,6 @@ var variables = {
 	width: width - 14,
 	height: height - 80,
 	prompt: minimarkdown(pref.prompt),
-	details: pref.details,
 	example: pref.example,
 	fontFamily: pref.fontFamily.replace( "'", '"' ),
 	fontSize: pref.fontSize,
@@ -379,7 +378,7 @@ function indexSpecialStates() {
 var mapplet = window.mapplet;
 var inline = ! mapplet  &&  pref.gadgetType == 'inline';
 var iframe = ! mapplet  &&  ! inline;
-var balloon = mapplet  ||  pref.details == 'balloon';
+var balloon = mapplet  ||  ( $(window).width() >= 450 && $(window).height() >= 400 );
 
 var map, $jsmap, currentAddress;
 var home, vote, scoop, interpolated;
@@ -1189,7 +1188,7 @@ function gadgetReady() {
 			
 			if( ! mapplet ) {
 				GEvent.addListener( map, 'load', ready );
-				var height = $window.height() - $map.offset().top;
+				var height = Math.floor( $window.height() - $map.offset().top );
 				$map.height( height );
 				$jsmap.height( height );
 				$details.height( height );
@@ -1705,7 +1704,7 @@ function gadgetReady() {
 		if( ! a ) return;
 		if( ! mapplet ) {
 			a.width = $map.width();
-			$map.height( a.height = $window.height() - $map.offset().top );
+			$map.height( a.height = Math.floor( $window.height() - $map.offset().top ) );
 			$map.html( formatMap(a) );
 		}
 		scooper( a.lat, a.lng, function( shop ) {
