@@ -272,7 +272,7 @@ var pref = {
 	details: 'tab',
 	prompt: 'Find your 2009 voter information. Enter the *home* address where you are registered to vote:',
 	//example: '1600 Pennsylvania Ave, Washington DC 20006',
-	example: '703 E Grace St, Richmond, VA 23219',
+	example: '703 E Grace St 23219',
 	address: '',
 	fontFamily: 'Arial,sans-serif',
 	fontSize: '10',
@@ -1858,7 +1858,7 @@ function gadgetReady() {
 	function setFiller() {
 		var filler = '';
 		if( iframe ) {
-			var w = $map.width(), h = $window.height() - $map.offset().top;
+			var w = $map.width(), h = Math.floor( $window.height() - $map.offset().top );
 			filler = pref.scoop && ! pref.scoop1 ? S(
 				'<img style="width:395px; height:410px; border:none;" src="', cacheUrl( baseUrl + 'BenAndJerry.png' ), '" />' ) : S(
 				// US:

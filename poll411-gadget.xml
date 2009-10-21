@@ -25,10 +25,10 @@
 	<EnumValue value="balloon" display_value="Balloon (Large Gadget)"/>
 </UserPref>
 
-<UserPref name="prompt" datatype="string" display_name="Prompt" default_value="Find your 2009 voter information. Enter the *home* address where you are registered to vote:"/>
+<!--<UserPref name="prompt" datatype="string" display_name="Prompt" default_value="Find your 2009 voter information. Enter the *home* address where you are registered to vote:"/>-->
 
 <!--<UserPref name="example" datatype="string" display_name="Example&#160;Addr" default_value="Ex: 1600 Pennsylvania Ave, Washington DC 20006"/>-->
-<UserPref name="example" datatype="string" display_name="Example&#160;Addr" default_value="Ex: 703 E Grace St, Richmond, VA 23219"/>
+<!--<UserPref name="example" datatype="string" display_name="Example&#160;Addr" default_value="Ex: 703 E Grace St 23219"/>-->
 
 <UserPref name="fontFamily" datatype="string" display_name="Font&#160;Family" default_value="Arial,sans-serif"/>
 
@@ -58,6 +58,8 @@
 	<EnumValue value="pt" display_value="Points (pt)"/>
 	<EnumValue value="px" display_value="Pixels (px)"/>
 </UserPref>
+
+<UserPref name="logo" datatype="string" display_name="Logo&#160;URL" default_value=""/>
 
 <Content type="html">
 <![CDATA[
