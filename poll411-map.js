@@ -270,9 +270,6 @@ var prefs = new _IG_Prefs();
 var pref = {
 	gadgetType: 'iframe',
 	details: 'tab',
-	prompt: 'Find your 2009 voter information. Enter the *home* address where you are registered to vote:',
-	//example: '1600 Pennsylvania Ave, Washington DC 20006',
-	example: '703 E Grace St 23219',
 	address: '',
 	fontFamily: 'Arial,sans-serif',
 	fontSize: '10',
@@ -283,6 +280,10 @@ var pref = {
 for( var name in pref ) pref[name] = prefs.getString(name) || pref[name];
 if( pref.scoop1 ) pref.scoop = pref.scoop1;
 pref.ready = prefs.getBool('submit');
+
+pref.prompt = 'Find your 2009 voter information. Enter the *home* address where you are registered to vote:';
+//pref.example = '1600 Pennsylvania Ave, Washington DC 20006';
+pref.example = '703 E Grace St 23219';
 
 var maker = decodeURIComponent(location.href).indexOf('source=http://www.gmodules.com/ig/creator?') > -1;
 
@@ -403,8 +404,8 @@ function tabLinks( active ) {
 	}
 	return S(
 		'<div id="tablinks">',
-			tab( '#mapbox', 'Map' ),
 			tab( '#detailsbox', 'Details' ),
+			tab( '#mapbox', 'Map' ),
 			tab( '#Poll411Gadget', 'Search' ),
 		'</div>'
 	);
