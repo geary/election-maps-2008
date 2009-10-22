@@ -309,7 +309,7 @@ for( var name in pref ) pref[name] = prefs.getString(name) || pref[name];
 if( pref.scoop1 ) pref.scoop = pref.scoop1;
 pref.ready = prefs.getBool('submit');
 
-pref.prompt = 'Find your 2009 voter information. Enter the *home* address where you are registered to vote:';
+pref.prompt = 'Find your 2009 Virginia voter information. Enter the *home* address where you are registered to vote:';
 //pref.example = '1600 Pennsylvania Ave, Washington DC 20006';
 pref.example = ( mapplet ? '' : 'Ex: ' ) + '703 E Grace St 23219';
 
