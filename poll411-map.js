@@ -1424,26 +1424,29 @@ function gadgetReady() {
 		//}
 	}
 	
-	function lookup( address, callback ) {
-		if( address == '1600 Pennsylvania Ave NW, Washington, DC 20006, USA' ) {
-			callback({
-				errorcode: 0,
-				locations: [{
-					address: '600 22nd St NW, Washington, DC 20037, USA',
-					location: 'George Washington University',
-					description: "The Smith Center-80's Club Room"
-				}]
-			});
-			return;
-		}
+	function lookup( inputAddress, address, callback, normalize ) {
+		//if( address == '1600 Pennsylvania Ave NW, Washington, DC 20006, USA' ) {
+		//	callback({
+		//		errorcode: 0,
+		//		locations: [{
+		//			address: '600 22nd St NW, Washington, DC 20037, USA',
+		//			location: 'George Washington University',
+		//			description: "The Smith Center-80's Club Room"
+		//		}]
+		//	});
+		//	return;
+		//}
 		var url = S(
 			'http://pollinglocation.apis.google.com/?',
-			pref.normalize ? 'normalize=1&' : '',
+			normalize ? 'normalize=1&' : '',
 			'q=', encodeURIComponent(address)
 		);
-		getJSON( url, callback );
-		//callback({ errorcode: -1 });  // temp disable
-		//callback({ errorcode:0, address:[ '600 22nd St NW, Washington, DC 20037' ] });
+		getJSON( url, function( poll ) {
+			if( poll.errorcode != 0  &&  poll.errorcode != 3  &&  ! normalize  &&  inputAddress )
+				lookup( inputAddress, inputAddress, callback, true );
+			else
+				callback( poll );
+		});
 	}
 	
 	function scooper( lat, lng, callback ) {
@@ -1549,7 +1552,7 @@ function gadgetReady() {
 						)).show();
 					}
 					else if( n == 1 ) {
-						findPrecinct( places[0] );
+						findPrecinct( places[0], addr );
 					}
 					else {
 						if( places ) {
@@ -1602,7 +1605,7 @@ function gadgetReady() {
 		);
 	}
 	
-	function findPrecinct( place ) {
+	function findPrecinct( place, inputAddress ) {
 		log( 'Getting home map info' );
 		home.info = mapInfo( place );
 		if( ! home.info ) { $title.empty().show(); sorry(); return; }
@@ -1611,7 +1614,7 @@ function gadgetReady() {
 		
 		getleo( home.info, function( leo ) {
 			home.leo = leo;
-			lookup( currentAddress, function( poll ) {
+			lookup( inputAddress, currentAddress, function( poll ) {
 				log( 'Polling errorcode: ' + poll.errorcode + ({
 					0: ' (exact match)',
 					1: ' (no match)',
