@@ -234,7 +234,7 @@ function analytics( path ) {
 		if( path.indexOf( 'http://maps.gmodules.com/ig/ifr' ) == 0 ) return;
 		if( path.indexOf( 'http://maps.google.com/maps?f=d' ) == 0 ) path = '/directions';
 		path = ( maker ? '/creator/' : params.home ? '/onebox/' : mapplet ? '/mapplet/' : inline ? '/inline/' : '/gadget/' ) + fixHttp(path);
-		path = fixHttp(document.referrer) + '/' + path;
+		path = '/' + fixHttp(document.referrer) + '/' + path;
 		//console.log( 'analytics', path );
 		_IG_Analytics( 'UA-5730550-1', path );
 	}
