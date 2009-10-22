@@ -1892,7 +1892,8 @@ function gadgetReady() {
 		if( mapplet ) return false;
 		$( $tabs.find('span')[0].className ).hide();
 		if( tab == '#Poll411Gadget' ) {
-			$tabs.html( tabLinks('#mapbox') );
+			$details.empty();
+			$tabs.html( tabLinks( balloon ? '#mapbox' : '#detailsbox' ) );
 			$tabs.hide();
 			$title.hide();
 			$spinner.css({ display:'none' });
