@@ -1860,6 +1860,7 @@ function gadgetReady() {
 		var filler = '';
 		if( iframe ) {
 			var w = $map.width(), h = Math.floor( $window.height() - $map.offset().top );
+			if( w * h == 0 ) return;
 			filler = pref.scoop && ! pref.scoop1 ? S(
 				'<img style="width:395px; height:410px; border:none;" src="', cacheUrl( baseUrl + 'BenAndJerry.png' ), '" />' ) : S(
 				'<div style="position:relative;">',
