@@ -288,6 +288,8 @@ function GAsync( obj ) {
 		callback();
 }
 
+var mapplet = window.mapplet;
+
 var userAgent = navigator.userAgent.toLowerCase(),
 	msie = /msie/.test( userAgent ) && !/opera/.test( userAgent );
 
@@ -309,7 +311,7 @@ pref.ready = prefs.getBool('submit');
 
 pref.prompt = 'Find your 2009 voter information. Enter the *home* address where you are registered to vote:';
 //pref.example = '1600 Pennsylvania Ave, Washington DC 20006';
-pref.example = mapplet ? '703 E Grace St 23219' : 'Ex: 703 E Grace St 23219';
+pref.example = ( mapplet ? '' : 'Ex: ' ) + '703 E Grace St 23219';
 
 var maker = decodeURIComponent(location.href).indexOf('source=http://www.gmodules.com/ig/creator?') > -1;
 
@@ -402,7 +404,6 @@ function indexSpecialStates() {
 		statesByName[abbr] = statesByName[ special[abbr] ];
 }
 
-var mapplet = window.mapplet;
 var inline = ! mapplet  &&  pref.gadgetType == 'inline';
 var iframe = ! mapplet  &&  ! inline;
 var balloon = mapplet  ||  ( $(window).width() >= 450 && $(window).height() >= 400 );
