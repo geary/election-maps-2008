@@ -207,12 +207,37 @@ $.extend( $.fn, {
 });
 
 function analytics( path ) {
-	if( path.indexOf( 'http://maps.gmodules.com/ig/ifr' ) == 0 ) return;
-	if( path.indexOf( 'http://maps.google.com/maps?f=d' ) == 0 ) path = '/directions';
-	path = path.replace( /http:\/\//, 'http/' ).replace( /mailto:/, 'mailto/' );
-	path = ( maker ? '/creator/' : params.home ? '/onebox/' : mapplet ? '/mapplet/' : inline ? '/inline/' : '/gadget/' ) + path;
-	//console.log( 'analytics', path );
-	_IG_Analytics( 'UA-5730550-1', path );
+	function fixHttp( url ) {
+		return url.replace( /http:\/\//, 'http/' ).replace( /mailto:/, 'mailto/' );
+	}
+	function fixAction( url ) {
+		return {
+			'lookup': 'search_submit',
+			'#detailsbox': 'view_detail',
+			'#mapbox':  'load_map',
+			'#Poll411Gadget': 'find_location'
+		}[url];
+	}
+	if( window._ADS_ReportInteraction ) {
+		if( path == 'view'  ||  /^javascript:/.test(path) ) return;
+		var action = fixAction( path );
+		if( action ) {
+			//console.log( 'adaction', action );
+			_ADS_ReportInteraction( action );
+		}
+		else {
+			//console.log( 'adclick', path );
+			_ADS_ReportInteraction( 'destination_url_1', path );
+		}
+	}
+	else {
+		if( path.indexOf( 'http://maps.gmodules.com/ig/ifr' ) == 0 ) return;
+		if( path.indexOf( 'http://maps.google.com/maps?f=d' ) == 0 ) path = '/directions';
+		path = ( maker ? '/creator/' : params.home ? '/onebox/' : mapplet ? '/mapplet/' : inline ? '/inline/' : '/gadget/' ) + fixHttp(path);
+		path = fixHttp(document.referrer) + '/' + path;
+		//console.log( 'analytics', path );
+		_IG_Analytics( 'UA-5730550-1', path );
+	}
 }
 
 // GAsync v2 by Michael Geary
@@ -703,7 +728,7 @@ function gadgetWrite() {
 // Document ready code
 
 function makerReady() {
-	_IG_Analytics( 'UA-5730550-1', '/creator' );
+	analytics( 'creator' );
 }
 
 function gadgetReady() {
@@ -1891,6 +1916,7 @@ function gadgetReady() {
 	
 	selectTab = function( tab ) {
 		if( mapplet ) return false;
+		analytics( tab );
 		$( $tabs.find('span')[0].className ).hide();
 		if( tab == '#Poll411Gadget' ) {
 			$details.empty();
@@ -2031,8 +2057,8 @@ $(function() {
 	maker && inline ? makerReady() : gadgetReady();
 	$('body').click( function( event ) {
 		var target = event.target;
-		if( $(target).is('a')  &&  target.href != '#' )
-			analytics( target.href );
+		if( $(target).is('a') )
+			analytics( $(target).attr('href') );
 	});
 });
 
