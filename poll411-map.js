@@ -408,6 +408,10 @@ var inline = ! mapplet  &&  pref.gadgetType == 'inline';
 var iframe = ! mapplet  &&  ! inline;
 var balloon = mapplet  ||  ( $(window).width() >= 450 && $(window).height() >= 400 );
 
+function useMap() {
+	return balloon && vote && vote.info && vote.info.latlng;
+}
+
 var map, $jsmap, currentAddress;
 var home, vote, scoop, interpolated;
 
@@ -421,7 +425,7 @@ var electionHeader = S(
 	'</div>'
 );
 
-function tabLinks( active ) {
+function tabLinks( active, first ) {
 	function tab( id, label ) {
 		return id == active ? S(
 			'<span class="', id, '">', label, '</span>'
@@ -432,7 +436,7 @@ function tabLinks( active ) {
 	return S(
 		'<div id="tablinks">',
 			tab( '#detailsbox', 'Details' ),
-			tab( '#mapbox', 'Map' ),
+			first || (vote && vote.info && vote.info.latlng ) ? tab( '#mapbox', 'Map' ) : '',
 			tab( '#Poll411Gadget', 'Search' ),
 		'</div>'
 	);
@@ -711,7 +715,7 @@ function gadgetWrite() {
 			'</div>',
 			'<div id="wrapper">',
 				'<div id="tabs" style="display:none;">',
-					tabLinks( balloon ? '#mapbox' : '#detailsbox' ),
+					tabLinks( balloon ? '#mapbox' : '#detailsbox', true ),
 				'</div>',
 				'<div id="title" style="display:none;">',
 				'</div>',
@@ -1214,22 +1218,24 @@ function gadgetReady() {
 		function go() {
 			setVoteHtml();
 			
+			var hi = home.info, vi = vote.info;
+			
 			if( ! mapplet ) {
 				GEvent.addListener( map, 'load', ready );
-				var height = Math.floor( $window.height() - $map.offset().top );
+				var top = $map.offset().top || $details.offset().top;
+				var height = Math.floor( $window.height() - top );
 				$map.height( height );
 				$jsmap.height( height );
 				$details.height( height );
-				if( ! balloon ) {
+				if( ! useMap() ) {
 					$map.hide();
 					$details.show();
 				}
 			}
 			
-			var hi = home.info, vi = vote.info;
 			if( ! hi ) return;
 			//if( scoop ) {
-			if( vi  &&  ! mapplet ) {
+			if( vi  &&  vi.latlng  &&  ! mapplet ) {
 				//si = scoop.info;
 				var bounds = new GLatLngBounds();
 				//bounds.extend( si.latlng );
@@ -1279,7 +1285,7 @@ function gadgetReady() {
 				//map.enableGoogleBar();
 			}
 			
-			if( vi ) {
+			if( vi && vi.latlng ) {
 				var directions = new GDirections( null/*, $directions[0]*/ );
 				GEvent.addListener( directions, 'load', function() {
 					GAsync( directions, 'getPolyline', function( polyline ) {
@@ -1702,14 +1708,22 @@ function gadgetReady() {
 				_:''
 			};
 			setVoteHtml();
-			setMap( home.info );
-			spin( false );
+			forceDetails();
 		}
 	}
 	
 	function sorry() {
 		if( mapplet ) $title.append( log.print() + sorryHtml() );
+		forceDetails();
+	}
+	
+	function forceDetails() {
 		setMap( home.info );
+		if( ! mapplet ) {
+			$map.hide();
+			$details.show();
+			$tabs.html( tabLinks('#detailsbox') );
+		}
 		spin( false );
 	}
 	
@@ -1924,7 +1938,7 @@ function gadgetReady() {
 		$( $tabs.find('span')[0].className ).hide();
 		if( tab == '#Poll411Gadget' ) {
 			$details.empty();
-			$tabs.html( tabLinks( balloon ? '#mapbox' : '#detailsbox' ) );
+			$tabs.html( tabLinks( useMap() ? '#mapbox' : '#detailsbox' ) );
 			$tabs.hide();
 			$title.hide();
 			$spinner.css({ display:'none' });
