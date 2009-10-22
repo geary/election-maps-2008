@@ -1655,19 +1655,21 @@ function gadgetReady() {
 			//if( places && places.length == 1 ) {
 			if( places && places.length >= 1 ) {
 				if( places.length > 1  &&  address != '1500 E Main St  Richmond, VA 23219-3634' ) {
-					alert( S(
-						'TEST ALERT\n\n',
-						'Uncertain polling place address:\n\n',
-						rawAddress, ' (original)\n',
-						address, ' (searched)\n\n',
-						'Geocoding results:\n\n',
-						places.map( function( place ) {
-							return S( formatAddress(place.address), '\n' );
-						}).join(''),
-						'\n',
-						'Please report this in the issue tracker.\n\n',
-						'You can copy and paste the text from this alert in many browsers.'
-					) );
+					//alert( S(
+					//	'TEST ALERT\n\n',
+					//	'Uncertain polling place address:\n\n',
+					//	rawAddress, ' (original)\n',
+					//	address, ' (searched)\n\n',
+					//	'Geocoding results:\n\n',
+					//	places.map( function( place ) {
+					//		return S( formatAddress(place.address), '\n' );
+					//	}).join(''),
+					//	'\n',
+					//	'Please report this in the issue tracker.\n\n',
+					//	'You can copy and paste the text from this alert in many browsers.'
+					//) );
+					setNoGeo( location, rawAddress );
+					return;
 				}
 				try {
 					var abbr = places[0].AddressDetails.Country.AdministrativeArea.AdministrativeAreaName;
@@ -1701,6 +1703,7 @@ function gadgetReady() {
 			};
 			setVoteHtml();
 			setMap( home.info );
+			spin( false );
 		}
 	}
 	
