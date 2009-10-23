@@ -1629,7 +1629,7 @@ function gadgetReady() {
 	function findPrecinct( place, inputAddress ) {
 		log( 'Getting home map info' );
 		home.info = mapInfo( place );
-		if( ! home.info  ||  home.info.accuracy < Accuracy.address ) { sorry(); return; }
+		if( ! home.info  /*||  home.info.accuracy < Accuracy.address*/ ) { sorry(); return; }
 		currentAddress = place.address;
 		var location;
 		
