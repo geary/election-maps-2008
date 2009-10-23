@@ -1006,7 +1006,7 @@ function gadgetReady() {
 		
 		function local() {
 			var leo = home.leo;
-			if( !( leo.title || leo.phone || leo.email  ) ) return '';
+			if( ! leo  ||  !( leo.title || leo.phone || leo.email  ) ) return '';
 			function remove( what ) {
 				if( title.indexOf(what) == 0 )
 					title = title.slice( what.length + 1 );
@@ -1625,7 +1625,7 @@ function gadgetReady() {
 	function findPrecinct( place, inputAddress ) {
 		log( 'Getting home map info' );
 		home.info = mapInfo( place );
-		if( ! home.info ) { sorry(); return; }
+		if( ! home.info  ||  home.info.accuracy < Accuracy.address ) { sorry(); return; }
 		currentAddress = place.address;
 		var location;
 		
@@ -1741,9 +1741,9 @@ function gadgetReady() {
 		setMap( home.info );
 		if( ! mapplet ) {
 			$map.hide();
-			$details.show();
-			$tabs.html( tabLinks('#detailsbox') );
+			$tabs.html( tabLinks('#detailsbox') ).show();
 		}
+		$details.show();
 		spin( false );
 	}
 	
