@@ -412,7 +412,7 @@ function initialMap() {
 	return balloon && vote && vote.info && vote.info.latlng;
 }
 
-var map, $jsmap, currentAddress;
+var map, currentAddress;
 var home, vote, scoop, interpolated;
 
 var key = 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRTZqGWfQErE9pT-IucjscazSdFnjBSzjqfxm1CQj7RDgG-OoyNfebJK0w';
@@ -617,8 +617,7 @@ function gadgetWrite() {
 		'<style type="text/css">',
 			'body.gadget { margin:0; padding:0; }',
 			'#wrapper, #wrapper * { ', fontStyle, ' }',
-			'#title { margin-bottom:4px; }',
-			'#title, #previewmap, #mapbox { overflow: auto; }',
+			'#previewmap, #mapbox { overflow: auto; }',
 			'.heading { font-weight:bold; font-size:110%; }',
 			params.home ? '.removehelp { display:none; }' : '',
 		'</style>'
@@ -633,7 +632,7 @@ function gadgetWrite() {
 				'.PollingPlaceSearchTitle { /*font-weight:bold;*/ /*font-size:110%;*/ /*padding-bottom:4px;*/ }',
 				//'.PollingPlaceSearchLabelBox { position:relative; float:left; margin-right:6px; }',
 				'.PollingPlaceSearchInput { width:100%; }',
-				'#title { margin-top:12px; }',
+				'#detailsbox { margin-top:12px; }',
 			'</style>'
 		);
 	}
@@ -648,9 +647,8 @@ function gadgetWrite() {
 				'#tablinks span, #tablinks a { margin-right:1em; }',
 				'#tablinks span { font-weight:bold; }',
 				'#tablinks a { color:#0000CC; }',
-				'#title { width:100%; }',
 				'#previewmap, #mapbox { width:100%; }',
-				'#detailsbox { overflow:scroll; overflow-x:auto; overflow-y:scroll; }',
+				'#detailsbox { width:100%; overflow:scroll; overflow-x:auto; overflow-y:scroll; }',
 			'</style>'
 		);
 	}
@@ -700,7 +698,7 @@ function gadgetWrite() {
 				'<div id="spinner">',
 				'</div>',
 				'<div id="wrapper">',
-					'<div id="title">',
+					'<div id="detailsbox">',
 						attribution,
 					'</div>',
 					'<div id="mapbox">',
@@ -715,8 +713,6 @@ function gadgetWrite() {
 			'</div>',
 			'<div id="wrapper">',
 				'<div id="tabs" style="display:none;">',
-				'</div>',
-				'<div id="title" style="display:none;">',
 				'</div>',
 				'<div id="previewmap">',
 				'</div>',
@@ -1044,7 +1040,7 @@ function gadgetReady() {
 	
 	function setVoteHtml() {
 		if( ! vote.info ) {
-			$title.append( log.print() );
+			$details.append( log.print() );
 			return;
 		}
 		//var largeMapLink = mapplet ? '' : S(
@@ -1059,7 +1055,7 @@ function gadgetReady() {
 			return formatLocation( vote.info, infowindow || ! mapplet ? 'vote-icon-50.png' : 'marker-red.png', 'Your Voting Location', infowindow, extra );
 		}
 		if( mapplet ) {
-			$title.append( longInfo() );
+			$details.append( longInfo() );
 			vote.html = S(
 				'<div style="', fontStyle, '">',
 					location( true ),
@@ -1070,8 +1066,7 @@ function gadgetReady() {
 		}
 		else {
 			$tabs.show();
-			$title.empty().show();
-			$details.html( longInfo() );
+			$details.html( longInfo() ).show();
 			vote.html = infoWrap( S(
 				log.print(),
 				electionHeader,
@@ -1141,8 +1136,7 @@ function gadgetReady() {
 		}
 		else {
 			GBrowserIsCompatible() && setTimeout( function() {
-				$jsmap = $('#jsmap');
-				map = new GMap2( $jsmap[0], {
+				map = new GMap2( $map[0], {
 					//googleBarOptions: { showOnLoad: true },
 					mapTypes: [
 						G_NORMAL_MAP,
@@ -1200,7 +1194,7 @@ function gadgetReady() {
 				new GMarker( a.place.info.latlng, { icon:icon });
 			map.addOverlay( marker );
 			var options = {
-				maxWidth: mapplet ? 350 : Math.min( $jsmap.width() - 100, 350 )
+				maxWidth: mapplet ? 350 : Math.min( $map.width() - 100, 350 )
 				/*, disableGoogleLinks:true*/
 			};
 			if( balloon ) {
@@ -1222,12 +1216,13 @@ function gadgetReady() {
 			if( ! mapplet ) {
 				$tabs.html( tabLinks( initialMap() ? '#mapbox' : '#detailsbox' ) );
 				GEvent.addListener( map, 'load', ready );
-				var top = $map.offset().top || $details.offset().top;
-				var height = Math.floor( $window.height() - top );
-				$map.height( height );
-				$jsmap.height( height );
-				$details.height( height );
-				if( ! initialMap() ) {
+				$map.css({ visibility:'hidden' });
+				setHeights();
+				if( initialMap() ) {
+					$map.show().css({ visibility:'visible' });
+					$details.hide();
+				}
+				else {
 					$map.hide();
 					$details.show();
 				}
@@ -1262,7 +1257,7 @@ function gadgetReady() {
 					);
 				}
 				//var center = latlng;
-				//var width = $jsmap.width(), height = $jsmap.height();
+				//var width = $map.width(), height = $map.height();
 				map.setCenter( latlng, a.zoom );
 			}
 			
@@ -1312,7 +1307,7 @@ function gadgetReady() {
 	function formatLocation( info, icon, title, infowindow, extra ) {
 		var special =
 			info.address != '703 E Grace St, Richmond, VA 23219' ? '' :
-			"Governor's Mansion<br />";
+			'<div style="font-size:90%; margin-bottom:0.25em;">GOVERNOR\'S MANSION</div>';
 		var size = infowindow || ! mapplet ? { width:50, height:50 } : { width:20, height:34 };
 		var locality = info.city ? info.city : info.county ? info.county + ' County' : '';
 		var addr = info.rawAddress ? S(
@@ -1506,6 +1501,7 @@ function gadgetReady() {
 			
 			submit: function() {
 				$previewmap.hide();
+				$map.hide().css({ visibility:'hidden' });
 				$search.slideUp( 250, function() {
 					$spinner.show();
 					submit( input.value );
@@ -1537,8 +1533,8 @@ function gadgetReady() {
 			map && map.clearOverlays();
 			currentAddress = addr;
 			$spinner.show();
-			$title.empty().show();
-			$map.empty().show();
+			$details.empty();
+			$map.empty();
 			closehelp( function() {
 				geocode( addr, function( geo ) {
 					var places = geo && geo.Placemark;
@@ -1546,26 +1542,26 @@ function gadgetReady() {
 					log( 'Number of matches: ' + n );
 					if( ! n ) {
 						spin( false );
-						$title.html( S(
+						detailsOnly( S(
 							log.print(),
 							'We did not find that address. Please check the spelling and try again. Be sure to include your zip code or city and state.'
-						)).show();
+						) );
 					}
 					else if( n == 1 ) {
 						findPrecinct( places[0], addr );
 					}
 					else {
 						if( places ) {
-							$title.append( S(
+							detailsOnly( S(
 								'<div id="radios">',
 									'<div id="radios" style="padding-top:0.5em;">',
 										'<strong>Select your address:</strong>',
 									'</div>',
 								'</div>'
-							)).show();
+							) );
 							var $radios = $('#radios');
 							$radios.append( formatPlaces(places) );
-							$('input:radio',$title).click( function() {
+							$details.find('input:radio').click( function() {
 								var radio = this;
 								spin( true );
 								setTimeout( function() {
@@ -1596,6 +1592,27 @@ function gadgetReady() {
 			$.getScript( 'http://maps.google.com/maps?file=api&v=2&async=2&callback=submitReady&key=' + key );
 	}
 	
+	function setHeights() {
+		var height = Math.floor( $window.height() - $tabs.height() );
+		$map.show().height( height );
+		$details.height( height );
+	}
+	
+	function detailsOnly( html ) {
+		if( ! mapplet ) {
+			$tabs.html( S(
+				'<div id="tablinks">',
+					'<span class="#detailsbox" style="display:none;"></span>',
+					'<a href="#Poll411Gadget">Search Again</a>',
+				'</div>'
+			) ).show();
+			setHeights();
+		}
+		$map.hide();
+		$details.html( html ).show();
+		spin( false );
+	}
+	
 	function formatHome( infowindow ) {
 		return S(
 			'<div style="', fontStyle, '">',
@@ -1608,7 +1625,7 @@ function gadgetReady() {
 	function findPrecinct( place, inputAddress ) {
 		log( 'Getting home map info' );
 		home.info = mapInfo( place );
-		if( ! home.info ) { $title.empty().show(); sorry(); return; }
+		if( ! home.info ) { sorry(); return; }
 		currentAddress = place.address;
 		var location;
 		
@@ -1716,7 +1733,7 @@ function gadgetReady() {
 	}
 	
 	function sorry() {
-		if( mapplet ) $title.append( log.print() + sorryHtml() );
+		$details.html( log.print() + sorryHtml() );
 		forceDetails();
 	}
 	
@@ -1752,8 +1769,7 @@ function gadgetReady() {
 		if( ! a ) return;
 		if( ! mapplet ) {
 			a.width = $map.width();
-			$map.height( a.height = Math.floor( $window.height() - $map.offset().top ) );
-			$map.html( formatMap(a) );
+			$map.show().height( a.height = Math.floor( $window.height() - $map.offset().top ) );
 		}
 		scooper( a.lat, a.lng, function( shop ) {
 			if( shop ) {
@@ -1895,13 +1911,6 @@ function gadgetReady() {
 		};
 	}
 	
-	function formatMap( a ) {
-		return S(
-			'<div id="jsmap" style="width:', a.width, 'px; height:', a.height, 'px;">',
-			'</div>'
-		);
-	}
-	
 	function setFiller() {
 		var filler = '';
 		if( iframe ) {
@@ -1941,17 +1950,15 @@ function gadgetReady() {
 		$( $tabs.find('span')[0].className ).hide();
 		if( tab == '#Poll411Gadget' ) {
 			$details.empty();
-			$tabs.html( tabLinks( initialMap() ? '#mapbox' : '#detailsbox' ) );
 			$tabs.hide();
-			$title.hide();
 			$spinner.css({ display:'none' });
-			$map.empty();
+			$map.empty().hide();
 			$search.slideDown( 250, function() {
 				$previewmap.show();
 			});
 		}
 		else {
-			$(tab).show();
+			$(tab).show().css({ visibility:'visible' });
 			$tabs.html( tabLinks(tab) );
 		}
 		return false;
@@ -1966,7 +1973,6 @@ function gadgetReady() {
 	
 	var $search,
 		$tabs = $('#tabs'),
-		$title = $('#title'),
 		$previewmap = $('#previewmap'),
 		$map = $('#mapbox'),
 		$details = $('#detailsbox'),
