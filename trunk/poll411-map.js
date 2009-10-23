@@ -483,28 +483,32 @@ function infoLinks() {
 var fullvips = 'state and local election officials from Iowa, Kansas, Maryland, Minnesota, Missouri, Montana, North Carolina, North Dakota, Ohio, Virginia, and Los Angeles County,';
 
 var attribution = S(
-	//'<div style="', fontStyle, ' color:#333;">',
-	//	'<div style="font-size:85%; margin-top:0.5em; border-top:1px solid #BBB; padding-top:1em;">',
-	//		'Developed with ',
-	//		'<span id="vips" style="font-size:100%;">',
-	//			'<a style="font-size:100%;" href="#" onclick="$(\'#vips\').html(fullvips); return false;">',
-	//				'state and local election officials',
-	//			'</a>',
-	//		'</span>',
-	//		' and the ',
-	//		'<a style="font-size:100%;" target="_blank" href="http://votinginfoproject.org/">',
-	//			'Voting Information Project',
-	//		'</a>',
-	//		'.',
-	//	'</div>',
-	//	'<div style="font-size:85%; margin-top:0.75em;">',
-	//		'In conjunction with the ',
-	//		'<a style="font-size:100%;" target="_blank" href="http://www.lwv.org/">',
-	//			'League of Women Voters',
-	//		'</a>',
-	//		'.',
-	//	'</div>',
-	//'</div>'
+	'<div style="', fontStyle, ' color:#333;">',
+		'<div style="font-size:85%; margin-top:0.5em; border-top:1px solid #BBB; padding-top:1em;">',
+			'Developed with ',
+			//'<span id="vips" style="font-size:100%;">',
+			//	'<a style="font-size:100%;" href="#" onclick="$(\'#vips\').html(fullvips); return false;">',
+			//		'state and local election officials',
+			//	'</a>',
+			//'</span>',
+			'the ',
+			'<a style="font-size:100%;" target="_blank" href="http://www.sbe.virginia.gov/">',
+				'Virginia State Board of Elections',
+			'</a>',
+			' and the ',
+			'<a style="font-size:100%;" target="_blank" href="http://www.votinginfoproject.org/">',
+				'Voting Information Project',
+			'</a>',
+			'.',
+		'</div>',
+		//'<div style="font-size:85%; margin-top:0.75em;">',
+		//	'In conjunction with the ',
+		//	'<a style="font-size:100%;" target="_blank" href="http://www.lwv.org/">',
+		//		'League of Women Voters',
+		//	'</a>',
+		//	'.',
+		//'</div>',
+	'</div>'
 );
 
 function formatInfoLocality( info ) {
@@ -913,7 +917,7 @@ function gadgetReady() {
 				) : '',
 				'<ul style="margin-top:0; margin-bottom:0;">',
 					election( 'gsx$areyouregistered', 'Are you registered to vote?' ),
-					election( 'gsx$registrationinfo', state.abbr == 'ND' ? '%S voter qualifications' : 'How to register in %S', true ),
+					//election( 'gsx$registrationinfo', state.abbr == 'ND' ? '%S voter qualifications' : 'How to register in %S', true ),
 					election( 'gsx$electionwebsite', '%S election website' ),
 				'</ul>',
 				'<div style="margin:1.0em 0 0.5em 0;">',
@@ -1070,12 +1074,12 @@ function gadgetReady() {
 			vote.html = infoWrap( S(
 				log.print(),
 				electionHeader,
-				homeAndVote()/*,
+				homeAndVote(),
 				'<div style="padding-top:1em">',
 				'</div>',
-				electionInfo(),
-				infoLinks(),
-				attribution*/
+				//electionInfo(),
+				//infoLinks(),
+				attribution
 			) );
 		}
 		
@@ -1748,7 +1752,7 @@ function gadgetReady() {
 	}
 	
 	function sorryHtml() {
-		return S(
+		return home && home.info ? S(
 			'<div>',
 				formatHome(),
 				'<div style="padding-top:0.75em">',
@@ -1761,6 +1765,10 @@ function gadgetReady() {
 				home.info ? electionInfo() : '',
 				infoLinks(),
 				attribution,
+			'</div>'
+		) : S(
+			'<div>',
+				'This application has information for the November 3 Virginia general election only (not for early voting or elections in other states).',
 			'</div>'
 		);
 	}
