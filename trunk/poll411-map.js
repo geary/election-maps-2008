@@ -113,6 +113,14 @@ function S() {
 	return Array.prototype.join.call( arguments, '' );
 }
 
+function linkIf( text, href, title ) {
+	return ! href ? text : S(
+		'<a target="_blank" href="', href, '" title="', title || text, '">',
+			text,
+		'</a>'
+	);
+}
+
 function fetch( url, callback, cache ) {
 	if( cache === false ) {
 		$.getJSON( url, callback );
@@ -1010,23 +1018,30 @@ function gadgetReady() {
 		
 		function local() {
 			var leo = home.leo;
-			if( ! leo  ||  !( leo.title || leo.phone || leo.email  ) ) return '';
-			function remove( what ) {
-				if( title.indexOf(what) == 0 )
-					title = title.slice( what.length + 1 );
-			}
-			var county = home.info.county;
-			var title = leo.title;
+			if( ! leo ) return '';
+			var a = leo.address || {}, o = leo.official || {};
 			return S(
-				'<div style="padding-top:0.5em;">',
-					'<div class="heading" style="padding-bottom:4px">',
-						'Local Voter Info',
+				'<div style="padding:0.5em 0;">',
+					'<div class="heading" style="font-size:110%; margin-bottom:0.75em">',
+						'Your Local Election Office',
+					'</div>',
+					'<div style="margin-bottom:0.15em;">',
+						linkIf( leo.name || '', leo.elections_url || '' ),
+					'</div>',
+						a.location_name || '',
+					'<div>',
+					'</div>',
+						a.line1 || '',
+					'<div>',
+						a.line2 || '',
 					'</div>',
 					'<div>',
-						title,
+						a.city && a.state ? S( a.city, ', ', a.state, ' ', a.zip || '' ) : '',
 					'</div>',
-					leo.phone ? S( '<div>', 'Phone: ', leo.phone, '</div>' ) : '',
-					leo.email ? S( '<div>', 'Email: ', linkto(leo.email), '</div>' ) : '',
+					'<div>',
+						o.phone ? 'Phone: ' + o.phone : '',
+					'</div>',
+					//leo.email ? S( '<div>', 'Email: ', linkto(leo.email), '</div>' ) : '',
 				'</div>'
 			);
 		}
@@ -1395,32 +1410,12 @@ function gadgetReady() {
 	}
 	
 	function getleo( info, callback ) {
-		callback({});
-		//var url = S( dataUrl, 'leo/', info.state.abbr, '.xml' );
-		//if( mapplet ) {
-		//	_IG_FetchXmlContent( url, function( xml ) {
-		//		if( typeof xml == 'string' ) {
-		//			callback({});
-		//			return;
-		//		}
-		//		function add( key ) { leo[key] = $.trim( $leo.find(key).text() ); }
-		//		var name = info.county.toUpperCase();
-		//		var counties = xml.getElementsByTagName( 'county_name' );
-		//		for( var i = 0, county;  county = counties[i++]; ) {
-		//			if( county.firstChild.nodeValue == name ) {
-		//				var $leo = $(county.parentNode);
-		//				var leo = {};
-		//				add('name'), add('title'), add('phone'), add('fax'), add('email');
-		//				callback( leo );
-		//				return;
-		//			}
-		//		}
-		//		callback({});
-		//	}, 300 );
-		//}
-		//else {
-		//	callback({});
-		//}
+		var url = S( dataUrl, 'leo/leo-', info.state.abbr.toLowerCase(), '.json' );
+		getJSON( url, function( state ) {
+			var city = info.city.toUpperCase();
+			var county = info.county.toUpperCase();
+			callback( state.cities[city] || state.counties[county] );
+		}, 300 );
 	}
 	
 	function lookup( inputAddress, address, callback, normalize ) {
