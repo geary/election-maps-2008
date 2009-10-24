@@ -1044,6 +1044,15 @@ function gadgetReady() {
 						o.phone ? 'Phone: ' + o.phone : '',
 					'</div>',
 					//leo.email ? S( '<div>', 'Email: ', linkto(leo.email), '</div>' ) : '',
+					!( a.line1 && a.city && a.state && a.zip ) ? '' :
+					directionsLink( home, {
+						info: {
+							address: S(
+								a.line1 ? a.line1 + ', ' : '',
+								a.city, ', ', a.state, ' ', a.zip
+							)
+						}
+					}),
 				'</div>'
 			);
 		}
