@@ -63,7 +63,7 @@ def convert
 		officials[id] = o = make_hash(
 			official,
 			#[ :name, :title, :phone, :fax, :email ]
-			[ :name, :title, :phone, :fax, :email ]
+			[ :phone, :fax ]
 		)
 		fix_phone o[:phone]
 		fix_phone o[:fax]
