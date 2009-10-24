@@ -1041,18 +1041,24 @@ function gadgetReady() {
 						a.city && a.state ? S( a.city, ', ', a.state, ' ', a.zip || '' ) : '',
 					'</div>',
 					'<div>',
-						o.phone ? 'Phone: ' + o.phone : '',
+						'<table cellspacing="0" cellpadding="0">',
+							o.phone ? '<tr><td>Phone:&nbsp;</td><td>' + o.phone + '</td></tr>' : '',
+							o.fax ? '<tr><td>Fax:&nbsp;</td><td>' + o.fax + '</td></tr>' : '',
+						'</table>',
 					'</div>',
 					//leo.email ? S( '<div>', 'Email: ', linkto(leo.email), '</div>' ) : '',
-					!( a.line1 && a.city && a.state && a.zip ) ? '' :
-					directionsLink( home, {
-						info: {
-							address: S(
-								a.line1 ? a.line1 + ', ' : '',
-								a.city, ', ', a.state, ' ', a.zip
-							)
-						}
-					}),
+					!( a.line1 && a.city && a.state && a.zip ) ? '' : S(
+						'<div style="margin-top:0.1em;">',
+						'</div>',
+						directionsLink( home, {
+							info: {
+								address: S(
+									a.line1 ? a.line1 + ', ' : '',
+									a.city, ', ', a.state, ' ', a.zip
+								)
+							}
+						})
+					),
 				'</div>'
 			);
 		}
