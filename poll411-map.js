@@ -953,7 +953,8 @@ function gadgetReady() {
 		//	);
 		return S(
 			'<div style="margin-bottom:0.5em;">',
-				'<div class="heading" style="font-size:110%; margin-bottom:0.75em;">',
+				candidates(),
+				'<div class="heading" style="font-size:110%; margin:0.75em 0;">',
 					'Vote by Mail',
 				'</div>',
 				'<div style="margin-bottom:1em;">',
@@ -985,7 +986,6 @@ function gadgetReady() {
 					'</span>',
 				'</div>',
 				local(),
-				candidates(),
 			'</div>'
 		);
 		
@@ -1116,7 +1116,7 @@ function gadgetReady() {
 		
 		function candidates() {
 			var contests = vote && vote.poll && vote.poll.contests;
-			if( ! contests ) return '';
+			if( ! contests  ||  ! contests.length ) return '';
 			contests = sortArrayBy( contests, 'ballot_placement', { numeric:true } );
 			return S(
 				'<div style="padding:0.5em 0;">',
