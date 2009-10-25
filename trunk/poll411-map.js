@@ -1089,11 +1089,13 @@ function gadgetReady() {
 							contest.ballot.candidate.randomized().mapjoin( function( candidate ) {
 								return S(
 									'<div>',
-										candidate.name,
-										'<span style="color:#444; font-size:85%;">',
-											' - ',
-											candidate.party,
-										'</span>',
+										linkIf( candidate.name, candidate.url ),
+										! candidate.party ? '' : S(
+											'<span style="color:#444; font-size:85%;">',
+												' - ',
+												candidate.party,
+											'</span>'
+										),
 									'</div>'
 								);
 							})
