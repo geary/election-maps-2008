@@ -105,6 +105,14 @@ Array.prototype.random = function() {
 	return this[ randomInt(this.length) ];
 };
 
+Array.prototype.randomized = function() {
+	var from = this.concat();
+	var to = [];
+	while( from.length )
+		to.push( from.splice( randomInt(from.length), 1 )[0] );
+	return to;
+};
+
 function randomInt( n ) {
 	return Math.floor( Math.random() * n );
 }
@@ -937,6 +945,7 @@ function gadgetReady() {
 					'</span>',
 				'</div>',
 				local(),
+				candidates(),
 			'</div>'
 		);
 		
@@ -1030,10 +1039,12 @@ function gadgetReady() {
 					'<div style="margin-bottom:0.15em;">',
 						linkIf( leo.name || '', leo.elections_url || '' ),
 					'</div>',
-						a.location_name || '',
 					'<div>',
+						a.location_name || '',
 					'</div>',
+					'<div>',
 						a.line1 || '',
+					'</div>',
 					'<div>',
 						a.line2 || '',
 					'</div>',
@@ -1059,6 +1070,38 @@ function gadgetReady() {
 							}
 						})
 					),
+				'</div>'
+			);
+		}
+		
+		function candidates() {
+			var contests = vote && vote.poll && vote.poll.contests;
+			return ! contests ? '' : S(
+				'<div style="padding:0.5em 0;">',
+					'<div class="heading" style="font-size:110%;">',
+						'General Election Candidates',
+					'</div>',
+					contests.concat().reverse().mapjoin( function( contest ) {
+						return S(
+							'<div class="heading" style="xfont-size:110%; margin-top:0.5em">',
+								contest.office,
+							'</div>',
+							contest.ballot.candidate.randomized().mapjoin( function( candidate ) {
+								return S(
+									'<div>',
+										candidate.name,
+										'<span style="color:#444; font-size:85%;">',
+											' - ',
+											candidate.party,
+										'</span>',
+									'</div>'
+								);
+							})
+						);
+					}),
+					'<div style="font-size:85%; font-style:italic; margin-top:0.75em">',
+						'Candidates for each office are listed in random order.',
+					'</div>',
 				'</div>'
 			);
 		}
@@ -1648,6 +1691,7 @@ function gadgetReady() {
 		getleo( home.info, function( leo ) {
 			home.leo = leo;
 			lookup( inputAddress, currentAddress, function( poll ) {
+				vote.poll = poll;
 				log( 'Polling errorcode: ' + poll.errorcode + ({
 					0: ' (exact match)',
 					1: ' (no match)',
