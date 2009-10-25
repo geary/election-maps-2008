@@ -1129,15 +1129,23 @@ function gadgetReady() {
 								contest.office,
 							'</div>',
 							contest.ballot.candidate.randomized().mapjoin( function( candidate ) {
+								function party() {
+									return candidate.party && ({
+										'Governor': true,
+										'Lieutenant Governor': true,
+										'Attorney General': true,
+										'Member House of Delegates': true
+									})[contest.office] ? S(
+										'<span style="color:#444; font-size:85%;">',
+											' - ',
+											candidate.party,
+										'</span>'
+									) : '';
+								}
 								return S(
 									'<div>',
 										linkIf( candidate.name, candidate.url ),
-										! candidate.party ? '' : S(
-											'<span style="color:#444; font-size:85%;">',
-												' - ',
-												candidate.party,
-											'</span>'
-										),
+										party(),
 									'</div>'
 								);
 							})
