@@ -1124,7 +1124,7 @@ function gadgetReady() {
 						'General Election Candidates',
 					'</div>',
 					'<div style="font-size:85%; font-style:italic; margin-top:0.5em">',
-						'Candidates for each office are listed in random order.',
+						'Candidates are listed in random order',
 					'</div>',
 					contests.mapjoin( function( contest ) {
 						return S(
