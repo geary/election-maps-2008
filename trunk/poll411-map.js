@@ -113,6 +113,46 @@ Array.prototype.randomized = function() {
 	return to;
 };
 
+function sortArrayBy( array, key, opt ) {
+	opt = opt || {};
+	// TODO: use code generation instead of multiple if statements?
+	var sep = unescape('%uFFFF');
+	
+	var i = 0, n = array.length, sorted = new Array( n );
+	if( opt.numeric ) {
+		if( typeof key == 'function' ) {
+			for( ;  i < n;  ++i )
+				sorted[i] = [ ( 1000000000000000 + key(array[i]) + '' ).slice(-15), i ].join(sep);
+		}
+		else {
+			for( ;  i < n;  ++i )
+				sorted[i] = [ ( 1000000000000000 + array[i][key] + '' ).slice(-15), i ].join(sep);
+		}
+	}
+	else {
+		if( typeof key == 'function' ) {
+			for( ;  i < n;  ++i )
+				sorted[i] = [ key(array[i]), i ].join(sep);
+		}
+		else if( opt.caseDependent ) {
+			for( ;  i < n;  ++i )
+				sorted[i] = [ array[i][key], i ].join(sep);
+		}
+		else {
+			for( ;  i < n;  ++i )
+				sorted[i] = [ array[i][key].toLowerCase(), i ].join(sep);
+		}
+	}
+	
+	sorted.sort();
+	
+	var output = new Array( n );
+	for( i = 0;  i < n;  ++i )
+		output[i] = array[ sorted[i].split(sep)[1] ];
+	
+	return output;
+}
+
 function randomInt( n ) {
 	return Math.floor( Math.random() * n );
 }
@@ -1076,12 +1116,14 @@ function gadgetReady() {
 		
 		function candidates() {
 			var contests = vote && vote.poll && vote.poll.contests;
-			return ! contests ? '' : S(
+			if( ! contests ) return '';
+			contests = sortArrayBy( contests, 'ballot_placement', { numeric:true } );
+			return S(
 				'<div style="padding:0.5em 0;">',
 					'<div class="heading" style="font-size:110%;">',
 						'General Election Candidates',
 					'</div>',
-					contests.concat().reverse().mapjoin( function( contest ) {
+					contests.mapjoin( function( contest ) {
 						return S(
 							'<div class="heading" style="xfont-size:110%; margin-top:0.5em">',
 								contest.office,
