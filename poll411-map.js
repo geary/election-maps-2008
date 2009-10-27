@@ -784,6 +784,8 @@ function gadgetWrite() {
 				'</div>',
 			'</div>'
 		);
+		
+		document.body.scroll = 'no';
 	}
 }
 
