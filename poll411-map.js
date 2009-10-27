@@ -495,7 +495,7 @@ function tabLinks( active ) {
 		'<div id="tablinks">',
 			tab( '#detailsbox', 'Details' ),
 			vote && vote.info && vote.info.latlng ? tab( '#mapbox', 'Map' ) : '',
-			tab( '#Poll411Gadget', 'Search' ),
+			pref.ready ? '' : tab( '#Poll411Gadget', 'Search' ),
 		'</div>'
 	);
 }
