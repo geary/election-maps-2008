@@ -1201,12 +1201,12 @@ function gadgetReady() {
 			vote.html = infoWrap( S(
 				log.print(),
 				electionHeader,
-				homeAndVote(),
-				'<div style="padding-top:1em">',
-				'</div>',
+				homeAndVote()//,
+				//'<div style="padding-top:1em">',
+				//'</div>',
 				//electionInfo(),
 				//infoLinks(),
-				attribution
+				//attribution
 			) );
 		}
 		
