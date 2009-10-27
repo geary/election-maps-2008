@@ -2053,7 +2053,7 @@ function gadgetReady() {
 		$tabs.click( function( event ) {
 			var $target = $(event.target);
 			if( $target.is('a') ) {
-				var tab = $target.attr('href');
+				var tab = $target.attr('href').replace( /^.*#/, '#' );
 				selectTab( tab );
 			}
 			return false;
