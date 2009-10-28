@@ -1528,6 +1528,10 @@ function gadgetReady() {
 		getJSON( url, function( state ) {
 			var city = info.city.toUpperCase();
 			var county = info.county.toUpperCase();
+			// Temp patch
+			var cc = { BEDFORD:1, FAIRFAX:1, FRANKLIN:1, RICHMOND:1, ROANOKE:1 };
+			if( city in cc  ||  county in cc ) { callback(); return; }
+			// End temp patch
 			callback( state.cities[city] || state.counties[county] );
 		}, 300 );
 	}
