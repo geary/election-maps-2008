@@ -1540,7 +1540,7 @@ function gadgetReady() {
 	
 	function geocode( address, callback ) {
 		var geocoder = new GClientGeocoder();
-		geocoder.getLocations( address, callback );
+		geocoder[ mapplet ? 'getLocationsAsync' : 'getLocations' ]( address, callback );
 	}
 	
 	function getleo( home, callback ) {
