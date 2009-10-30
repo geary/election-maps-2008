@@ -1539,11 +1539,8 @@ function gadgetReady() {
 	}
 	
 	function geocode( address, callback ) {
-		var url = S(
-			'http://maps.google.com/maps/geo?output=json&callback=?&oe=utf-8&gl=us&q=',
-			encodeURIComponent(address), '&key=', key
-		);
-		getJSON( url, callback, false );
+		var geocoder = new GClientGeocoder();
+		geocoder.getLocations( address, callback );
 	}
 	
 	function getleo( home, callback ) {
