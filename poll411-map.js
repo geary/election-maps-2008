@@ -1550,11 +1550,13 @@ function gadgetReady() {
 		var info = home.info;
 		var url = S( dataUrl, 'leo/', info.state.abbr.toLowerCase(), '-leo.json' );
 		getJSON( url, function( leo ) {
+			var city = info.city.toUpperCase(), county = info.county.toUpperCase();
 			home.leo = {
 				leo: leo,
-				city: leo.cities[ info.city.toUpperCase() ],
-				county: leo.counties[ info.county.toUpperCase() ]
+				city: leo.cities[city],
+				county: leo.counties[county] || leo.cities[county]
 			};
+			if( leo.city == leo.county ) delete leo.county;
 			callback();
 		}, 300 );
 	}
