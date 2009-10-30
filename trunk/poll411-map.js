@@ -1849,11 +1849,17 @@ function gadgetReady() {
 					return;
 				}
 				try {
-					var abbr = places[0].AddressDetails.Country.AdministrativeArea.AdministrativeAreaName;
+					var details = places[0].AddressDetails;
+					var abbr = details.Country.AdministrativeArea.AdministrativeAreaName;
 					var st = statesByName[abbr] || statesByAbbr[ abbr.toUpperCase() ];
 					log( 'Polling state: ' + st.name );
 					if( st != home.info.state ) {
 						log( 'Polling place geocoded to wrong state' );
+						setNoGeo( location, rawAddress );
+						return;
+					}
+					if( details.Accuracy < Accuracy.intersection ) {
+						log( 'Polling place geocoding not accurate enough' );
 						setNoGeo( location, rawAddress );
 						return;
 					}
