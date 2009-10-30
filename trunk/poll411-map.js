@@ -1573,6 +1573,9 @@ function gadgetReady() {
 	
 	function getJSON( url, callback, cache ) {
 		fetch( url, function( text ) {
+			// TEMP
+			if( text == '{"errorcode": 1,"locations": [],"contests": [],"locality": }' )
+				text = '{"errorcode": 1,"locations": [],"contests": [],"locality":null }';
 			var json = typeof text == 'object' ? text : eval( '(' + text + ')' );
 			callback( json );
 		}, cache );
