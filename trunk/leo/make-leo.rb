@@ -5,8 +5,8 @@ require 'hpricot'
 require 'json'
 
 STATE = 'va'  # 2009 temp
-XML_PATH = "leo-#{STATE}.xml"
-JSON_PATH = "leo-#{STATE}.json"
+XML_PATH = "#{STATE}-leo.xml"
+JSON_PATH = "#{STATE}-leo.json"
 
 class Quit < Exception
 end
@@ -20,32 +20,12 @@ def make_hash( root, fields )
 	result
 end
 
-def swapperoo( id )
-	
-	id == '47515' ? '47019' :
-	id == '47019' ? '47515' :
-
-	id == '47600' ? '47059' :
-	id == '47059' ? '47600' :
-
-	id == '47620' ? '47067' :
-	id == '47067' ? '47620' :
-
-	id == '47760' ? '47159' :
-	id == '47159' ? '47760' :
-
-	id == '47770' ? '47161' :
-	id == '47161' ? '47770' :
-	
-	id
-
-end
-
 def fix_phone text
 	text.sub!( /^(\d{3})(\d{3})(\d{4})$/, '(\1) \2-\3' ) if text
 end
 
 def convert
+	localities = {}
 	counties = {}
 	cities = {}
 	admins = {}
@@ -95,15 +75,16 @@ def convert
 		type = (locality/:type).text
 		#admin = admins[ (locality/:election_administration_id).text ]
 		admin_id = (locality/:election_administration_id).text
-		admin_id = swapperoo admin_id
 		admin = admins[admin_id]
 		admin_name = admin[:name]
+		id = locality[:id]
+		localities[id] = admin
 		oops = false
 		if type == 'COUNTY'
-			counties[ name.sub( / COUNTY$/, '' ) ] = admin
+			counties[ name.sub( / COUNTY$/, '' ) ] = id
 			oops = ! admin_name.match( / County General Registrar$/ )
 		elsif type == 'Independent City'
-			cities[ name.sub( / CITY$/, '' ) ] = admin
+			cities[ name.sub( / CITY$/, '' ) ] = id
 			oops = ! admin_name.match( / City General Registrar$/ )
 		else
 			print "#{name} is a #{type}, not a city or a county!\n"
@@ -117,6 +98,7 @@ def convert
 	
 	json = {
 		:state => STATE,
+		:localities => localities,
 		:cities => cities,
 		:counties => counties
 	}.to_json
