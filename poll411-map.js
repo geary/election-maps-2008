@@ -987,7 +987,7 @@ function gadgetReady() {
 						state.gsx$hotline.$t,
 					'</span>',
 				'</div>',
-				local(),
+				formatLeo(),
 			'</div>'
 		);
 		
@@ -1069,49 +1069,72 @@ function gadgetReady() {
 			);
 		}
 		
-		function local() {
+		function formatLeo() {
 			var leo = home.leo;
-			if( ! leo ) return '';
-			var a = leo.address || {}, o = leo.official || {};
+			return(
+				! leo ? '' :
+				leo.locality ? formatLeoList([ leo.locality ]) :
+				formatLeoList([ leo.city, leo.county ])
+			);
+		}
+		
+		function formatLeoList( ids ) {
+			var out = [];
+			ids && ids.forEach( function( id ) {
+				var leo = home.leo.leo.localities[id];
+				if( ! leo ) return;
+				var a = leo.address || {}, o = leo.official || {};
+				out.push( S(
+					'<div>',
+						'<div style="margin-bottom:0.15em;">',
+							linkIf( leo.name || '', leo.elections_url || '' ),
+						'</div>',
+						'<div>',
+							a.location_name || '',
+						'</div>',
+						'<div>',
+							a.line1 || '',
+						'</div>',
+						'<div>',
+							a.line2 || '',
+						'</div>',
+						'<div>',
+							a.city && a.state ? S( a.city, ', ', a.state, ' ', a.zip || '' ) : '',
+						'</div>',
+						'<div>',
+							'<table cellspacing="0" cellpadding="0">',
+								o.phone ? '<tr><td>Phone:&nbsp;</td><td>' + o.phone + '</td></tr>' : '',
+								o.fax ? '<tr><td>Fax:&nbsp;</td><td>' + o.fax + '</td></tr>' : '',
+							'</table>',
+						'</div>',
+						//leo.email ? S( '<div>', 'Email: ', linkto(leo.email), '</div>' ) : '',
+						!( a.line1 && a.city && a.state && a.zip ) ? '' : S(
+							'<div style="margin-top:0.1em;">',
+							'</div>',
+							directionsLink( home, {
+								info: {
+									address: S(
+										a.line1 ? a.line1 + ', ' : '',
+										a.city, ', ', a.state, ' ', a.zip
+									)
+								}
+							})
+						),
+					'</div>'
+				) );
+			});
+			if( ! out.length ) return '';
 			return S(
-				'<div style="padding:0.5em 0;">',
+				'<div style="padding:0.5em 0 0.75em 0;">',
 					'<div class="heading" style="font-size:110%; margin-bottom:0.75em">',
 						'Your Local Election Office',
 					'</div>',
-					'<div style="margin-bottom:0.15em;">',
-						linkIf( leo.name || '', leo.elections_url || '' ),
-					'</div>',
-					'<div>',
-						a.location_name || '',
-					'</div>',
-					'<div>',
-						a.line1 || '',
-					'</div>',
-					'<div>',
-						a.line2 || '',
-					'</div>',
-					'<div>',
-						a.city && a.state ? S( a.city, ', ', a.state, ' ', a.zip || '' ) : '',
-					'</div>',
-					'<div>',
-						'<table cellspacing="0" cellpadding="0">',
-							o.phone ? '<tr><td>Phone:&nbsp;</td><td>' + o.phone + '</td></tr>' : '',
-							o.fax ? '<tr><td>Fax:&nbsp;</td><td>' + o.fax + '</td></tr>' : '',
-						'</table>',
-					'</div>',
-					//leo.email ? S( '<div>', 'Email: ', linkto(leo.email), '</div>' ) : '',
-					!( a.line1 && a.city && a.state && a.zip ) ? '' : S(
-						'<div style="margin-top:0.1em;">',
-						'</div>',
-						directionsLink( home, {
-							info: {
-								address: S(
-									a.line1 ? a.line1 + ', ' : '',
-									a.city, ', ', a.state, ' ', a.zip
-								)
-							}
-						})
+					out.length < 2 ? '' : S(
+						'<div style="font-size:85%; font-style:italic; margin-bottom:0.75em;">',
+							'Your local election office may be either of the following:',
+						'</div>'
 					),
+					out.join('<div style="padding:0.5em;"></div>'),
 				'</div>'
 			);
 		}
@@ -1523,16 +1546,16 @@ function gadgetReady() {
 		getJSON( url, callback, false );
 	}
 	
-	function getleo( info, callback ) {
-		var url = S( dataUrl, 'leo/leo-', info.state.abbr.toLowerCase(), '.json' );
-		getJSON( url, function( state ) {
-			var city = info.city.toUpperCase();
-			var county = info.county.toUpperCase();
-			// Temp patch
-			var cc = { BEDFORD:1, FAIRFAX:1, FRANKLIN:1, RICHMOND:1, ROANOKE:1 };
-			if( city in cc  ||  county in cc ) { callback(); return; }
-			// End temp patch
-			callback( state.cities[city] || state.counties[county] );
+	function getleo( home, callback ) {
+		var info = home.info;
+		var url = S( dataUrl, 'leo/', info.state.abbr.toLowerCase(), '-leo.json' );
+		getJSON( url, function( leo ) {
+			home.leo = {
+				leo: leo,
+				city: leo.cities[ info.city.toUpperCase() ],
+				county: leo.counties[ info.county.toUpperCase() ]
+			};
+			callback();
 		}, 300 );
 	}
 	
@@ -1749,8 +1772,7 @@ function gadgetReady() {
 		currentAddress = place.address;
 		var location;
 		
-		getleo( home.info, function( leo ) {
-			home.leo = leo;
+		getleo( home, function() {
 			lookup( inputAddress, currentAddress, function( poll ) {
 				vote.poll = poll;
 				log( 'Polling errorcode: ' + poll.errorcode + ({
@@ -1778,6 +1800,7 @@ function gadgetReady() {
 						}
 						return;
 					}
+					home.leo.locality = '' + poll.locality;
 					var ok = address.match( /(,| +)\d\d\d\d\d(-\d\d\d\d)? *$/i );
 					if( ! ok ) {
 						var match = address.match( /(,| +) *([a-z][a-z])(,| *)$/i );
