@@ -1113,6 +1113,7 @@ function gadgetReady() {
 							'</div>',
 							directionsLink( home, {
 								info: {
+									accuracy: Accuracy.address,
 									address: S(
 										a.line1 ? a.line1 + ', ' : '',
 										a.city, ', ', a.state, ' ', a.zip
@@ -1185,9 +1186,16 @@ function gadgetReady() {
 	}
 	
 	function directionsLink( from, to ) {
-		return S(
+		from = from.info;
+		to = to.info;
+		//console.log( 'directions', '('+from.accuracy+')', from.address, '-', '('+to.accuracy+')', to.address );
+		return to.accuracy < Accuracy.intersection ? '' : S(
 			'<div>',
-				'<a target="_blank" href="http://maps.google.com/maps?f=d&saddr=', encodeURIComponent(from.info.address), '&daddr=', encodeURIComponent(to.info.address), '&hl=en&mra=ls&ie=UTF8&iwloc=A&iwstate1=dir">',
+				'<a target="_blank" href="http://maps.google.com/maps?f=d&saddr=',
+					from.accuracy < Accuracy.street ? '' : encodeURIComponent(from.address),
+					'&daddr=', encodeURIComponent(to.address),
+					'&hl=en&mra=ls&ie=UTF8&iwloc=A&iwstate1=dir"',
+				'>',
 					'Get directions',
 				'</a>',
 			'</div>'
@@ -1690,7 +1698,7 @@ function gadgetReady() {
 						) );
 					}
 					else if( n == 1 ) {
-						findPrecinct( places[0], addr );
+						findPrecinct( geo, places[0], addr );
 					}
 					else {
 						if( places ) {
@@ -1708,7 +1716,7 @@ function gadgetReady() {
 								spin( true );
 								setTimeout( function() {
 									function ready() {
-										findPrecinct( places[ radio.id.split('-')[1] ] );
+										findPrecinct( geo, places[ radio.id.split('-')[1] ] );
 									}
 									if( $.browser.msie ) {
 										$radios.hide();
@@ -1764,9 +1772,9 @@ function gadgetReady() {
 		);
 	}
 	
-	function findPrecinct( place, inputAddress ) {
+	function findPrecinct( geo, place, inputAddress ) {
 		log( 'Getting home map info' );
-		home.info = mapInfo( place );
+		home.info = mapInfo( geo, place );
 		if( ! home.info  /*||  home.info.accuracy < Accuracy.address*/ ) { sorry(); return; }
 		currentAddress = place.address;
 		var location;
@@ -1814,13 +1822,13 @@ function gadgetReady() {
 					log( 'Modified address:', address );
 					geocode( address, function( geo ) {
 						var places = geo && geo.Placemark;
-						set( places, location, address, rawAddress );
+						set( geo, places, location, address, rawAddress );
 					});
 				}
 			});
 		});
 		
-		function set( places, location, address, rawAddress ) {
+		function set( geo, places, location, address, rawAddress ) {
 			//if( places && places.length == 1 ) {
 			if( places && places.length >= 1 ) {
 				if( places.length > 1  &&  address != '1500 E Main St  Richmond, VA 23219-3634' ) {
@@ -1854,7 +1862,7 @@ function gadgetReady() {
 					log( 'Error getting polling state' );
 				}
 				log( 'Getting polling place map info' );
-				setMap( vote.info = mapInfo( places[0], location, rawAddress ) );
+				setMap( vote.info = mapInfo( geo, places[0], location, rawAddress ) );
 				return;
 			}
 			setNoGeo( location, rawAddress );
@@ -1992,7 +2000,7 @@ function gadgetReady() {
 	var Kind = [ '', 'Country', 'State', 'County', 'City', 'Neighborhood', 'Neighborhood', 'Neighborhood', 'Home', 'Home' ];
 	var Zoom = [ 4, 5, 6, 10, 11, 12, 13, 14, 15, 15 ];
 	
-	function mapInfo( place, extra, rawAddress ) {
+	function mapInfo( geo, place, extra, rawAddress ) {
 		extra = extra || {};
 		var details = place.AddressDetails;
 		var accuracy = Math.min( details.Accuracy, Accuracy.address );
@@ -2037,6 +2045,8 @@ function gadgetReady() {
 		var formatted = formatAddress( place.address );
 		log( 'Formatted address:', formatted );
 		return {
+			geo: geo,
+			place: place,
 			address: formatted,
 			rawAddress: rawAddress,
 			location: extra.location,
