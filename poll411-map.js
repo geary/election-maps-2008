@@ -1574,8 +1574,8 @@ function gadgetReady() {
 	function getJSON( url, callback, cache ) {
 		fetch( url, function( text ) {
 			// TEMP
-			if( text == '{"errorcode": 1,"locations": [],"contests": [],"locality": }' )
-				text = '{"errorcode": 1,"locations": [],"contests": [],"locality":null }';
+			if( typeof text == 'string' ) text = text.replace( '"locality": }', '"locality":null }' );
+			// END TEMP
 			var json = typeof text == 'object' ? text : eval( '(' + text + ')' );
 			callback( json );
 		}, cache );
