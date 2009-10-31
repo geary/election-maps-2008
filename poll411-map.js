@@ -1225,7 +1225,12 @@ function gadgetReady() {
 		//);
 		var extra = home.info.latlng && vote.info.latlng ? directionsLink( home, vote ) : '';
 		function location( infowindow ) {
-			return formatLocation( vote.info, infowindow || ! mapplet ? 'vote-icon-50.png' : 'marker-red.png', 'Your Voting Location', infowindow, extra );
+			return formatLocation( vote.info,
+				infowindow
+					? { url:'vote-icon-50.png', width:50, height:50 }
+					: { url:'vote-pin-icon.png', width:29, height:66 },
+				'Your Voting Location', infowindow, extra
+			);
 		}
 		if( mapplet ) {
 			$details.append( longInfo() );
@@ -1481,7 +1486,6 @@ function gadgetReady() {
 		var special =
 			info.address != '703 E Grace St, Richmond, VA 23219' ? '' :
 			'<div style="font-size:90%; margin-bottom:0.25em;">GOVERNOR\'S MANSION</div>';
-		var size = infowindow || ! mapplet ? { width:50, height:50 } : { width:20, height:34 };
 		var locality = info.city ? info.city : info.county ? info.county + ' County' : '';
 		var addr = info.rawAddress ? S(
 			'<div>',
@@ -1510,11 +1514,11 @@ function gadgetReady() {
 				'<div style="font-weight:bold; font-size:110%;">',
 					title,
 				'</div>',
-				'<div style="padding-top:0.5em;">',
+				'<div style="padding:0.5em 0;">',
 					'<table cellpadding="0" cellspacing="0">',
 						'<tr valign="top">',
-							'<td style="width:20px; padding-right:.75em;">',
-								'<img src="', cacheUrl( baseUrl + icon ), '" style="width:', size.width, 'px; height:', size.height, 'px;" />',
+							'<td style="width:20px; padding:2px .75em 0 0;">',
+								'<img src="', cacheUrl( baseUrl + icon.url ), '" style="width:', icon.width, 'px; height:', icon.height, 'px;" />',
 							'</td>',
 							'<td>',
 								addr,
@@ -1775,7 +1779,12 @@ function gadgetReady() {
 	function formatHome( infowindow ) {
 		return S(
 			'<div style="', fontStyle, '">',
-				formatLocation( home.info, infowindow || ! mapplet ? 'home-icon-50.png' : 'marker-green.png', 'Your ' + home.info.kind, infowindow ),
+				formatLocation( home.info,
+					infowindow
+						? { url:'home-icon-50.png', width:50, height:50 }
+						: { url:'home-pin-icon.png', width:29, height:57 },
+					'Your ' + home.info.kind, infowindow
+				),
 				//extra ? electionInfo() : '',
 			'</div>'
 		);
