@@ -1259,7 +1259,7 @@ function gadgetReady() {
 		
 		function homeAndVote() {
 			return vote.info.latlng ? S(
-				location(),
+				location( true ),
 				'<div style="padding-top:0.75em;">',
 					'<a href="#detailsbox" onclick="return selectTab(\'#detailsbox\');">View Full Details</a>',
 				'</div>'
