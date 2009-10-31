@@ -483,6 +483,10 @@ var electionHeader = S(
 	'</div>'
 );
 
+function includeMap() {
+	return vote && vote.info && vote.info.latlng;
+}
+
 function tabLinks( active ) {
 	function tab( id, label ) {
 		return id == active ? S(
@@ -494,7 +498,7 @@ function tabLinks( active ) {
 	return S(
 		'<div id="tablinks">',
 			tab( '#detailsbox', 'Details' ),
-			vote && vote.info && vote.info.latlng ? tab( '#mapbox', 'Map' ) : '',
+			includeMap() ? tab( '#mapbox', 'Map' ) : '',
 			pref.ready ? '' : tab( '#Poll411Gadget', 'Search' ),
 		'</div>'
 	);
@@ -1509,8 +1513,9 @@ function gadgetReady() {
 				info.zip ? ' ' + info.zip : '',
 			'</div>'
 		);
+		var select = includeMap() ? ' onclick="return maybeSelectTab(\'#mapbox\',event);" style="cursor:pointer;"' : ''
 		return S(
-			'<div onclick="return maybeSelectTab(\'#mapbox\',event);" style="cursor:pointer;">',
+			'<div', select, '>',
 				'<div style="font-weight:bold; font-size:110%;">',
 					title,
 				'</div>',
