@@ -835,11 +835,13 @@ function gadgetReady() {
 		var warning = interpolated ? S(
 			registered,
 			'Verify your voting location with your local election officials. ',
-			'This voting location is for the November 3 election only (not for early voting), and it is an estimate based on nearby addresses. ',
+			//'This voting location is for the November 3 election only (not for early voting), and it is an estimate based on nearby addresses. ',
+			'This voting location is for the November 3 election only, and it is an estimate based on nearby addresses. ',
 			'It may be incorrect and may change before election day.'
 		) : S(
 			registered,
-			'This voting location is for the November 3 election only (not for early voting), and it is only for voters registered at the home address entered. ',
+			//'This voting location is for the November 3 election only (not for early voting), and it is only for voters registered at the home address entered. ',
+			'This voting location is for the November 3 election only, and it is only for voters registered at the home address entered. ',
 			'Please verify this voting location with your local election officials to ensure that it is correct.'
 		);
 		return S(
@@ -941,7 +943,8 @@ function gadgetReady() {
 		//w.document.close();
 		
 		var absenteeLinkTitle = {
-			'Early': 'Absentee ballot and early voting information',
+			//'Early': 'Absentee ballot and early voting information',
+			'Early': 'Absentee ballot information',
 			'Mail': 'Vote by mail information'
 		}[state.gsx$absentee.$t] || 'Get an absentee ballot';
 		
@@ -1962,7 +1965,8 @@ function gadgetReady() {
 			'</div>'
 		) : S(
 			'<div>',
-				'This application has information for the November 3 Virginia general election only (not for early voting or elections in other states).',
+				//'This application has information for the November 3 Virginia general election only (not for early voting or elections in other states).',
+				'This application has information for the November 3 Virginia general election only, not for elections in other states.',
 			'</div>'
 		);
 	}
