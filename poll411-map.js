@@ -380,7 +380,7 @@ for( var name in pref ) pref[name] = prefs.getString(name) || pref[name];
 if( pref.scoop1 ) pref.scoop = pref.scoop1;
 pref.ready = prefs.getBool('submit');
 
-pref.prompt = 'Find your polling place information. Enter the *home* address where you are registered to vote:';
+pref.prompt = 'Find your polling place information. Enter the complete *home* address where you are registered to vote:';
 //pref.example = '1600 Pennsylvania Ave, Washington DC 20006';
 pref.example = ( mapplet ? '' : 'Ex: ' ) + '703 E Grace St 23219';
 
@@ -739,7 +739,7 @@ function gadgetWrite() {
 					'<div class="PollingPlaceSearchTitle removehelp">',
 						'<div style="margin-bottom:4px;">',
 							'Find your Virginia voting location and more.<br />',
-							'Enter the <strong>home</strong> address where you are registered to vote:',
+							'Enter the complete <strong>home</strong> address where you are registered to vote:',
 						'</div>',
 					'</div>',
 					'<!--<div id="PollingPlaceSearchSpinner" class="PollingPlaceSearchSpinner">-->',
