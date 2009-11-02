@@ -483,7 +483,7 @@ function initialMap() {
 	return balloon && vote && vote.info && vote.info.latlng;
 }
 
-var map, currentAddress;
+var map;
 var home, vote, scoop, interpolated;
 
 var key = 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRTZqGWfQErE9pT-IucjscazSdFnjBSzjqfxm1CQj7RDgG-OoyNfebJK0w';
@@ -1597,7 +1597,20 @@ function gadgetReady() {
 		}, 300 );
 	}
 	
-	function lookup( inputAddress, address, callback, normalize ) {
+	function pollingApi( address, normalize, callback ) {
+		var url = S(
+			'http://pollinglocation.apis.google.com/?',
+			normalize ? 'normalize=1&' : '',
+			'q=', encodeURIComponent(address)
+		);
+		getJSON( url, callback );
+	}
+	
+	function lookupPollingPlace( inputAddress, info, callback ) {
+		function ok( poll ) { return poll.errorcode == 0  ||  poll.errorcode == 3; }
+		function countyAddress() {
+			return S( info.street, ', ', info.county, ', ', info.state.abbr, ' ', info.zip );
+		}
 		//if( address == '1600 Pennsylvania Ave NW, Washington, DC 20006, USA' ) {
 		//	callback({
 		//		errorcode: 0,
@@ -1609,16 +1622,16 @@ function gadgetReady() {
 		//	});
 		//	return;
 		//}
-		var url = S(
-			'http://pollinglocation.apis.google.com/?',
-			normalize ? 'normalize=1&' : '',
-			'q=', encodeURIComponent(address)
-		);
-		getJSON( url, function( poll ) {
-			if( poll.errorcode != 0  &&  poll.errorcode != 3  &&  ! normalize  &&  inputAddress )
-				lookup( inputAddress, inputAddress, callback, true );
-			else
+		pollingApi( info.place.address, false, function( poll ) {
+			if( ok(poll) )
 				callback( poll );
+			else
+				pollingApi( countyAddress(), false, function( poll ) {
+					if( ok(poll)  ||  ! inputAddress  )
+						callback( poll );
+					else
+						pollingApi( inputAddress, true, callback );
+				});
 		});
 	}
 	
@@ -1712,7 +1725,6 @@ function gadgetReady() {
 			home = {};
 			vote = {};
 			map && map.clearOverlays();
-			currentAddress = addr;
 			$spinner.show();
 			$details.empty();
 			$map.empty();
@@ -1812,11 +1824,10 @@ function gadgetReady() {
 		log( 'Getting home map info' );
 		home.info = mapInfo( geo, place );
 		if( ! home.info  /*||  home.info.accuracy < Accuracy.address*/ ) { sorry(); return; }
-		currentAddress = place.address;
 		var location;
 		
 		getleo( home, function() {
-			lookup( inputAddress, currentAddress, function( poll ) {
+			lookupPollingPlace( inputAddress, home.info, function( poll ) {
 				vote.poll = poll;
 				log( 'Polling errorcode: ' + poll.errorcode + ({
 					0: ' (exact match)',
