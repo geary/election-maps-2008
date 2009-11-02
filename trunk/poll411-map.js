@@ -843,7 +843,7 @@ function gadgetReady() {
 			'Please verify this voting location with your local election officials to ensure that it is correct.'
 		);
 		return S(
-			'<div style="padding-top:1em;">',
+			'<div style="padding-top:.75em; font-size:90%;">',
 				'<span style="font-weight:bold;">',
 					'Important: ',
 				'</span>',
