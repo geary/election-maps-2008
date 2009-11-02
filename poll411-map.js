@@ -1425,22 +1425,34 @@ function gadgetReady() {
 			
 			if( ! hi ) return;
 			//if( scoop ) {
-			if( vi  &&  vi.latlng  &&  ! mapplet ) {
-				//si = scoop.info;
-				var bounds = new GLatLngBounds();
-				//bounds.extend( si.latlng );
-				bounds.extend( hi.latlng );
-				if( vi ) bounds.extend( vi.latlng );
-				var ne = bounds.getNorthEast();
-				var sw = bounds.getSouthWest();
-				var n = ne.lat(), e = ne.lng(), s = sw.lat(), w = sw.lng();
-				var  latpad = ( n - s ) / 8;
-				var lngpad = ( e - w )  / 8;
-				bounds = new GLatLngBounds(
-					new GLatLng( s - latpad, w - lngpad ),
-					new GLatLng( n + latpad*2, e + lngpad )
+			if( vi  &&  vi.latlng ) {
+				var directions = new GDirections( null/*, $directions[0]*/ );
+				GEvent.addListener( directions, 'load', function() {
+					GAsync( directions, 'getBounds', 'getPolyline', function( bounds, polyline ) {
+						var ne = bounds.getNorthEast();
+						var sw = bounds.getSouthWest();
+						var n = ne.lat(), e = ne.lng(), s = sw.lat(), w = sw.lng();
+						var  latpad = ( n - s ) / 4;
+						var lngpad = ( e - w )  / 4;
+						bounds = new GLatLngBounds(
+							new GLatLng( s - latpad, w - lngpad ),
+							new GLatLng( n + latpad*2, e + lngpad )
+						);
+						GAsync( map, 'getBoundsZoomLevel', [ bounds ], function( zoom ) {
+							map.setCenter( bounds.getCenter(), Math.min(zoom,16) );
+							map.addOverlay( polyline );
+						});
+					});
+				});
+				directions.loadFromWaypoints(
+					[
+						S( 'Your Home (', hi.address, ')@', hi.lat.toFixed(6), ',', hi.lng.toFixed(6) ),
+						S( 'Your Voting Location (', vi.address, ')@', vi.lat.toFixed(6), ',', vi.lng.toFixed(6) )
+					],
+					{
+						getPolyline: true
+					}
 				);
-				map.setCenter( bounds.getCenter(), map.getBoundsZoomLevel(bounds) );
 			}
 			else {
 				// Initial position with marker centered on home, or halfway between home and voting place
@@ -1473,24 +1485,6 @@ function gadgetReady() {
 				map.addControl( new GSmallMapControl );
 				map.addControl( new GMapTypeControl );
 				//map.enableGoogleBar();
-			}
-			
-			if( vi && vi.latlng ) {
-				var directions = new GDirections( null/*, $directions[0]*/ );
-				GEvent.addListener( directions, 'load', function() {
-					GAsync( directions, 'getPolyline', function( polyline ) {
-						map.addOverlay( polyline );
-					});
-				});
-				directions.loadFromWaypoints(
-					[
-						S( 'Your Home (', hi.address, ')@', hi.lat.toFixed(6), ',', hi.lng.toFixed(6) ),
-						S( 'Your Voting Location (', vi.address, ')@', vi.lat.toFixed(6), ',', vi.lng.toFixed(6) )
-					],
-					{
-						getPolyline: true
-					}
-				);
 			}
 			
 			if( mapplet )
