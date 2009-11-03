@@ -1591,7 +1591,7 @@ function gadgetReady() {
 			};
 			if( leo.city == leo.county ) delete leo.county;
 			callback();
-		}, 300 );
+		}, 60 );
 	}
 	
 	function pollingApi( address, normalize, callback ) {
