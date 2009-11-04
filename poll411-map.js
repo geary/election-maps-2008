@@ -40,7 +40,7 @@ document.write(
 			'<a target="_blank" href="http://www.votinginformationproject.org/" title="Voting Information Project">Voting Information Project</a>',
 		'</div>',
 		'<div style="margin-top:1em; font-style:italic; font-size:90%;">',
-			'Thanks to the Virginia State Board of Elections for providing ballot data, polling place locations and local election official information.',
+			'Thanks to the Virginia State Board of Elections for providing ballot data, polling place locations, and local election official information.',
 		'</div>',
 	'</div>'
 );
