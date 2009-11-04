@@ -33,7 +33,7 @@ document.write(
 			'<a target="_blank" href="http://www.sbe.virginia.gov/cms/Election_Information/Election_Results/2009/November_General_Election.html" title="Virginia Election Results Map">Virginia Election Results Map</a>',
 		'</div>',
 		'<div style="margin-top:1em;">',
-			'<a target="_blank" href="https://www.voterinfo.sbe.virginia.gov/election/DATA/2009/37C2EDEB-FACB-44C1-AF70-05FB616DCD62/UnOfficial/3_s.shtml" title="Full Virginia Election Results">Full Virginia Election Results</a>',
+			'<a target="_blank" href="https://www.voterinfo.sbe.virginia.gov/election/DATA/2009/37C2EDEB-FACB-44C1-AF70-05FB616DCD62/UnOfficial/2_s.shtml" title="Full Virginia Election Results">Full Virginia Election Results</a>',
 		'</div>',
 		'<div style="margin-top:1em;">',
 			'Learn more about the ',
