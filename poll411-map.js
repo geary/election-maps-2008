@@ -9,7 +9,7 @@
 
 var opt = window.gadget ? gadget : window.mapplet ? mapplet : {};
 
-if( 0 ) {
+if( 1 ) {
 
 (function() {
 
@@ -29,6 +29,19 @@ document.write(
 				'</td>',
 			'</tr>',
 		'</table>',
+		'<div style="margin-top:1em;">',
+			'<a href="http://www.sbe.virginia.gov/cms/Election_Information/Election_Results/2009/November_General_Election.html" title="Virginia Election Results Map">Virginia Election Results Map</a>',
+		'</div>',
+		'<div style="margin-top:1em;">',
+			'<a href="https://www.voterinfo.sbe.virginia.gov/election/DATA/2009/37C2EDEB-FACB-44C1-AF70-05FB616DCD62/UnOfficial/3_s.shtml" title="Full Virginia Election Results">Full Virginia Election Results</a>',
+		'</div>',
+		'<div style="margin-top:1em;">',
+			'Learn more about the ',
+			'<a href="http://www.votinginformationproject.org/" title="Voting Information Project">Voting Information Project</a>',
+		'</div>',
+		'<div style="margin-top:1em; font-style:italic; font-size:90%;">',
+			'Thanks to the Virginia State Board of Elections for providing ballot data, polling place locations and local election official information.',
+		'</div>',
 	'</div>'
 );
 
