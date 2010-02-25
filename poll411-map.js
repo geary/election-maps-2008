@@ -505,7 +505,7 @@ var key = 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRTZqGWfQErE9pT-IucjscazSdFnjBSzjqfxm1CQj
 
 var electionHeader = S(
 	'<div>',
-		'<strong>Nov 3, 2009 Virginia general election</strong>',
+		'<strong>March 2, 2010 Virginia special election</strong>',
 	'</div>'
 );
 
@@ -849,12 +849,11 @@ function gadgetReady() {
 			registered,
 			'Verify your voting location with your local election officials. ',
 			//'This voting location is for the November 3 election only (not for early voting), and it is an estimate based on nearby addresses. ',
-			'This voting location is for the November 3 election only, and it is an estimate based on nearby addresses. ',
+			//'This voting location is for the November 3 election only, and it is an estimate based on nearby addresses. ',
 			'It may be incorrect and may change before election day.'
 		) : S(
 			registered,
-			//'This voting location is for the November 3 election only (not for early voting), and it is only for voters registered at the home address entered. ',
-			'This voting location is for the November 3 election only, and it is only for voters registered at the home address entered. ',
+			'This voting location is for the March 2 election only, and it is only for voters registered at the home address entered. ',
 			'Please verify this voting location with your local election officials to ensure that it is correct.'
 		);
 		return S(
@@ -895,7 +894,7 @@ function gadgetReady() {
 		var sameDay = state.gsx$sameday.$t != 'TRUE' ? '' : S(
 			'<div style="margin-bottom:0.5em;">',
 				state.name, ' residents may register to vote at their polling place on Election Day:<br />',
-				'Tuesday, November 3',
+				'Tuesday, March 2',
 			'</div>'
 		);
 		
@@ -1180,7 +1179,7 @@ function gadgetReady() {
 			return S(
 				'<div style="padding:0.5em 0;">',
 					'<div class="heading" style="font-size:110%;">',
-						'General Election Candidates',
+						'Special Election Candidates',
 					'</div>',
 					'<div style="font-size:85%; font-style:italic; margin-top:0.5em">',
 						'Candidates are listed in random order',
@@ -1979,7 +1978,7 @@ function gadgetReady() {
 		) : S(
 			'<div>',
 				//'This application has information for the November 3 Virginia general election only (not for early voting or elections in other states).',
-				'This application has information for the November 3 Virginia general election only, not for elections in other states.',
+				'This application has information for the March 2 Virginia special election only, not for elections in other states.',
 			'</div>'
 		);
 	}
