@@ -9,7 +9,7 @@
 
 var opt = window.gadget ? gadget : window.mapplet ? mapplet : {};
 
-if( !( opt.archive || /%23archive/.test(location.href) ) ) {
+if( /%232009results/.test(location.href) ) {
 
 (function() {
 
