@@ -1293,7 +1293,7 @@ function gadgetReady() {
 			return vote.info.latlng ? S(
 				location( true ),
 				'<div style="padding-top:0.75em;">',
-					'<a href="#detailsbox" onclick="return selectTab(\'#detailsbox\');">View Full Details</a>',
+					'<a href="#detailsbox" onclick="return selectTab(\'#detailsbox\');">View Candidates and Details</a>',
 				'</div>'
 				//stateLocator(),
 				//locationWarning(),
