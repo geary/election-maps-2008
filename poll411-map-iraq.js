@@ -154,7 +154,6 @@ function formatLocation( location, link ) {
 }
 
 function addMarker( location ) {
-console.log( location );
 	var latlng = new GLatLng( location.lat, location.lng );
 	var icon = new GIcon( G_DEFAULT_ICON );
 	var marker = new GMarker( latlng, { icon:icon } );
