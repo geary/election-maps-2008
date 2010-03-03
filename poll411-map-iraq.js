@@ -197,7 +197,24 @@ function getJSON( url, callback, cache ) {
 	}, cache );
 }
 
+function zoom() {
+	var bounds = [
+		[ -124.72846051, 24.54570037 ],
+		[ -66.95221658, 49.38362494 ]
+	];
+	var latlngbounds = new GLatLngBounds(
+		new GLatLng( bounds[0][1], bounds[0][0] ),
+		new GLatLng( bounds[1][1], bounds[1][0] )
+	);
+	map.getBoundsZoomLevelAsync( latlngbounds, function( zoom ) {
+		map.setCenter( latlngbounds.getCenter(), zoom );
+	});
+}
+
 $(function() {
+	
+	zoom();
+	
 	$('#locations')
 		.html(
 			locationStrings.mapjoin( function( string, index ) {
@@ -223,7 +240,9 @@ $(function() {
 			}
 			return false;
 		});
+		
 	_IG_AdjustIFrameHeight();
+	
 });
 	
 })();
