@@ -129,13 +129,33 @@ var key = 'ABQIAAAAL7MXzZBubnPtVtBszDCxeRTZqGWfQErE9pT-IucjscazSdFnjBSzjqfxm1CQj
 document.write(
 	'<style type="text/css">',
 		'body.gadget { margin:0; padding:0; }',
-		'#locations .address { margin-bottom:10px; }',
+		'#locations .address { margin-bottom:12px; }',
 	'</style>',
 	
-	'<div style="font-size:125%; margin-bottom:12px;">',
-		'Iraq Out Of Country Voter Info',
-	'</div>',
-	'<div id="locations">',
+	'<div style="font:10pt Arial,sans-serif">',
+	
+		'<div style="font-size:140%; margin-bottom:14px;">',
+			'Iraq Out of Country Voter Info',
+		'</div>',
+		
+		'<div style="font-weight:bold; font-size:125%; margin-bottom:4px;">',
+			'OCV Office',
+		'</div>',
+		'<div>',
+			'Manager: Sarbest Mohamed Tahr<br />',
+			'Phone: 937-608-7897<br />',
+			'Email: <a target="_blank" href="mailto:ocv_usa@yahoo.com">ocv_usa@yahoo.com</a><br />',
+			'14000 Thunderbolt Place<br />',
+			'Chantilly, VA  20151<br />',
+		'</div>',
+		
+		'<div style="font-weight:bold; font-size:125%; margin:16px 0 4px 0;">',
+			'Voting Locations',
+		'</div>',
+		
+		'<div id="locations" style="margin-top:12px;">',
+		'</div>',
+		
 	'</div>'
 );
 
