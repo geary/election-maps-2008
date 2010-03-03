@@ -3,6 +3,8 @@
 // Free Beer and Free Speech License (any OSI license)
 // http://freebeerfreespeech.org/
 
+(function() {
+
 // Common initialization
 
 var locationStrings = [
@@ -18,10 +20,6 @@ var locationStrings = [
 ];
 
 var locations = [];
-
-var opt = window.gadget ? gadget : window.mapplet ? mapplet : {};
-
-(function() {
 
 // Utility functions and jQuery extensions
 
@@ -102,7 +100,7 @@ function GAsync( obj ) {
 		}
 	}
 	
-	//var mapplet = ! window.GBrowserIsCompatible;
+	var mapplet = ! window.GBrowserIsCompatible;
 	
 	var args = arguments, nArgs = args.length - 1;
 	var results = [], nCalls = 0;

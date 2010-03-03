@@ -19,26 +19,24 @@
 <Content type="html">
 <![CDATA[
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js">
-</script>
-
 <script type="text/javascript">
 
-	var mapplet = {
+	var opt = {
+		mapplet: true,
 		moduleId: __MODULE_ID__,
-		baseUrl: 'http://election-maps-2008.googlecode.com/svn/trunk/'
+		baseUrl: 'http://election-maps-2008.googlecode.com/svn/trunk/',
+		
+		writeScript: function( name, seconds ) {
+			document.write(
+				'<script type="text/javascript" src="',
+					_IG_GetCachedUrl( opt.baseUrl + name, { refreshInterval: seconds || 60 } ),
+				'">',
+				'<\/script>'
+			);
+		}
 	};
 	
-	function script( url, seconds ) {
-		document.write(
-			'<script type="text/javascript" src="',
-				_IG_GetCachedUrl( url, { refreshInterval:seconds } ),
-			'">',
-			'<\/script>'
-		);
-	}
-	
-	script( mapplet.baseUrl + 'poll411-map-iraq.js', 60 );
+	opt.writeScript( 'poll411-loader.js' );
 	
 </script>
 
