@@ -38,7 +38,7 @@
 		);
 	}
 	
-	script( 'http://election-maps-2008.googlecode.com/svn/trunk/poll411-map-iraq.js', 60 );
+	script( mapplet.baseUrl + 'poll411-map-iraq.js', 60 );
 	
 </script>
 
