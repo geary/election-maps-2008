@@ -223,6 +223,7 @@ $(function() {
 			}
 			return false;
 		});
+	_IG_AdjustIFrameHeight();
 });
 	
 })();
