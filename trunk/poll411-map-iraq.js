@@ -134,8 +134,16 @@ document.write(
 	
 	'<div style="font:10pt Arial,sans-serif">',
 	
-		'<div style="font-size:140%; margin-bottom:14px;">',
+		'<div style="font-size:140%; margin-bottom:10px;">',
 			'Iraq Out of Country Voter Info',
+		'</div>',
+		
+		'<div style="margin:12px 0;">',
+			'In partnership with the ',
+			'<a target="_blank" href="http://ocv-ihec.com/">',
+				'Iraq High Electoral Commission',
+			'</a>',
+			'.',
 		'</div>',
 		
 		'<div style="font-weight:bold; font-size:125%; margin-bottom:4px;">',
@@ -154,6 +162,21 @@ document.write(
 		'</div>',
 		
 		'<div id="locations" style="margin-top:12px;">',
+		'</div>',
+		
+		'<div style="margin-top:12px;">',
+			'<b>Important: </b>',
+			'The Out-of-Country eligibility criteria as listed by the Iraq High Electoral Commission are:',
+			'<ol>',
+				'<li>The voter identification (identification documents)</li>',
+				'<li>Born on or before 31/12/1992 (age identification documents)</li>',
+				'<li>Iraqi nationality (nationality documents)</li>',
+				'<li>Governorate (governorate identification documents)</li>',
+			'</ol>',
+			'You can find more information on the Iraq High Electoral Commission Out of Country Voting website: ',
+			'<a target="_blank" href="http://ocv-ihec.com/">',
+				'www.ocv-ihec.com',
+			'</a>',
 		'</div>',
 		
 	'</div>'
