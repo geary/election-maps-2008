@@ -14,7 +14,7 @@ if( window.mapplet ) {
 	
 	document.write(
 		'<script type="text/javascript" src="',
-			_IG_GetCachedUrl( 'http://election-gadgets.googlecode.com/hg/voter-info/voter-info-iraq.js', { refreshInterval: seconds || 60 } ),
+			_IG_GetCachedUrl( 'http://election-gadgets.googlecode.com/hg/voter-info/voter-info-iraq.js', { refreshInterval: 60 } ),
 		'">',
 		'<\/script>'
 	);
