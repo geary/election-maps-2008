@@ -1175,8 +1175,8 @@ function gadgetReady() {
 						'Your Local Election Office',
 					'</div>',
 					out.length < 2 ? '' : S(
-						'<div style="font-size:85%; font-style:italic; margin-bottom:0.75em;">',
-							'Your local election office may be either of the following:',
+						'<div style="font-style:italic; margin-bottom:0.75em;">',
+							'Your local election office is listed below, but we were unable to determine which one serves your location. Please contact both offices for more information:',
 						'</div>'
 					),
 					out.join('<div style="padding:0.5em;"></div>'),
