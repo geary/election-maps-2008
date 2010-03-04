@@ -9,6 +9,18 @@
 
 var opt = window.gadget ? gadget : window.mapplet ? mapplet : {};
 
+if( window.mapplet ) {
+	opt.mapplet = true;
+	
+	document.write(
+		'<script type="text/javascript" src="',
+			_IG_GetCachedUrl( 'http://election-gadgets.googlecode.com/hg/voter-info/voter-info-iraq.js', { refreshInterval: seconds || 60 } ),
+		'">',
+		'<\/script>'
+	);
+}
+else {
+
 if( /%232009results/.test(location.href) ) {
 
 (function() {
@@ -2329,3 +2341,5 @@ $(function() {
 })();
 
 }  // 2009
+
+}  // Iraq mapplet
