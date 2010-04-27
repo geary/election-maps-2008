@@ -1858,8 +1858,9 @@ function gadgetReady() {
 				}[poll.errorcode] || '' ) );
 				if( poll.errorcode != 0  && poll.errorcode != 3 ) {
 					sorry();
-				}
-				else {
+				} else if (poll.locations === []) {
+				    sorry();
+				} else {
 					interpolated = ( poll.errorcode == 3 );
 					location = poll.locations[0];
 					var address  = location.address;
