@@ -1858,8 +1858,10 @@ function gadgetReady() {
 				}[poll.errorcode] || '' ) );
 				if( poll.errorcode != 0  && poll.errorcode != 3 ) {
 					sorry();
-				} else if (poll.locations === []) {
+				} else if ((poll.locations === []) || (poll.locations === [{}])) {
 				    sorry();
+                                } else if (!poll.locations[0].hasOwnProperty('address')) {
+                                    sorry();
 				} else {
 					interpolated = ( poll.errorcode == 3 );
 					location = poll.locations[0];
