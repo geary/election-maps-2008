@@ -9,6 +9,7 @@
     author_email="elections@google.com"
     thumbnail="http://election-maps-2008.googlecode.com/svn/trunk/poll411-gadget-thumbnail.png"
     screenshot="http://election-maps-2008.googlecode.com/svn/trunk/poll411-gadget-screenshot.png"
+    title_url="http://www.sbe.virginia.gov/cms/Voter_Information/Where_Do_I_Vote/Index.html"
     width="620"
     height="480">
   <Require feature="analytics"/>
